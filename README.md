@@ -1,11 +1,3 @@
-# BufferZero ⚡
-### Video Streaming Architecture Performance Analyzer
-
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-bufferzero.vercel.app-2457FF?style=for-the-badge&logo=vercel&logoColor=white)](https://bufferzero.vercel.app/)
-[![Build Status](https://img.shields.io/badge/Build-Passing-D7FF38?style=for-the-badge&logo=githubactions&logoColor=171717)](https://github.com/Haripriya24071/BufferZero)
-[![Tests](https://img.shields.io/badge/Tests-7%2F7%20Passed-00F0FF?style=for-the-badge&logo=vitest&logoColor=171717)](https://github.com/Haripriya24071/BufferZero)
-[![Course](https://img.shields.io/badge/Course-25ESCS04%20COA-FF3B30?style=for-the-badge)](https://github.com/Haripriya24071/BufferZero)
-[![University](https://img.shields.io/badge/University-Jain%20University-171717?style=for-the-badge)](https://github.com/Haripriya24071/BufferZero)
 
 ```
 ██████╗ ██╗   ██╗███████╗███████╗███████╗██████╗ ███████╗██████╗  ██████╗ 
@@ -15,6 +7,14 @@
 ██████╔╝╚██████╔╝██║     ██║     ███████╗██║  ██║███████╗██║  ██║╚██████╔╝
 ╚═════╝  ╚═════╝ ╚═╝     ╚═╝     ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝ 
 ```
+# BufferZero 
+### Video Streaming Architecture Performance Analyzer
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-bufferzero.vercel.app-2457FF?style=for-the-badge&logo=vercel&logoColor=white)](https://bufferzero.vercel.app/)
+[![Build Status](https://img.shields.io/badge/Build-Passing-D7FF38?style=for-the-badge&logo=githubactions&logoColor=171717)](https://github.com/Haripriya24071/BufferZero)
+[![Tests](https://img.shields.io/badge/Tests-7%2F7%20Passed-00F0FF?style=for-the-badge&logo=vitest&logoColor=171717)](https://github.com/Haripriya24071/BufferZero)
+[![Course](https://img.shields.io/badge/Course-25ESCS04%20COA-FF3B30?style=for-the-badge)](https://github.com/Haripriya24071/BufferZero)
+[![University](https://img.shields.io/badge/University-Jain%20University-171717?style=for-the-badge)](https://github.com/Haripriya24071/BufferZero)
 
 > **A Computer Organization and Architecture (COA) Simulation Lab & Viva Defense System**  
 > Evaluates how **Cache Block Sizing** and **Direct Memory Access (DMA)** prevent video stream stalls and frame drops in hardware.  
