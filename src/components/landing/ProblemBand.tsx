@@ -27,13 +27,13 @@ export const ProblemBand: React.FC = () => {
   ];
 
   return (
-    <section id="problem" className="py-16 md:py-24 px-4 md:px-8 bg-[#CCFF00] border-b-2 border-[#12151A]">
+    <section id="problem" className="py-16 md:py-24 px-4 md:px-8 bg-[#D7FF38] border-b-2 border-[#171717]">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
-          <span className="font-mono text-xs uppercase tracking-widest text-[#12151A] font-bold px-2.5 py-1 bg-[#FFFFFF] border border-[#12151A] rounded inline-block shadow-[2px_2px_0_#12151A]">
+          <span className="font-mono text-xs uppercase tracking-widest text-[#171717] font-bold px-2.5 py-1 bg-[#FFFFFF] border border-[#171717] rounded inline-block shadow-[2px_2px_0_#171717]">
             Core Engineering Context
           </span>
-          <h2 className="font-display text-3xl sm:text-5xl text-[#12151A] mt-3 tracking-tight">
+          <h2 className="font-display text-3xl sm:text-5xl text-[#171717] mt-3 tracking-tight">
             The problem in 30 seconds
           </h2>
         </div>
@@ -44,19 +44,19 @@ export const ProblemBand: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="bg-[#FFFFFF] border-2 border-[#12151A] p-6 md:p-8 rounded-lg shadow-[6px_6px_0_#12151A] flex flex-col justify-between hover:-translate-y-1.5 transition-transform"
+                className="bg-[#FFFFFF] border-2 border-[#171717] p-6 md:p-8 rounded-lg shadow-[6px_6px_0_#171717] flex flex-col justify-between hover:-translate-y-1.5 transition-transform"
               >
                 <div>
                   <div className="flex items-center justify-between mb-6">
-                    <span className="font-display text-4xl text-[#12151A]">
+                    <span className="font-display text-4xl text-[#171717]">
                       {card.num}
                     </span>
-                    <div className="w-10 h-10 rounded-md bg-[#F5F2EB] border border-[#12151A] flex items-center justify-center shadow-[2px_2px_0_#12151A]">
-                      <Icon size={20} className="text-[#12151A]" />
+                    <div className="w-10 h-10 rounded-md bg-[#F5F5F0] border border-[#171717] flex items-center justify-center shadow-[2px_2px_0_#171717]">
+                      <Icon size={20} className="text-[#171717]" />
                     </div>
                   </div>
 
-                  <h3 className="font-display text-2xl text-[#12151A] mb-3">
+                  <h3 className="font-display text-2xl text-[#171717] mb-3">
                     {card.title}
                   </h3>
 
@@ -65,8 +65,8 @@ export const ProblemBand: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-[#12151A]/10">
-                  <span className="text-[11px] font-mono font-bold text-[#12151A] uppercase tracking-wide bg-[#CCFF00]/40 px-2 py-0.5 rounded">
+                <div className="mt-6 pt-4 border-t border-[#171717]/10">
+                  <span className="text-[11px] font-mono font-bold text-[#171717] uppercase tracking-wide bg-[#D7FF38]/40 px-2 py-0.5 rounded">
                     Key Fact: {card.highlight}
                   </span>
                 </div>

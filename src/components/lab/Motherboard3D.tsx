@@ -60,13 +60,13 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
   return (
     <div className="card-tactile overflow-hidden flex flex-col">
       {/* Top Header Bar */}
-      <div className="bg-[#12151A] text-white px-4 py-2.5 flex items-center justify-between border-b-2 border-[#12151A]">
+      <div className="bg-[#171717] text-white px-4 py-2.5 flex items-center justify-between border-b-2 border-[#171717]">
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#CCFF00] animate-pulse"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-[#D7FF38] animate-pulse"></span>
           <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#FFFFFF]">
             3D Hardware Motherboard Stage
           </span>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#2A303A] text-[#CCFF00] font-bold">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#2A303A] text-[#D7FF38] font-bold">
             {transferMode === "DMA" ? "DMA EXPRESSWAY ACTIVE" : "CPU BUSY COPYING"}
           </span>
         </div>
@@ -77,7 +77,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
             onClick={() => setViewMode("3d_city")}
             className={`px-2 py-1 rounded transition-colors ${
               viewMode === "3d_city"
-                ? "bg-[#CCFF00] text-[#12151A] font-bold"
+                ? "bg-[#D7FF38] text-[#171717] font-bold"
                 : "text-[#8E99A8] hover:text-white"
             }`}
           >
@@ -87,7 +87,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
             onClick={() => setViewMode("schematic")}
             className={`px-2 py-1 rounded transition-colors ${
               viewMode === "schematic"
-                ? "bg-[#CCFF00] text-[#12151A] font-bold"
+                ? "bg-[#D7FF38] text-[#171717] font-bold"
                 : "text-[#8E99A8] hover:text-white"
             }`}
           >
@@ -111,14 +111,14 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
 
             {/* Live Kinetic HUD Overlay */}
             <div className="absolute top-3 left-3 pointer-events-none z-10 flex flex-col gap-1.5 font-mono text-[11px]">
-              <div className="bg-[#12151A]/90 text-white px-2.5 py-1 rounded border border-[#CCFF00]/40 backdrop-blur-xs flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#CCFF00] animate-ping"></span>
-                <span>BUS ADDR: <strong className="text-[#CCFF00]">{currentAddressHex}</strong></span>
+              <div className="bg-[#171717]/90 text-white px-2.5 py-1 rounded border border-[#D7FF38]/40 backdrop-blur-xs flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#D7FF38] animate-ping"></span>
+                <span>BUS ADDR: <strong className="text-[#D7FF38]">{currentAddressHex}</strong></span>
               </div>
 
               <div className={`px-2.5 py-1 rounded border text-[10px] font-bold backdrop-blur-xs ${
                 transferMode === "DMA"
-                  ? "bg-[#CCFF00]/20 text-[#CCFF00] border-[#CCFF00]"
+                  ? "bg-[#D7FF38]/20 text-[#D7FF38] border-[#D7FF38]"
                   : "bg-[#FF3B30]/20 text-[#FF3B30] border-[#FF3B30]"
               }`}>
                 {transferMode === "DMA"
@@ -129,14 +129,14 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
 
             {/* Quick Component Telemetry Hotbar */}
             <div className="absolute bottom-3 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-2 pointer-events-auto">
-              <div className="flex items-center gap-1.5 bg-[#12151A]/90 p-1.5 rounded-lg border border-[#2A303A] backdrop-blur-xs">
+              <div className="flex items-center gap-1.5 bg-[#171717]/90 p-1.5 rounded-lg border border-[#2A303A] backdrop-blur-xs">
                 {(["cpu", "dma", "cache", "ram", "nic"] as const).map((chip) => (
                   <button
                     key={chip}
                     onClick={() => setActiveChip(chip)}
                     className={`px-2 py-1 rounded font-mono text-[10px] uppercase font-bold transition-all ${
                       activeChip === chip
-                        ? "bg-[#CCFF00] text-[#12151A] shadow-[2px_2px_0_#000]"
+                        ? "bg-[#D7FF38] text-[#171717] shadow-[2px_2px_0_#000]"
                         : "text-[#8E99A8] hover:text-white bg-[#1E242D]"
                     }`}
                   >
@@ -145,19 +145,19 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
                 ))}
               </div>
 
-              <div className="bg-[#12151A]/90 text-xs font-mono text-white px-3 py-1.5 rounded border border-[#2A303A] hidden sm:flex items-center gap-2">
-                <Activity size={13} className="text-[#CCFF00]" />
+              <div className="bg-[#171717]/90 text-xs font-mono text-white px-3 py-1.5 rounded border border-[#2A303A] hidden sm:flex items-center gap-2">
+                <Activity size={13} className="text-[#D7FF38]" />
                 <span>Interact: Click & Drag to Orbit 3D Board</span>
               </div>
             </div>
           </div>
         ) : (
           /* Technical Bus Schematic View */
-          <div className="w-full h-full p-6 flex flex-col justify-between bg-[#12151A] text-white">
+          <div className="w-full h-full p-6 flex flex-col justify-between bg-[#171717] text-white">
             <div className="grid grid-cols-5 gap-3 h-full items-center">
               {/* NIC */}
               <div className="bg-[#1E242D] border-2 border-[#2A303A] p-3 rounded-lg text-center">
-                <Radio size={20} className="mx-auto mb-1 text-[#CCFF00]" />
+                <Radio size={20} className="mx-auto mb-1 text-[#D7FF38]" />
                 <span className="font-mono text-xs font-bold block">Network NIC</span>
                 <span className="text-[10px] font-mono text-[#8E99A8]">Incoming Packets</span>
               </div>
@@ -165,7 +165,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
               {/* DMA Controller */}
               <div className={`border-2 p-3 rounded-lg text-center transition-all ${
                 transferMode === "DMA"
-                  ? "bg-[#CCFF00]/10 border-[#CCFF00] text-[#CCFF00] shadow-[0_0_12px_rgba(204,255,0,0.3)]"
+                  ? "bg-[#D7FF38]/10 border-[#D7FF38] text-[#D7FF38] shadow-[0_0_12px_rgba(204,255,0,0.3)]"
                   : "bg-[#1E242D] border-[#2A303A] text-[#8E99A8]"
               }`}>
                 <Sparkles size={20} className="mx-auto mb-1" />
@@ -190,7 +190,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
 
               {/* Cache Bank */}
               <div className="bg-[#1E242D] border-2 border-[#2A303A] p-3 rounded-lg text-center">
-                <Layers size={20} className="mx-auto mb-1 text-[#CCFF00]" />
+                <Layers size={20} className="mx-auto mb-1 text-[#D7FF38]" />
                 <span className="font-mono text-xs font-bold block">SRAM Cache</span>
                 <span className="text-[10px] font-mono text-[#8E99A8]">1-Cycle Access</span>
               </div>
@@ -206,7 +206,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
             {/* Data flow banner */}
             <div className="bg-[#0A0D12] p-2.5 rounded border border-[#2A303A] font-mono text-xs text-center">
               {transferMode === "DMA" ? (
-                <span className="text-[#CCFF00]">
+                <span className="text-[#D7FF38]">
                   Packet Route: NIC ➔ <strong>DMA Bus Master</strong> ➔ DDR RAM (CPU freed for 60 FPS decoding)
                 </span>
               ) : (
@@ -220,9 +220,9 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       </div>
 
       {/* Dynamic Inspector Detail Strip for Selected Chip */}
-      <div className="p-3 bg-[#FAF8F5] border-t-2 border-[#12151A] flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono text-xs">
+      <div className="p-3 bg-[#FFFFFF] border-t-2 border-[#171717] flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono text-xs">
         <div>
-          <span className="font-bold text-[#12151A] text-sm block">
+          <span className="font-bold text-[#171717] text-sm block">
             {chipsInfo[activeChip].title}
           </span>
           <p className="text-[#5A6372] text-[11px] mt-0.5">
@@ -231,11 +231,11 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
-          <div className="bg-[#FFFFFF] border border-[#12151A] px-2.5 py-1 rounded">
+          <div className="bg-[#FFFFFF] border border-[#171717] px-2.5 py-1 rounded">
             <span className="text-[10px] text-[#5A6372] block">STATUS</span>
-            <span className="font-bold text-[#12151A]">{chipsInfo[activeChip].status}</span>
+            <span className="font-bold text-[#171717]">{chipsInfo[activeChip].status}</span>
           </div>
-          <div className="bg-[#12151A] text-[#CCFF00] px-2.5 py-1 rounded">
+          <div className="bg-[#171717] text-[#D7FF38] px-2.5 py-1 rounded">
             <span className="text-[10px] text-[#8E99A8] block">SYLLABUS</span>
             <span className="font-bold text-[10px]">{chipsInfo[activeChip].coa}</span>
           </div>

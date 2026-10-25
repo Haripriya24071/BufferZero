@@ -30,11 +30,11 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
 
   return (
     <div className="card-tactile p-5 space-y-5 bg-[#FFFFFF]">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b-2 border-[#12151A]/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b-2 border-[#171717]/10">
         <div>
           <div className="flex items-center gap-2">
-            <GitCommit size={18} className="text-[#12151A]" />
-            <h3 className="font-display text-base text-[#12151A]">
+            <GitCommit size={18} className="text-[#171717]" />
+            <h3 className="font-display text-base text-[#171717]">
               5-Stage Instruction Pipeline (CO6)
             </h3>
           </div>
@@ -45,25 +45,25 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
 
         {/* CPI comparison badge */}
         <div className="flex items-center gap-2 font-mono text-xs">
-          <span className="px-2 py-0.5 bg-[#FAF8F5] border border-[#12151A] rounded">
+          <span className="px-2 py-0.5 bg-[#FFFFFF] border border-[#171717] rounded">
             Ideal CPI: <strong>1.00</strong>
           </span>
           <ArrowRight size={13} className="text-[#5A6372]" />
-          <span className="px-2 py-0.5 bg-[#CCFF00] border border-[#12151A] rounded font-bold text-[#12151A]">
+          <span className="px-2 py-0.5 bg-[#D7FF38] border border-[#171717] rounded font-bold text-[#171717]">
             Actual CPI: {actualCPI}
           </span>
         </div>
       </div>
 
       {/* Pipeline Gantt Timeline */}
-      <div className="bg-[#FAF8F5] border-2 border-[#12151A] p-4 rounded-lg overflow-x-auto">
+      <div className="bg-[#FFFFFF] border-2 border-[#171717] p-4 rounded-lg overflow-x-auto">
         <div className="min-w-[500px] space-y-2 font-mono text-xs">
           {instructions.map((instr, idx) => {
             const offset = idx * 2;
 
             return (
               <div key={idx} className="flex items-center gap-3">
-                <span className="w-40 shrink-0 text-[11px] font-bold text-[#12151A] truncate">
+                <span className="w-40 shrink-0 text-[11px] font-bold text-[#171717] truncate">
                   {instr.id}
                 </span>
 
@@ -81,12 +81,12 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
                     return (
                       <div
                         key={stage}
-                        className={`h-7 px-2 rounded flex items-center justify-center font-bold text-[10px] border border-[#12151A] ${
+                        className={`h-7 px-2 rounded flex items-center justify-center font-bold text-[10px] border border-[#171717] ${
                           isStalled
-                            ? "bg-[#FF3B30] text-white shadow-[2px_2px_0_#12151A] animate-pulse"
+                            ? "bg-[#FF3B30] text-white shadow-[2px_2px_0_#171717] animate-pulse"
                             : stage === "MEM"
-                            ? "bg-[#CCFF00] text-[#12151A]"
-                            : "bg-[#FFFFFF] text-[#12151A]"
+                            ? "bg-[#D7FF38] text-[#171717]"
+                            : "bg-[#FFFFFF] text-[#171717]"
                         }`}
                         title={isStalled ? "MEM Cache Miss Bubble Stall" : `${stage} Stage`}
                       >
@@ -104,10 +104,10 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
       {/* Memory instructions % Slider */}
       <div className="space-y-1.5 font-mono text-xs">
         <div className="flex justify-between">
-          <span className="text-[#12151A] font-bold">
+          <span className="text-[#171717] font-bold">
             Memory Instruction Frequency (LOAD / STORE %):
           </span>
-          <span className="font-extrabold text-[#12151A] bg-[#CCFF00] px-1.5 py-0.5 rounded border border-[#12151A]">
+          <span className="font-extrabold text-[#171717] bg-[#D7FF38] px-1.5 py-0.5 rounded border border-[#171717]">
             {memInstrPct}%
           </span>
         </div>
@@ -117,7 +117,7 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
           max={60}
           value={memInstrPct}
           onChange={(e) => setMemInstrPct(Number(e.target.value))}
-          className="w-full accent-[#CCFF00] cursor-pointer h-2 bg-[#EAE5DB] rounded-lg"
+          className="w-full accent-[#D7FF38] cursor-pointer h-2 bg-[#EBEBE6] rounded-lg"
         />
         <p className="text-[10px] text-[#5A6372]">
           Higher memory instruction frequency increases sensitivity to cache miss penalties.

@@ -144,7 +144,7 @@ export const LabPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F2EB] flex flex-col">
+    <div className="min-h-screen bg-[#F5F5F0] flex flex-col">
       {/* Top Controls Header */}
       <LabHeader
         isRunning={isRunning}
@@ -184,14 +184,14 @@ export const LabPage: React.FC = () => {
               {/* Center Column: Focused Simulation Stage (6 cols) */}
               <div className="lg:col-span-6 flex flex-col justify-between space-y-3">
                 {/* Stage Selector Pills */}
-                <div className="flex items-center justify-between bg-[#FFFFFF] border-2 border-[#12151A] p-1.5 rounded-lg shadow-[3px_3px_0_#12151A]">
+                <div className="flex items-center justify-between bg-[#FFFFFF] border-2 border-[#171717] p-1.5 rounded-lg shadow-[3px_3px_0_#171717]">
                   <div className="flex items-center gap-1 font-mono text-xs">
                     <button
                       onClick={() => setCenterStage("player")}
                       className={`px-3 py-1.5 rounded font-bold transition-all cursor-pointer ${
                         centerStage === "player"
-                          ? "bg-[#12151A] text-[#CCFF00] shadow-[2px_2px_0_#12151A]"
-                          : "text-[#5A6372] hover:text-[#12151A]"
+                          ? "bg-[#171717] text-[#D7FF38] shadow-[2px_2px_0_#2457FF]"
+                          : "text-[#525252] hover:text-[#171717]"
                       }`}
                     >
                       📺 Video Monitor
@@ -201,8 +201,8 @@ export const LabPage: React.FC = () => {
                       onClick={() => setCenterStage("motherboard")}
                       className={`px-3 py-1.5 rounded font-bold transition-all cursor-pointer ${
                         centerStage === "motherboard"
-                          ? "bg-[#12151A] text-[#CCFF00] shadow-[2px_2px_0_#12151A]"
-                          : "text-[#5A6372] hover:text-[#12151A]"
+                          ? "bg-[#171717] text-[#D7FF38] shadow-[2px_2px_0_#2457FF]"
+                          : "text-[#525252] hover:text-[#171717]"
                       }`}
                     >
                       🏙️ 3D Motherboard
@@ -212,8 +212,8 @@ export const LabPage: React.FC = () => {
                       onClick={() => setCenterStage("cache")}
                       className={`px-3 py-1.5 rounded font-bold transition-all cursor-pointer ${
                         centerStage === "cache"
-                          ? "bg-[#12151A] text-[#CCFF00] shadow-[2px_2px_0_#12151A]"
-                          : "text-[#5A6372] hover:text-[#12151A]"
+                          ? "bg-[#171717] text-[#D7FF38] shadow-[2px_2px_0_#2457FF]"
+                          : "text-[#525252] hover:text-[#171717]"
                       }`}
                     >
                       🔬 Cache Bit Inspector
@@ -221,9 +221,9 @@ export const LabPage: React.FC = () => {
                   </div>
 
                   {/* Calm persistent mini-status */}
-                  <div className="hidden sm:flex items-center gap-2 font-mono text-[10px] text-[#5A6372] pr-2">
-                    <span className="w-2 h-2 rounded-full bg-[#CCFF00] animate-pulse"></span>
-                    <span>ADDR: <strong className="text-[#12151A]">{lastStep ? lastStep.hexAddress : "0x20000000"}</strong></span>
+                  <div className="hidden sm:flex items-center gap-2 font-mono text-[10px] text-[#525252] pr-2">
+                    <span className="w-2 h-2 rounded-full bg-[#2457FF] animate-pulse"></span>
+                    <span>ADDR: <strong className="text-[#171717]">{lastStep ? lastStep.hexAddress : "0x20000000"}</strong></span>
                   </div>
                 </div>
 
@@ -260,18 +260,18 @@ export const LabPage: React.FC = () => {
                 </div>
 
                 {/* Sub-Stage Quick Status Strip */}
-                <div className="flex items-center justify-between p-2 bg-[#FFFFFF] border-2 border-[#12151A] rounded-lg shadow-[2px_2px_0_#12151A] font-mono text-xs">
+                <div className="flex items-center justify-between p-2 bg-[#FFFFFF] border-2 border-[#171717] rounded-lg shadow-[2px_2px_0_#171717] font-mono text-xs">
                   <div className="flex items-center gap-2">
-                    <span className={`w-2.5 h-2.5 rounded-full ${metrics.isBuffering ? "bg-[#FF3B30] animate-ping" : "bg-[#CCFF00]"}`}></span>
-                    <span className="font-bold text-[#12151A]">
+                    <span className={`w-2.5 h-2.5 rounded-full ${metrics.isBuffering ? "bg-[#FF3B30] animate-ping" : "bg-[#2457FF]"}`}></span>
+                    <span className="font-bold text-[#171717]">
                       {metrics.isBuffering ? "BUFFERING STALL" : "REAL-TIME STREAMING"}
                     </span>
-                    <span className="text-[#5A6372]">|</span>
-                    <span className="text-[#5A6372] hidden sm:inline">
-                      {config.transferMode === "DMA" ? "DMA Hardware Active" : "CPU Busy Copying Words"}
+                    <span className="text-[#525252]">|</span>
+                    <span className="text-[#525252] hidden sm:inline">
+                      {config.transferMode === "DMA" ? "DMA Hardware Engine Active" : "CPU Busy Copying Words"}
                     </span>
                   </div>
-                  <div className="font-bold text-[#12151A]">
+                  <div className="font-bold text-[#171717]">
                     {metrics.fps} FPS ({config.quality})
                   </div>
                 </div>
@@ -286,13 +286,13 @@ export const LabPage: React.FC = () => {
             {/* Bottom Analysis Tabs Deck */}
             <div className="space-y-3 pt-2">
               {/* Tab Navigation */}
-              <div className="flex flex-wrap items-center gap-2 border-b-2 border-[#12151A] pb-2">
+              <div className="flex flex-wrap items-center gap-2 border-b-2 border-[#171717] pb-2">
                 <button
                   onClick={() => setBottomTab("charts")}
-                  className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#12151A] flex items-center gap-1.5 transition-all ${
+                  className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
                     bottomTab === "charts"
-                      ? "bg-[#CCFF00] text-[#12151A] shadow-[3px_3px_0_#12151A]"
-                      : "bg-[#FFFFFF] text-[#5A6372] hover:text-[#12151A]"
+                      ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
+                      : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
                   }`}
                 >
                   <TrendingUp size={15} />
@@ -301,10 +301,10 @@ export const LabPage: React.FC = () => {
 
                 <button
                   onClick={() => setBottomTab("pipeline")}
-                  className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#12151A] flex items-center gap-1.5 transition-all ${
+                  className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
                     bottomTab === "pipeline"
-                      ? "bg-[#CCFF00] text-[#12151A] shadow-[3px_3px_0_#12151A]"
-                      : "bg-[#FFFFFF] text-[#5A6372] hover:text-[#12151A]"
+                      ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
+                      : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
                   }`}
                 >
                   <GitCommit size={15} />
@@ -313,10 +313,10 @@ export const LabPage: React.FC = () => {
 
                 <button
                   onClick={() => setBottomTab("debugger")}
-                  className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#12151A] flex items-center gap-1.5 transition-all ${
+                  className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
                     bottomTab === "debugger"
-                      ? "bg-[#CCFF00] text-[#12151A] shadow-[3px_3px_0_#12151A]"
-                      : "bg-[#FFFFFF] text-[#5A6372] hover:text-[#12151A]"
+                      ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
+                      : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
                   }`}
                 >
                   <History size={15} />
@@ -325,14 +325,14 @@ export const LabPage: React.FC = () => {
 
                 <button
                   onClick={() => setBottomTab("handcheck")}
-                  className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#12151A] flex items-center gap-1.5 transition-all ${
+                  className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
                     bottomTab === "handcheck"
-                      ? "bg-[#CCFF00] text-[#12151A] shadow-[3px_3px_0_#12151A]"
-                      : "bg-[#FFFFFF] text-[#5A6372] hover:text-[#12151A]"
+                      ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
+                      : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
                   }`}
                 >
                   <Calculator size={15} />
-                  <span>Viva Hand-Check Formulas</span>
+                  <span>Viva Hand-Check Formula Verifier</span>
                 </button>
               </div>
 

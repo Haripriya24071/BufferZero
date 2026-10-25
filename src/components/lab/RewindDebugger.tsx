@@ -41,7 +41,7 @@ export const RewindDebugger: React.FC<RewindDebuggerProps> = ({
   if (!activeStep) {
     return (
       <div className="card-tactile p-5 text-center font-mono text-xs text-[#5A6372]">
-        <History size={20} className="mx-auto mb-2 text-[#12151A]" />
+        <History size={20} className="mx-auto mb-2 text-[#171717]" />
         <span>Run the simulation to populate the Rewind Debugger history buffer.</span>
       </div>
     );
@@ -55,11 +55,11 @@ export const RewindDebugger: React.FC<RewindDebuggerProps> = ({
   return (
     <div className="card-tactile p-5 space-y-4 bg-[#FFFFFF]">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b-2 border-[#12151A]/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b-2 border-[#171717]/10">
         <div className="flex items-center gap-2">
-          <History size={18} className="text-[#12151A]" />
+          <History size={18} className="text-[#171717]" />
           <div>
-            <h3 className="font-display text-base text-[#12151A]">
+            <h3 className="font-display text-base text-[#171717]">
               Rewind Cycle Debugger
             </h3>
             <span className="text-[10px] font-mono text-[#5A6372]">
@@ -73,20 +73,20 @@ export const RewindDebugger: React.FC<RewindDebuggerProps> = ({
           <button
             onClick={handlePrev}
             disabled={selectedIndex <= 0}
-            className="p-1.5 rounded bg-[#F5F2EB] hover:bg-[#EAE5DB] border border-[#12151A] disabled:opacity-30"
+            className="p-1.5 rounded bg-[#F5F5F0] hover:bg-[#EBEBE6] border border-[#171717] disabled:opacity-30"
             title="Step Back 1 Cycle"
           >
             <ChevronLeft size={16} />
           </button>
 
-          <span className="font-mono text-xs font-bold text-[#12151A] min-w-16 text-center">
+          <span className="font-mono text-xs font-bold text-[#171717] min-w-16 text-center">
             {selectedIndex + 1} / {history.length}
           </span>
 
           <button
             onClick={handleNext}
             disabled={selectedIndex >= history.length - 1}
-            className="p-1.5 rounded bg-[#F5F2EB] hover:bg-[#EAE5DB] border border-[#12151A] disabled:opacity-30"
+            className="p-1.5 rounded bg-[#F5F5F0] hover:bg-[#EBEBE6] border border-[#171717] disabled:opacity-30"
             title="Step Forward 1 Cycle"
           >
             <ChevronRight size={16} />
@@ -102,7 +102,7 @@ export const RewindDebugger: React.FC<RewindDebuggerProps> = ({
           max={Math.max(0, history.length - 1)}
           value={selectedIndex}
           onChange={(e) => handleScrub(Number(e.target.value))}
-          className="w-full accent-[#CCFF00] cursor-pointer h-2 bg-[#EAE5DB] rounded-lg"
+          className="w-full accent-[#D7FF38] cursor-pointer h-2 bg-[#EBEBE6] rounded-lg"
         />
         <div className="flex justify-between font-mono text-[9px] text-[#5A6372]">
           <span>- {history.length - 1} Cycles Ago</span>
@@ -111,17 +111,17 @@ export const RewindDebugger: React.FC<RewindDebuggerProps> = ({
       </div>
 
       {/* Active Step Binary Decomposition Display */}
-      <div className="bg-[#12151A] text-white p-4 rounded-lg border-2 border-[#12151A] space-y-3 font-mono">
+      <div className="bg-[#171717] text-white p-4 rounded-lg border-2 border-[#171717] space-y-3 font-mono">
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
           <div className="flex items-center gap-2">
             <span className="text-[#8E99A8]">CYCLE #{activeStep.cycle}</span>
-            <span className="text-[#CCFF00] font-bold text-sm">{activeStep.hexAddress}</span>
+            <span className="text-[#D7FF38] font-bold text-sm">{activeStep.hexAddress}</span>
           </div>
 
           <span
             className={`px-2.5 py-0.5 rounded text-xs font-bold ${
               activeStep.hit
-                ? "bg-[#CCFF00] text-[#12151A]"
+                ? "bg-[#D7FF38] text-[#171717]"
                 : "bg-[#FF3B30] text-white"
             }`}
           >
@@ -133,14 +133,14 @@ export const RewindDebugger: React.FC<RewindDebuggerProps> = ({
         <div className="grid grid-cols-12 gap-1 text-center text-xs">
           <div className="col-span-7 bg-[#1E242D] p-2 rounded border border-[#2A303A]">
             <span className="text-[9px] text-[#8E99A8] block">TAG ({geometry.tagBits}b)</span>
-            <span className="font-bold text-[#CCFF00]">0x{(activeStep.tag >>> 0).toString(16).toUpperCase()}</span>
+            <span className="font-bold text-[#D7FF38]">0x{(activeStep.tag >>> 0).toString(16).toUpperCase()}</span>
             <div className="text-[9px] text-[#8E99A8] truncate mt-0.5">{tagBin}</div>
           </div>
 
-          <div className="col-span-3 bg-[#CCFF00] text-[#12151A] p-2 rounded border border-[#12151A]">
-            <span className="text-[9px] text-[#12151A] font-bold block">SET INDEX ({geometry.indexBits}b)</span>
-            <span className="font-extrabold text-sm text-[#12151A]">Set #{activeStep.setIndex}</span>
-            <div className="text-[9px] text-[#12151A] truncate mt-0.5">{indexBin}</div>
+          <div className="col-span-3 bg-[#D7FF38] text-[#171717] p-2 rounded border border-[#171717]">
+            <span className="text-[9px] text-[#171717] font-bold block">SET INDEX ({geometry.indexBits}b)</span>
+            <span className="font-extrabold text-sm text-[#171717]">Set #{activeStep.setIndex}</span>
+            <div className="text-[9px] text-[#171717] truncate mt-0.5">{indexBin}</div>
           </div>
 
           <div className="col-span-2 bg-[#2A303A] text-white p-2 rounded border border-[#5A6372]">
@@ -151,9 +151,9 @@ export const RewindDebugger: React.FC<RewindDebuggerProps> = ({
         </div>
 
         {/* Hardware Action Verdict */}
-        <div className="pt-2 border-t border-[#2A303A] flex items-center justify-between text-xs text-[#EAE5DB]">
+        <div className="pt-2 border-t border-[#2A303A] flex items-center justify-between text-xs text-[#EBEBE6]">
           <div className="flex items-center gap-1.5">
-            <ArrowRight size={14} className="text-[#CCFF00]" />
+            <ArrowRight size={14} className="text-[#D7FF38]" />
             <span>
               Targeted Cache Set: <strong>Set {activeStep.setIndex}</strong>
             </span>

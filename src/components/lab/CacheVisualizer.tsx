@@ -63,15 +63,15 @@ export const CacheVisualizer: React.FC<CacheVisualizerProps> = ({
         if (!line || !line.valid) {
           ctx.fillStyle = "#FFFFFF"; // Empty
         } else if (isCurrentTarget && lastStep?.hit) {
-          ctx.fillStyle = "#CCFF00"; // Hit: Acid Lime
+          ctx.fillStyle = "#D7FF38"; // Hit: Acid Lime
         } else if (isCurrentTarget && !lastStep?.hit) {
           ctx.fillStyle = "#FF3B30"; // Miss: Tomato
         } else {
-          ctx.fillStyle = "#EAE5DB"; // Valid filled
+          ctx.fillStyle = "#EBEBE6"; // Valid filled
         }
 
         ctx.fillRect(x, y, cellWidth - 2, cellHeight - 2);
-        ctx.strokeStyle = "#12151A";
+        ctx.strokeStyle = "#171717";
         ctx.lineWidth = 1;
         ctx.strokeRect(x, y, cellWidth - 2, cellHeight - 2);
       }
@@ -80,10 +80,10 @@ export const CacheVisualizer: React.FC<CacheVisualizerProps> = ({
 
   return (
     <div className="card-tactile p-5 space-y-4">
-      <div className="flex items-center justify-between pb-3 border-b-2 border-[#12151A]/10">
+      <div className="flex items-center justify-between pb-3 border-b-2 border-[#171717]/10">
         <div className="flex items-center gap-2">
-          <Layers size={18} className="text-[#12151A]" />
-          <h3 className="font-display text-base text-[#12151A]">
+          <Layers size={18} className="text-[#171717]" />
+          <h3 className="font-display text-base text-[#171717]">
             Cache Bit Inspector & Grid Visualizer
           </h3>
         </div>
@@ -95,10 +95,10 @@ export const CacheVisualizer: React.FC<CacheVisualizerProps> = ({
       {/* 32-bit Address Split Bar: Tag | Index | Offset */}
       <div className="space-y-1.5 font-mono">
         <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1.5 font-bold text-[#12151A]">
+          <div className="flex items-center gap-1.5 font-bold text-[#171717]">
             <Binary size={14} />
             <span>32-BIT ADDRESS:</span>
-            <span className="bg-[#12151A] text-[#CCFF00] px-2 py-0.5 rounded font-bold">
+            <span className="bg-[#171717] text-[#D7FF38] px-2 py-0.5 rounded font-bold">
               {lastStep ? lastStep.hexAddress : "0x200001A4"}
             </span>
           </div>
@@ -111,33 +111,33 @@ export const CacheVisualizer: React.FC<CacheVisualizerProps> = ({
         {/* Visual Partition Bar */}
         <div className="grid grid-cols-12 gap-1 text-center text-xs">
           {/* Tag Segment */}
-          <div className="col-span-7 bg-[#12151A] text-white p-2 rounded border border-[#12151A]">
+          <div className="col-span-7 bg-[#171717] text-white p-2 rounded border border-[#171717]">
             <span className="text-[10px] text-[#8E99A8] block font-bold">
               TAG ({geometry.tagBits} BITS)
             </span>
-            <div className="text-[11px] font-bold text-[#CCFF00] truncate">
+            <div className="text-[11px] font-bold text-[#D7FF38] truncate">
               {lastStep ? `0x${(lastStep.tag >>> 0).toString(16).toUpperCase()}` : "0x00020"}
             </div>
             <div className="text-[9px] text-[#8E99A8] truncate mt-0.5">{tagBinary.slice(0, 16)}...</div>
           </div>
 
           {/* Index Segment */}
-          <div className="col-span-3 bg-[#CCFF00] text-[#12151A] p-2 rounded border border-[#12151A]">
-            <span className="text-[10px] text-[#12151A] block font-bold">
+          <div className="col-span-3 bg-[#D7FF38] text-[#171717] p-2 rounded border border-[#171717]">
+            <span className="text-[10px] text-[#171717] block font-bold">
               INDEX ({geometry.indexBits} BITS)
             </span>
-            <div className="text-[11px] font-extrabold text-[#12151A]">
+            <div className="text-[11px] font-extrabold text-[#171717]">
               Set {lastStep ? lastStep.setIndex : 26}
             </div>
-            <div className="text-[9px] text-[#12151A] truncate mt-0.5">{indexBinary}</div>
+            <div className="text-[9px] text-[#171717] truncate mt-0.5">{indexBinary}</div>
           </div>
 
           {/* Offset Segment */}
-          <div className="col-span-2 bg-[#F5F2EB] text-[#12151A] p-2 rounded border border-[#12151A]">
+          <div className="col-span-2 bg-[#F5F5F0] text-[#171717] p-2 rounded border border-[#171717]">
             <span className="text-[10px] text-[#5A6372] block font-bold">
               OFFSET ({geometry.offsetBits} BITS)
             </span>
-            <div className="text-[11px] font-bold text-[#12151A]">
+            <div className="text-[11px] font-bold text-[#171717]">
               {lastStep ? lastStep.offset : 4} B
             </div>
             <div className="text-[9px] text-[#5A6372] truncate mt-0.5">{offsetBinary}</div>
@@ -146,20 +146,20 @@ export const CacheVisualizer: React.FC<CacheVisualizerProps> = ({
       </div>
 
       {/* Canvas Cache Set Grid */}
-      <div className="bg-[#FAF8F5] border-2 border-[#12151A] p-2 rounded-lg">
+      <div className="bg-[#FFFFFF] border-2 border-[#171717] p-2 rounded-lg">
         <div className="flex items-center justify-between text-[10px] font-mono text-[#5A6372] px-2 mb-1">
           <span>Set 0 ➔ {Math.min(32, geometry.numSets) - 1}</span>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 bg-[#CCFF00] border border-[#12151A] rounded-xs"></span>
+              <span className="w-2.5 h-2.5 bg-[#D7FF38] border border-[#171717] rounded-xs"></span>
               <span>Hit</span>
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 bg-[#FF3B30] border border-[#12151A] rounded-xs"></span>
+              <span className="w-2.5 h-2.5 bg-[#FF3B30] border border-[#171717] rounded-xs"></span>
               <span>Miss</span>
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 bg-[#FFFFFF] border border-[#12151A] rounded-xs"></span>
+              <span className="w-2.5 h-2.5 bg-[#FFFFFF] border border-[#171717] rounded-xs"></span>
               <span>Empty</span>
             </span>
           </div>
@@ -182,8 +182,8 @@ export const CacheVisualizer: React.FC<CacheVisualizerProps> = ({
           {recentSteps.slice(-12).map((st, i) => (
             <span
               key={i}
-              className={`w-6 h-6 rounded flex items-center justify-center font-bold text-[11px] border border-[#12151A] ${
-                st.hit ? "bg-[#CCFF00] text-[#12151A]" : "bg-[#FF3B30] text-white"
+              className={`w-6 h-6 rounded flex items-center justify-center font-bold text-[11px] border border-[#171717] ${
+                st.hit ? "bg-[#D7FF38] text-[#171717]" : "bg-[#FF3B30] text-white"
               }`}
               title={`${st.hexAddress} - Set ${st.setIndex} - ${st.hit ? "HIT" : "MISS"}`}
             >

@@ -103,13 +103,13 @@ export const HowItWorks: React.FC = () => {
   const toyHitRatio = totalAccesses > 0 ? Math.round((toyStats.hits / totalAccesses) * 100) : 0;
 
   return (
-    <section id="how-it-works" className="py-20 md:py-28 px-4 md:px-8 bg-[#FAF8F5] border-b-2 border-[#12151A]">
+    <section id="how-it-works" className="py-20 md:py-28 px-4 md:px-8 bg-[#FFFFFF] border-b-2 border-[#171717]">
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="font-mono text-xs uppercase tracking-widest text-[#12151A] font-bold px-3 py-1 bg-[#CCFF00] border border-[#12151A] rounded inline-block shadow-[2px_2px_0_#12151A]">
+          <span className="font-mono text-xs uppercase tracking-widest text-[#171717] font-bold px-3 py-1 bg-[#D7FF38] border border-[#171717] rounded inline-block shadow-[2px_2px_0_#171717]">
             Interactive Workflow
           </span>
-          <h2 className="font-display text-4xl sm:text-5xl text-[#12151A] mt-3 tracking-tight">
+          <h2 className="font-display text-4xl sm:text-5xl text-[#171717] mt-3 tracking-tight">
             Four Steps to Hardware Mastery
           </h2>
           <p className="text-[#5A6372] mt-3 text-sm sm:text-base">
@@ -124,23 +124,23 @@ export const HowItWorks: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="bg-[#FFFFFF] border-2 border-[#12151A] p-6 rounded-lg shadow-[4px_4px_0_#12151A] hover:-translate-y-2 hover:shadow-[6px_6px_0_#12151A] transition-all flex flex-col justify-between"
+                className="bg-[#FFFFFF] border-2 border-[#171717] p-6 rounded-lg shadow-[4px_4px_0_#171717] hover:-translate-y-2 hover:shadow-[6px_6px_0_#171717] transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="font-display text-4xl text-[#CCFF00] drop-shadow-[2px_2px_0_#12151A]">
+                    <span className="font-display text-4xl text-[#D7FF38] drop-shadow-[2px_2px_0_#171717]">
                       {s.num}
                     </span>
-                    <div className="w-10 h-10 rounded-md bg-[#F5F2EB] border border-[#12151A] flex items-center justify-center">
-                      <Icon size={18} className="text-[#12151A]" />
+                    <div className="w-10 h-10 rounded-md bg-[#F5F5F0] border border-[#171717] flex items-center justify-center">
+                      <Icon size={18} className="text-[#171717]" />
                     </div>
                   </div>
-                  <h3 className="font-display text-xl text-[#12151A] mb-2">{s.title}</h3>
+                  <h3 className="font-display text-xl text-[#171717] mb-2">{s.title}</h3>
                   <p className="text-xs sm:text-sm text-[#5A6372] leading-relaxed">{s.desc}</p>
                 </div>
 
-                <div className="mt-6 pt-3 border-t border-[#12151A]/10 flex items-center gap-1.5 font-mono text-[10px] text-[#12151A] font-bold">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#12151A]"></span>
+                <div className="mt-6 pt-3 border-t border-[#171717]/10 flex items-center gap-1.5 font-mono text-[10px] text-[#171717] font-bold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#171717]"></span>
                   <span>Step {s.num} of 4</span>
                 </div>
               </div>
@@ -149,12 +149,12 @@ export const HowItWorks: React.FC = () => {
         </div>
 
         {/* Interactive Cache Toy */}
-        <div className="bg-[#FFFFFF] border-3 border-[#12151A] p-6 md:p-8 rounded-xl shadow-[8px_8px_0_#12151A] max-w-4xl mx-auto">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b-2 border-[#12151A]/10">
+        <div className="bg-[#FFFFFF] border-3 border-[#171717] p-6 md:p-8 rounded-xl shadow-[8px_8px_0_#171717] max-w-4xl mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b-2 border-[#171717]/10">
             <div>
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 bg-[#CCFF00] border border-[#12151A] rounded-full"></span>
-                <h4 className="font-display text-lg text-[#12151A]">Interactive Cache Toy</h4>
+                <span className="w-2.5 h-2.5 bg-[#D7FF38] border border-[#171717] rounded-full"></span>
+                <h4 className="font-display text-lg text-[#171717]">Interactive Cache Toy</h4>
               </div>
               <p className="text-xs font-mono text-[#5A6372] mt-0.5">
                 Click any line block to simulate memory lookup behavior (Hit vs Miss)
@@ -163,20 +163,20 @@ export const HowItWorks: React.FC = () => {
 
             <div className="flex items-center gap-4">
               <div className="font-mono text-xs flex items-center gap-3">
-                <span className="text-[#12151A]">
-                  Hits: <strong className="text-[#12151A] bg-[#CCFF00] px-1.5 py-0.5 rounded border border-[#12151A]">{toyStats.hits}</strong>
+                <span className="text-[#171717]">
+                  Hits: <strong className="text-[#171717] bg-[#D7FF38] px-1.5 py-0.5 rounded border border-[#171717]">{toyStats.hits}</strong>
                 </span>
-                <span className="text-[#12151A]">
-                  Misses: <strong className="text-white bg-[#FF3B30] px-1.5 py-0.5 rounded border border-[#12151A]">{toyStats.misses}</strong>
+                <span className="text-[#171717]">
+                  Misses: <strong className="text-white bg-[#FF3B30] px-1.5 py-0.5 rounded border border-[#171717]">{toyStats.misses}</strong>
                 </span>
-                <span className="text-[#12151A] font-bold">
+                <span className="text-[#171717] font-bold">
                   Ratio: {toyHitRatio}%
                 </span>
               </div>
 
               <button
                 onClick={handleResetToy}
-                className="p-1.5 bg-[#F5F2EB] hover:bg-[#EAE5DB] border border-[#12151A] rounded text-[#12151A] transition-colors"
+                className="p-1.5 bg-[#F5F5F0] hover:bg-[#EBEBE6] border border-[#171717] rounded text-[#171717] transition-colors"
                 title="Reset Cache Toy"
               >
                 <RefreshCcw size={14} />
@@ -190,12 +190,12 @@ export const HowItWorks: React.FC = () => {
               <button
                 key={block.id}
                 onClick={() => handleBlockClick(idx)}
-                className={`h-20 rounded-md border-2 border-[#12151A] flex flex-col items-center justify-between p-2 cursor-pointer transition-all transform active:scale-95 ${
+                className={`h-20 rounded-md border-2 border-[#171717] flex flex-col items-center justify-between p-2 cursor-pointer transition-all transform active:scale-95 ${
                   block.status === "hit"
-                    ? "bg-[#CCFF00] shadow-[3px_3px_0_#12151A]"
+                    ? "bg-[#D7FF38] shadow-[3px_3px_0_#171717]"
                     : block.status === "miss"
-                    ? "bg-[#FF3B30] text-white shadow-[3px_3px_0_#12151A]"
-                    : "bg-[#F5F2EB] hover:bg-[#EAE5DB] shadow-[2px_2px_0_#12151A]"
+                    ? "bg-[#FF3B30] text-white shadow-[3px_3px_0_#171717]"
+                    : "bg-[#F5F5F0] hover:bg-[#EBEBE6] shadow-[2px_2px_0_#171717]"
                 }`}
               >
                 <span className="font-mono text-[10px] font-bold opacity-75">
@@ -214,9 +214,9 @@ export const HowItWorks: React.FC = () => {
           </div>
 
           {/* Running Status Feed */}
-          <div className="bg-[#12151A] text-[#CCFF00] font-mono text-xs p-3 rounded border border-[#12151A] flex items-center justify-between">
+          <div className="bg-[#171717] text-[#D7FF38] font-mono text-xs p-3 rounded border border-[#171717] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#CCFF00] animate-ping"></span>
+              <span className="w-2 h-2 rounded-full bg-[#D7FF38] animate-ping"></span>
               <span>{toyStats.lastAction}</span>
             </div>
             <span className="text-[10px] text-[#8E99A8] hidden sm:inline">Click cached block to trigger HIT</span>

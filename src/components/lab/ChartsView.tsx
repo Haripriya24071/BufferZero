@@ -38,11 +38,11 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
 
   return (
     <div className="card-tactile p-5 space-y-5 bg-[#FFFFFF]">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b-2 border-[#12151A]/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b-2 border-[#171717]/10">
         <div>
           <div className="flex items-center gap-2">
-            <TrendingUp size={18} className="text-[#12151A]" />
-            <h3 className="font-display text-base text-[#12151A]">
+            <TrendingUp size={18} className="text-[#171717]" />
+            <h3 className="font-display text-base text-[#171717]">
               Architecture Performance Analysis (CO5 Curves)
             </h3>
           </div>
@@ -57,8 +57,8 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
             onClick={() => setActiveChart("amat")}
             className={`px-2.5 py-1 rounded transition-colors ${
               activeChart === "amat"
-                ? "bg-[#12151A] text-[#CCFF00] font-bold"
-                : "bg-[#F5F2EB] text-[#12151A] hover:bg-[#EAE5DB]"
+                ? "bg-[#171717] text-[#D7FF38] font-bold"
+                : "bg-[#F5F5F0] text-[#171717] hover:bg-[#EBEBE6]"
             }`}
           >
             U-Shaped AMAT Curve
@@ -67,8 +67,8 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
             onClick={() => setActiveChart("hitrate")}
             className={`px-2.5 py-1 rounded transition-colors ${
               activeChart === "hitrate"
-                ? "bg-[#12151A] text-[#CCFF00] font-bold"
-                : "bg-[#F5F2EB] text-[#12151A] hover:bg-[#EAE5DB]"
+                ? "bg-[#171717] text-[#D7FF38] font-bold"
+                : "bg-[#F5F5F0] text-[#171717] hover:bg-[#EBEBE6]"
             }`}
           >
             Hit Ratio
@@ -77,8 +77,8 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
             onClick={() => setActiveChart("cpufree")}
             className={`px-2.5 py-1 rounded transition-colors ${
               activeChart === "cpufree"
-                ? "bg-[#12151A] text-[#CCFF00] font-bold"
-                : "bg-[#F5F2EB] text-[#12151A] hover:bg-[#EAE5DB]"
+                ? "bg-[#171717] text-[#D7FF38] font-bold"
+                : "bg-[#F5F5F0] text-[#171717] hover:bg-[#EBEBE6]"
             }`}
           >
             CPU Free %
@@ -89,12 +89,12 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
       {/* Chart Canvas */}
       {activeChart === "amat" && (
         <div className="space-y-3">
-          <div className="bg-[#FAF8F5] border-2 border-[#12151A] p-4 rounded-lg">
+          <div className="bg-[#FFFFFF] border-2 border-[#171717] p-4 rounded-lg">
             <div className="flex items-center justify-between text-xs font-mono mb-2">
-              <span className="font-bold text-[#12151A]">
+              <span className="font-bold text-[#171717]">
                 AVERAGE MEMORY ACCESS TIME (CYCLES) VS BLOCK SIZE:
               </span>
-              <span className="px-2 py-0.5 bg-[#CCFF00] border border-[#12151A] rounded text-[10px] font-bold">
+              <span className="px-2 py-0.5 bg-[#D7FF38] border border-[#171717] rounded text-[10px] font-bold">
                 Sweet Spot: {minAmatItem.size} B ({minAmatItem.amat} cycles)
               </span>
             </div>
@@ -103,10 +103,10 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
             <div className="h-44 w-full relative">
               <svg className="w-full h-full overflow-visible" viewBox="0 0 500 140">
                 {/* Horizontal reference grid lines */}
-                <line x1="40" y1="20" x2="480" y2="20" stroke="#EAE5DB" strokeWidth="1" strokeDasharray="3 3" />
-                <line x1="40" y1="60" x2="480" y2="60" stroke="#EAE5DB" strokeWidth="1" strokeDasharray="3 3" />
-                <line x1="40" y1="100" x2="480" y2="100" stroke="#EAE5DB" strokeWidth="1" strokeDasharray="3 3" />
-                <line x1="40" y1="120" x2="480" y2="120" stroke="#12151A" strokeWidth="2" />
+                <line x1="40" y1="20" x2="480" y2="20" stroke="#EBEBE6" strokeWidth="1" strokeDasharray="3 3" />
+                <line x1="40" y1="60" x2="480" y2="60" stroke="#EBEBE6" strokeWidth="1" strokeDasharray="3 3" />
+                <line x1="40" y1="100" x2="480" y2="100" stroke="#EBEBE6" strokeWidth="1" strokeDasharray="3 3" />
+                <line x1="40" y1="120" x2="480" y2="120" stroke="#171717" strokeWidth="2" />
 
                 {/* Y-Axis Labels */}
                 <text x="10" y="25" fill="#5A6372" fontSize="9" fontFamily="monospace">35c</text>
@@ -118,7 +118,7 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
                 <path
                   d="M 70 30 Q 160 85 260 102 T 450 70"
                   fill="none"
-                  stroke="#12151A"
+                  stroke="#171717"
                   strokeWidth="3.5"
                 />
 
@@ -140,15 +140,15 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
                         cx={coords.x}
                         cy={coords.y}
                         r={isMin ? 7 : 4}
-                        fill={isMin ? "#CCFF00" : "#12151A"}
-                        stroke="#12151A"
+                        fill={isMin ? "#D7FF38" : "#171717"}
+                        stroke="#171717"
                         strokeWidth="2"
                       />
                       <text
                         x={coords.x}
                         y={coords.y - 10}
                         textAnchor="middle"
-                        fill="#12151A"
+                        fill="#171717"
                         fontSize="10"
                         fontFamily="monospace"
                         fontWeight="bold"
@@ -173,9 +173,9 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
             </div>
           </div>
 
-          <div className="p-3 bg-[#12151A] text-white rounded-lg font-mono text-xs flex items-start gap-2">
-            <Info size={16} className="text-[#CCFF00] shrink-0 mt-0.5" />
-            <p className="text-[11px] text-[#EAE5DB] leading-relaxed">
+          <div className="p-3 bg-[#171717] text-white rounded-lg font-mono text-xs flex items-start gap-2">
+            <Info size={16} className="text-[#D7FF38] shrink-0 mt-0.5" />
+            <p className="text-[11px] text-[#EBEBE6] leading-relaxed">
               <strong>Viva Explanation:</strong> Notice the distinct <strong>U-shape</strong>. At 16B, high miss rate increases AMAT. At 64B, spatial locality drives AMAT to its minimum ({minAmatItem.amat}c). Beyond 128B, the bus transfer penalty (208 cycles) forces AMAT to rise again!
             </p>
           </div>
@@ -184,8 +184,8 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
 
       {/* Hit Rate View */}
       {activeChart === "hitrate" && (
-        <div className="bg-[#FAF8F5] border-2 border-[#12151A] p-4 rounded-lg space-y-4 font-mono text-xs">
-          <span className="font-bold text-[#12151A] block">
+        <div className="bg-[#FFFFFF] border-2 border-[#171717] p-4 rounded-lg space-y-4 font-mono text-xs">
+          <span className="font-bold text-[#171717] block">
             CACHE HIT RATIO (%) VS BLOCK SIZE:
           </span>
           <div className="space-y-2">
@@ -193,11 +193,11 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
               <div key={item.size} className="space-y-1">
                 <div className="flex justify-between text-[11px]">
                   <span>Block Size {item.size} Bytes:</span>
-                  <span className="font-bold text-[#12151A]">{item.hitRate}% Hit Ratio</span>
+                  <span className="font-bold text-[#171717]">{item.hitRate}% Hit Ratio</span>
                 </div>
-                <div className="w-full h-3 bg-[#EAE5DB] rounded overflow-hidden border border-[#12151A]">
+                <div className="w-full h-3 bg-[#EBEBE6] rounded overflow-hidden border border-[#171717]">
                   <div
-                    className="h-full bg-[#CCFF00]"
+                    className="h-full bg-[#D7FF38]"
                     style={{ width: `${item.hitRate}%` }}
                   ></div>
                 </div>
@@ -209,8 +209,8 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
 
       {/* CPU Free View */}
       {activeChart === "cpufree" && (
-        <div className="bg-[#FAF8F5] border-2 border-[#12151A] p-4 rounded-lg space-y-4 font-mono text-xs">
-          <span className="font-bold text-[#12151A] block">
+        <div className="bg-[#FFFFFF] border-2 border-[#171717] p-4 rounded-lg space-y-4 font-mono text-xs">
+          <span className="font-bold text-[#171717] block">
             CPU HEADROOM COMPARISON: CPU-DRIVEN VS DMA
           </span>
           <div className="space-y-3">
@@ -219,7 +219,7 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
                 <span>CPU-Driven (Programmed I/O):</span>
                 <span className="font-bold text-[#FF3B30]">18% Free (Core Stalled)</span>
               </div>
-              <div className="w-full h-4 bg-[#EAE5DB] rounded overflow-hidden border border-[#12151A]">
+              <div className="w-full h-4 bg-[#EBEBE6] rounded overflow-hidden border border-[#171717]">
                 <div className="h-full bg-[#FF3B30]" style={{ width: "18%" }}></div>
               </div>
             </div>
@@ -227,10 +227,10 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
             <div>
               <div className="flex justify-between text-[11px] mb-1">
                 <span>DMA Mode (Hardware Co-processor):</span>
-                <span className="font-bold text-[#12151A]">87% Free (Full Decode Speed)</span>
+                <span className="font-bold text-[#171717]">87% Free (Full Decode Speed)</span>
               </div>
-              <div className="w-full h-4 bg-[#EAE5DB] rounded overflow-hidden border border-[#12151A]">
-                <div className="h-full bg-[#CCFF00]" style={{ width: "87%" }}></div>
+              <div className="w-full h-4 bg-[#EBEBE6] rounded overflow-hidden border border-[#171717]">
+                <div className="h-full bg-[#D7FF38]" style={{ width: "87%" }}></div>
               </div>
             </div>
           </div>

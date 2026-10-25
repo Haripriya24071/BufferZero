@@ -44,7 +44,7 @@ export const AutoAnalyzeModal: React.FC<AutoAnalyzeModalProps> = ({
           particleCount: 50,
           spread: 60,
           origin: { y: 0.6 },
-          colors: ["#CCFF00", "#12151A", "#FF3B30"],
+          colors: ["#D7FF38", "#171717", "#FF3B30"],
         });
       } catch (e) {
         // Confetti fallback
@@ -62,16 +62,16 @@ export const AutoAnalyzeModal: React.FC<AutoAnalyzeModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#12151A]/80 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-[#FFFFFF] border-3 border-[#12151A] rounded-xl shadow-[8px_8px_0_#12151A] max-w-3xl w-full p-6 space-y-6 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-[#171717]/80 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-[#FFFFFF] border-3 border-[#171717] rounded-xl shadow-[8px_8px_0_#171717] max-w-3xl w-full p-6 space-y-6 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b-2 border-[#12151A]">
+        <div className="flex items-center justify-between pb-4 border-b-2 border-[#171717]">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-[#CCFF00] border border-[#12151A] flex items-center justify-center">
-              <Sparkles size={18} className="text-[#12151A]" />
+            <div className="w-8 h-8 rounded bg-[#D7FF38] border border-[#171717] flex items-center justify-center">
+              <Sparkles size={18} className="text-[#171717]" />
             </div>
             <div>
-              <h3 className="font-display text-2xl text-[#12151A]">
+              <h3 className="font-display text-2xl text-[#171717]">
                 Auto-Analyze Parameter Sweep
               </h3>
               <p className="font-mono text-xs text-[#5A6372]">
@@ -82,7 +82,7 @@ export const AutoAnalyzeModal: React.FC<AutoAnalyzeModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded hover:bg-[#F5F2EB] text-[#12151A] transition-colors"
+            className="p-1.5 rounded hover:bg-[#F5F5F0] text-[#171717] transition-colors"
           >
             <X size={20} />
           </button>
@@ -91,24 +91,24 @@ export const AutoAnalyzeModal: React.FC<AutoAnalyzeModalProps> = ({
         {/* Sweep Progress if running */}
         {isSweeping ? (
           <div className="py-12 text-center space-y-3 font-mono">
-            <span className="w-3 h-3 rounded-full bg-[#12151A] animate-ping inline-block"></span>
-            <div className="text-sm font-bold text-[#12151A]">
+            <span className="w-3 h-3 rounded-full bg-[#171717] animate-ping inline-block"></span>
+            <div className="text-sm font-bold text-[#171717]">
               Sweeping 10 architectural configurations ({progress}%)...
             </div>
           </div>
         ) : (
           <>
             {/* Results Matrix Table */}
-            <div className="border-2 border-[#12151A] rounded-lg overflow-hidden font-mono text-xs">
+            <div className="border-2 border-[#171717] rounded-lg overflow-hidden font-mono text-xs">
               <table className="w-full text-center border-collapse">
                 <thead>
-                  <tr className="bg-[#12151A] text-white">
+                  <tr className="bg-[#171717] text-white">
                     <th className="py-2.5 px-4 text-left border-r border-[#2A303A]">Block Size</th>
                     <th className="py-2.5 px-4 border-r border-[#2A303A]">CPU-Driven Mode</th>
                     <th className="py-2.5 px-4">DMA Mode</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y border-t border-[#12151A]">
+                <tbody className="divide-y border-t border-[#171717]">
                   {BLOCK_SIZES.map((size) => {
                     const cpuRes = results.find(
                       (r) => r.blockSizeB === size && r.transferMode === "CPU"
@@ -125,15 +125,15 @@ export const AutoAnalyzeModal: React.FC<AutoAnalyzeModalProps> = ({
                       analysis?.bestConfig.transferMode === "DMA";
 
                     return (
-                      <tr key={size} className="hover:bg-[#FAF8F5]">
-                        <td className="py-2 px-4 text-left font-bold border-r border-[#12151A]/10 bg-[#FAF8F5]">
+                      <tr key={size} className="hover:bg-[#FFFFFF]">
+                        <td className="py-2 px-4 text-left font-bold border-r border-[#171717]/10 bg-[#FFFFFF]">
                           {size} Bytes
                         </td>
 
                         {/* CPU Cell */}
                         <td
-                          className={`py-2 px-4 border-r border-[#12151A]/10 ${
-                            isCpuBest ? "bg-[#CCFF00] font-extrabold border-2 border-[#12151A]" : ""
+                          className={`py-2 px-4 border-r border-[#171717]/10 ${
+                            isCpuBest ? "bg-[#D7FF38] font-extrabold border-2 border-[#171717]" : ""
                           }`}
                         >
                           {cpuRes && (
@@ -149,7 +149,7 @@ export const AutoAnalyzeModal: React.FC<AutoAnalyzeModalProps> = ({
                         {/* DMA Cell */}
                         <td
                           className={`py-2 px-4 ${
-                            isDmaBest ? "bg-[#CCFF00] font-extrabold border-2 border-[#12151A]" : ""
+                            isDmaBest ? "bg-[#D7FF38] font-extrabold border-2 border-[#171717]" : ""
                           }`}
                         >
                           {dmaRes && (
@@ -170,22 +170,22 @@ export const AutoAnalyzeModal: React.FC<AutoAnalyzeModalProps> = ({
 
             {/* Recommendation Card */}
             {analysis && (
-              <div className="bg-[#FAF8F5] border-2 border-[#12151A] p-5 rounded-xl space-y-4 shadow-[4px_4px_0_#12151A]">
+              <div className="bg-[#FFFFFF] border-2 border-[#171717] p-5 rounded-xl space-y-4 shadow-[4px_4px_0_#171717]">
                 <div className="flex items-center gap-2">
-                  <Award size={20} className="text-[#12151A]" />
-                  <h4 className="font-display text-lg text-[#12151A]">
+                  <Award size={20} className="text-[#171717]" />
+                  <h4 className="font-display text-lg text-[#171717]">
                     Recommended Architecture Configuration
                   </h4>
                 </div>
 
-                <div className="p-3 bg-[#CCFF00] border-2 border-[#12151A] rounded-lg font-mono text-sm font-bold text-[#12151A]">
+                <div className="p-3 bg-[#D7FF38] border-2 border-[#171717] rounded-lg font-mono text-sm font-bold text-[#171717]">
                   {analysis.summary}
                 </div>
 
                 <div className="space-y-2 font-mono text-xs text-[#2A303A]">
                   {analysis.reasons.map((r, i) => (
                     <div key={i} className="flex items-start gap-2">
-                      <span className="text-[#12151A] font-bold">✔</span>
+                      <span className="text-[#171717] font-bold">✔</span>
                       <span>{r}</span>
                     </div>
                   ))}

@@ -117,13 +117,13 @@ ${conclusion}
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#12151A]/80 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-[#FFFFFF] border-3 border-[#12151A] rounded-xl shadow-[8px_8px_0_#12151A] max-w-4xl w-full p-6 md:p-8 space-y-6 max-h-[92vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-[#171717]/80 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-[#FFFFFF] border-3 border-[#171717] rounded-xl shadow-[8px_8px_0_#171717] max-w-4xl w-full p-6 md:p-8 space-y-6 max-h-[92vh] overflow-y-auto">
         {/* Top Action Bar (hidden on print) */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b-2 border-[#12151A] no-print">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b-2 border-[#171717] no-print">
           <div className="flex items-center gap-2">
-            <FileText size={22} className="text-[#12151A]" />
-            <span className="font-display text-xl text-[#12151A]">
+            <FileText size={22} className="text-[#171717]" />
+            <span className="font-display text-xl text-[#171717]">
               Faculty Evaluation Report Generator
             </span>
           </div>
@@ -133,7 +133,7 @@ ${conclusion}
               onClick={handleCopyMarkdown}
               className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5"
             >
-              {copied ? <Check size={14} className="text-[#CCFF00]" /> : <Copy size={14} />}
+              {copied ? <Check size={14} className="text-[#D7FF38]" /> : <Copy size={14} />}
               <span>{copied ? "COPIED!" : "COPY MARKDOWN"}</span>
             </button>
 
@@ -155,7 +155,7 @@ ${conclusion}
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded hover:bg-[#F5F2EB] text-[#12151A] transition-colors ml-2"
+              className="p-1.5 rounded hover:bg-[#F5F5F0] text-[#171717] transition-colors ml-2"
             >
               <X size={20} />
             </button>
@@ -163,15 +163,15 @@ ${conclusion}
         </div>
 
         {/* Printable Formal Academic Sheet */}
-        <div className="space-y-6 font-mono text-xs text-[#12151A]">
+        <div className="space-y-6 font-mono text-xs text-[#171717]">
           {/* Header Block */}
-          <div className="border-2 border-[#12151A] p-5 rounded-lg bg-[#FAF8F5]">
+          <div className="border-2 border-[#171717] p-5 rounded-lg bg-[#FFFFFF]">
             <div className="flex justify-between items-start">
               <div>
                 <span className="text-[10px] text-[#5A6372] uppercase font-bold">
                   MINI PROJECT EVALUATION REPORT (25ESCS04)
                 </span>
-                <h1 className="font-display text-2xl text-[#12151A] mt-0.5">
+                <h1 className="font-display text-2xl text-[#171717] mt-0.5">
                   {PROJECT_CONFIG.title}
                 </h1>
                 <p className="text-xs text-[#5A6372] mt-1">
@@ -181,7 +181,7 @@ ${conclusion}
 
               <div className="text-right text-[11px]">
                 <span className="font-bold block text-sm">{PROJECT_CONFIG.studentName}</span>
-                <span className="text-[#CCFF00] bg-[#12151A] px-2 py-0.5 rounded font-bold inline-block mt-0.5">
+                <span className="text-[#D7FF38] bg-[#171717] px-2 py-0.5 rounded font-bold inline-block mt-0.5">
                   USN: {PROJECT_CONFIG.usn}
                 </span>
                 <span className="text-[#5A6372] block mt-1">{PROJECT_CONFIG.university}</span>
@@ -192,8 +192,8 @@ ${conclusion}
           {/* Configuration & Outcomes Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Architecture Settings */}
-            <div className="border-2 border-[#12151A] p-4 rounded-lg bg-[#FFFFFF]">
-              <span className="font-bold text-xs uppercase text-[#12151A] block mb-2 border-b pb-1">
+            <div className="border-2 border-[#171717] p-4 rounded-lg bg-[#FFFFFF]">
+              <span className="font-bold text-xs uppercase text-[#171717] block mb-2 border-b pb-1">
                 Active Architecture Parameters
               </span>
               <div className="space-y-1.5 text-[11px]">
@@ -225,8 +225,8 @@ ${conclusion}
             </div>
 
             {/* Results Snapshot */}
-            <div className="border-2 border-[#12151A] p-4 rounded-lg bg-[#FFFFFF]">
-              <span className="font-bold text-xs uppercase text-[#12151A] block mb-2 border-b pb-1">
+            <div className="border-2 border-[#171717] p-4 rounded-lg bg-[#FFFFFF]">
+              <span className="font-bold text-xs uppercase text-[#171717] block mb-2 border-b pb-1">
                 Quantitative Results
               </span>
               <div className="space-y-1.5 text-[11px]">
@@ -252,7 +252,7 @@ ${conclusion}
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#5A6372]">Playback Stability:</span>
-                  <span className={`font-bold ${metrics.isBuffering ? "text-[#FF3B30]" : "text-[#12151A]"}`}>
+                  <span className={`font-bold ${metrics.isBuffering ? "text-[#FF3B30]" : "text-[#171717]"}`}>
                     {metrics.isBuffering ? "Buffering Stalled" : "Smooth 60 FPS"}
                   </span>
                 </div>
@@ -261,15 +261,15 @@ ${conclusion}
           </div>
 
           {/* Conclusion Box */}
-          <div className="border-2 border-[#12151A] p-4 rounded-lg bg-[#FAF8F5]">
-            <span className="font-bold text-xs uppercase text-[#12151A] block mb-1">
+          <div className="border-2 border-[#171717] p-4 rounded-lg bg-[#FFFFFF]">
+            <span className="font-bold text-xs uppercase text-[#171717] block mb-1">
               Candidate Conclusion & Viva Defense Statement:
             </span>
             <textarea
               value={conclusion}
               onChange={(e) => setConclusion(e.target.value)}
               rows={3}
-              className="w-full p-2.5 bg-white border border-[#12151A] rounded text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#CCFF00]"
+              className="w-full p-2.5 bg-white border border-[#171717] rounded text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#D7FF38]"
             />
           </div>
         </div>

@@ -14,8 +14,8 @@ export const BreakItDeck: React.FC<BreakItDeckProps> = ({
 }) => {
   return (
     <div className="card-tactile p-4 space-y-3 bg-[#FFFFFF]">
-      <div className="flex items-center justify-between pb-2 border-b border-[#12151A]/10">
-        <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-[#12151A]">
+      <div className="flex items-center justify-between pb-2 border-b border-[#171717]/10">
+        <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-[#171717]">
           <Flame size={15} className="text-[#FF3B30]" />
           <span>"BREAK-IT" HARDWARE STRESS TEST DECK</span>
         </div>
@@ -28,13 +28,13 @@ export const BreakItDeck: React.FC<BreakItDeckProps> = ({
         {/* Button 1: Seek Storm */}
         <button
           onClick={onSeekStorm}
-          className="p-3 rounded-lg border-2 border-[#12151A] bg-[#F5F2EB] hover:bg-[#EAE5DB] shadow-[3px_3px_0_#12151A] active:translate-y-0.5 text-left transition-all"
+          className="p-3 rounded-lg border-2 border-[#171717] bg-[#F5F5F0] hover:bg-[#EBEBE6] shadow-[3px_3px_0_#171717] active:translate-y-0.5 text-left transition-all"
         >
           <div className="flex items-center justify-between mb-1.5">
-            <span className="font-mono text-xs font-bold text-[#12151A]">
+            <span className="font-mono text-xs font-bold text-[#171717]">
               🌪️ Seek Storm
             </span>
-            <Wind size={14} className="text-[#12151A]" />
+            <Wind size={14} className="text-[#171717]" />
           </div>
           <p className="text-[10px] font-mono text-[#5A6372] leading-tight">
             Forces sudden video scrubbing. Demonstrates spatial cache thrashing.
@@ -44,10 +44,10 @@ export const BreakItDeck: React.FC<BreakItDeckProps> = ({
         {/* Button 2: Cold Cache Flush */}
         <button
           onClick={onColdFlush}
-          className="p-3 rounded-lg border-2 border-[#12151A] bg-[#F5F2EB] hover:bg-[#EAE5DB] shadow-[3px_3px_0_#12151A] active:translate-y-0.5 text-left transition-all"
+          className="p-3 rounded-lg border-2 border-[#171717] bg-[#F5F5F0] hover:bg-[#EBEBE6] shadow-[3px_3px_0_#171717] active:translate-y-0.5 text-left transition-all"
         >
           <div className="flex items-center justify-between mb-1.5">
-            <span className="font-mono text-xs font-bold text-[#12151A]">
+            <span className="font-mono text-xs font-bold text-[#171717]">
               ❄️ Cold Flush
             </span>
             <Snowflake size={14} className="text-[#02167F]" />
@@ -60,15 +60,15 @@ export const BreakItDeck: React.FC<BreakItDeckProps> = ({
         {/* Button 3: Network Burst */}
         <button
           onClick={onNetworkBurst}
-          className="p-3 rounded-lg border-2 border-[#12151A] bg-[#CCFF00] hover:bg-[#BBEE00] shadow-[3px_3px_0_#12151A] active:translate-y-0.5 text-left transition-all"
+          className="p-3 rounded-lg border-2 border-[#171717] bg-[#D7FF38] hover:bg-[#BBEE00] shadow-[3px_3px_0_#171717] active:translate-y-0.5 text-left transition-all"
         >
           <div className="flex items-center justify-between mb-1.5">
-            <span className="font-mono text-xs font-extrabold text-[#12151A]">
+            <span className="font-mono text-xs font-extrabold text-[#171717]">
               ⚡ Network Burst
             </span>
-            <AlertTriangle size={14} className="text-[#12151A]" />
+            <AlertTriangle size={14} className="text-[#171717]" />
           </div>
-          <p className="text-[10px] font-mono text-[#12151A] leading-tight">
+          <p className="text-[10px] font-mono text-[#171717] leading-tight">
             Spikes incoming packet bitrate. Tests DMA vs CPU saturation limit.
           </p>
         </button>

@@ -8,16 +8,16 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onLaunchLab }) => {
   return (
-    <footer className="bg-[#12151A] text-[#F5F2EB] border-t-4 border-[#CCFF00] pt-16 pb-12 px-4 md:px-8">
+    <footer className="bg-[#171717] text-[#F5F5F0] border-t-4 border-[#D7FF38] pt-16 pb-12 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pb-12 border-b border-[#2A303A]">
           {/* Col 1: Product & Academic Summary */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-6 h-6 bg-[#CCFF00] rounded flex items-end justify-center gap-0.5 p-1">
-                <span className="w-1 h-2 bg-[#12151A]"></span>
-                <span className="w-1 h-3.5 bg-[#12151A]"></span>
-                <span className="w-1 h-2.5 bg-[#12151A]"></span>
+              <div className="w-6 h-6 bg-[#D7FF38] rounded flex items-end justify-center gap-0.5 p-1">
+                <span className="w-1 h-2 bg-[#171717]"></span>
+                <span className="w-1 h-3.5 bg-[#171717]"></span>
+                <span className="w-1 h-2.5 bg-[#171717]"></span>
               </div>
               <span className="font-display text-2xl font-bold tracking-tight text-[#FFFFFF]">
                 {PROJECT_CONFIG.productName}
@@ -26,7 +26,7 @@ export const Footer: React.FC<FooterProps> = ({ onLaunchLab }) => {
             <p className="text-sm text-[#8E99A8] leading-relaxed mb-6 font-mono">
               {PROJECT_CONFIG.title} — An interactive computer organization simulator evaluating how cache block sizing and DMA offloading dictate video streaming buffer stability.
             </p>
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#2A303A] border border-[#5A6372] rounded text-xs font-mono text-[#CCFF00]">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#2A303A] border border-[#5A6372] rounded text-xs font-mono text-[#D7FF38]">
               <Award size={14} />
               <span>{PROJECT_CONFIG.dimension}</span>
             </div>
@@ -34,18 +34,18 @@ export const Footer: React.FC<FooterProps> = ({ onLaunchLab }) => {
 
           {/* Col 2: Student & Academic Affiliation */}
           <div className="bg-[#1E242D] border-2 border-[#2A303A] p-6 rounded-lg shadow-[4px_4px_0_#000]">
-            <h4 className="font-mono text-xs uppercase tracking-wider text-[#CCFF00] mb-4 flex items-center gap-2 font-bold">
+            <h4 className="font-mono text-xs uppercase tracking-wider text-[#D7FF38] mb-4 flex items-center gap-2 font-bold">
               <BookOpen size={14} />
               <span>Academic Credentials</span>
             </h4>
-            <div className="space-y-3 font-mono text-xs text-[#F5F2EB]">
+            <div className="space-y-3 font-mono text-xs text-[#F5F5F0]">
               <div>
                 <span className="text-[#8E99A8] block text-[10px]">STUDENT NAME</span>
                 <span className="font-bold text-sm text-[#FFFFFF]">{PROJECT_CONFIG.studentName}</span>
               </div>
               <div>
                 <span className="text-[#8E99A8] block text-[10px]">UNIVERSITY SEAT NUMBER (USN)</span>
-                <span className="font-bold text-[#CCFF00]">{PROJECT_CONFIG.usn}</span>
+                <span className="font-bold text-[#D7FF38]">{PROJECT_CONFIG.usn}</span>
               </div>
               <div>
                 <span className="text-[#8E99A8] block text-[10px]">INSTITUTION & DEPARTMENT</span>
@@ -65,15 +65,15 @@ export const Footer: React.FC<FooterProps> = ({ onLaunchLab }) => {
               <h4 className="font-mono text-xs uppercase tracking-wider text-[#8E99A8] mb-3">
                 Faculty Deliverables
               </h4>
-              <p className="text-xs font-mono text-[#F5F2EB] mb-6">
-                Directly produces quantitative empirical data for the Mini Project Evaluation covering <span className="text-[#CCFF00] font-bold">CO4, CO5, and CO6</span>.
+              <p className="text-xs font-mono text-[#F5F5F0] mb-6">
+                Directly produces quantitative empirical data for the Mini Project Evaluation covering <span className="text-[#D7FF38] font-bold">CO4, CO5, and CO6</span>.
               </p>
             </div>
 
             <div className="space-y-3">
               <button
                 onClick={onLaunchLab}
-                className="w-full btn-primary text-xs py-3 justify-center gap-2 text-[#12151A]"
+                className="w-full btn-primary text-xs py-3 justify-center gap-2 text-[#171717]"
               >
                 <span>OPEN INTERACTIVE LAB</span>
                 <ArrowUpRight size={16} />
