@@ -6,6 +6,8 @@ import {
   RotateCw,
   Activity,
   Tag,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 
 interface Motherboard3DProps {
@@ -32,6 +34,8 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
   cacheSizeKB = 16,
 }) => {
   const mountRef = useRef<HTMLDivElement | null>(null);
+  const boardCardRef = useRef<HTMLDivElement | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [activeChip, setActiveChip] = useState<ChipId>("cpu");
   const [isAutoRotate, setIsAutoRotate] = useState<boolean>(false);
   const [showLabels, setShowLabels] = useState<boolean>(true);
@@ -43,6 +47,34 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
   const controlsRef = useRef<OrbitControls | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const reqIdRef = useRef<number | null>(null);
+
+  // Toggle fullscreen mode
+  const handleToggleFullscreen = () => {
+    if (!boardCardRef.current) return;
+    if (!document.fullscreenElement) {
+      boardCardRef.current.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
+    } else {
+      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
+    }
+  };
+
+  // Sync fullscreen change & resize Three.js
+  useEffect(() => {
+    const onFsChange = () => {
+      const isFs = !!document.fullscreenElement;
+      setIsFullscreen(isFs);
+      setTimeout(() => {
+        if (!mountRef.current || !cameraRef.current || !rendererRef.current) return;
+        const newW = mountRef.current.clientWidth;
+        const newH = mountRef.current.clientHeight;
+        cameraRef.current.aspect = newW / newH;
+        cameraRef.current.updateProjectionMatrix();
+        rendererRef.current.setSize(newW, newH);
+      }, 150);
+    };
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => document.removeEventListener("fullscreenchange", onFsChange);
+  }, []);
 
   // Dynamic mesh refs
   const cpuDieRef = useRef<THREE.Mesh | null>(null);
@@ -189,6 +221,8 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.25;
     rendererRef.current = renderer;
     container.innerHTML = "";
     container.appendChild(renderer.domElement);
@@ -204,19 +238,24 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     controlsRef.current = controls;
 
     // 4. Lighting System
-    const ambientLight = new THREE.AmbientLight(0x2d3748, 1.4);
+    const ambientLight = new THREE.AmbientLight(0x334155, 1.6);
     scene.add(ambientLight);
 
-    const sunLight = new THREE.DirectionalLight(0xffffff, 2.2);
-    sunLight.position.set(18, 32, 20);
+    const sunLight = new THREE.DirectionalLight(0xffffff, 2.6);
+    sunLight.position.set(20, 36, 22);
     sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 1024;
-    sunLight.shadow.mapSize.height = 1024;
+    sunLight.shadow.mapSize.width = 2048;
+    sunLight.shadow.mapSize.height = 2048;
+    sunLight.shadow.bias = -0.0001;
     scene.add(sunLight);
 
-    const fillLight = new THREE.DirectionalLight(0x2457ff, 0.9);
-    fillLight.position.set(-20, 16, -16);
-    scene.add(fillLight);
+    const rimLight = new THREE.DirectionalLight(0x00f0ff, 1.1);
+    rimLight.position.set(-22, 18, -18);
+    scene.add(rimLight);
+
+    const warmSpecularLight = new THREE.DirectionalLight(0xd4af37, 0.7);
+    warmSpecularLight.position.set(16, 14, -20);
+    scene.add(warmSpecularLight);
 
     // Component point lights
     const cpuLight = new THREE.PointLight(0x2457ff, 3, 15);
@@ -231,8 +270,8 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
 
     // 5. Motherboard PCB Base
     const boardMat = new THREE.MeshStandardMaterial({
-      color: 0x0c1017,
-      roughness: 0.75,
+      color: 0x090e17,
+      roughness: 0.6,
       metalness: 0.25,
     });
     const boardMesh = new THREE.Mesh(new THREE.BoxGeometry(32, 0.8, 24), boardMat);
@@ -1322,7 +1361,14 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
   };
 
   return (
-    <div className="card-tactile overflow-hidden flex flex-col bg-[#0A0D14]">
+    <div
+      ref={boardCardRef}
+      className={`card-tactile overflow-hidden flex flex-col bg-[#0A0D14] transition-all duration-300 ${
+        isFullscreen
+          ? "fixed inset-0 z-[100] w-screen h-screen rounded-none border-0 shadow-2xl"
+          : ""
+      }`}
+    >
       {/* Top Header Bar */}
       <div className="bg-[#171717] text-white px-4 py-2.5 flex items-center justify-between border-b-2 border-[#171717]">
         <div className="flex items-center gap-2">
@@ -1337,11 +1383,11 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
                 : "bg-[#FF3B30]/20 text-[#FF3B30] border border-[#FF3B30]/40"
             }`}
           >
-            {transferMode === "DMA" ? "⚡ DMA EXPRESSWAY ACTIVE" : "⚠️ CPU BOUND (WORD COPY)"}
+            {transferMode === "DMA" ? "DMA EXPRESSWAY ACTIVE" : "CPU BOUND (WORD COPY)"}
           </span>
         </div>
 
-        {/* Camera View & Label Toggle Controls */}
+        {/* Camera View, Label Toggle & Fullscreen Controls */}
         <div className="flex items-center gap-1 font-mono text-[11px]">
           <button
             onClick={() => setShowLabels(!showLabels)}
@@ -1387,11 +1433,29 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
             <RotateCw size={12} className={isAutoRotate ? "animate-spin" : ""} />
             <span>Orbit</span>
           </button>
+
+          {/* Fullscreen Mode Button */}
+          <button
+            onClick={handleToggleFullscreen}
+            className={`px-2.5 py-1 rounded flex items-center gap-1.5 transition-all cursor-pointer font-bold ${
+              isFullscreen
+                ? "bg-[#2457FF] text-white shadow-[2px_2px_0_#000]"
+                : "bg-[#1E242D] text-[#D7FF38] border border-[#D7FF38]/40 hover:bg-[#D7FF38] hover:text-[#171717]"
+            }`}
+            title="Toggle Immersive Fullscreen 3D View"
+          >
+            {isFullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
+            <span>{isFullscreen ? "Exit Fullscreen" : "Fullscreen"}</span>
+          </button>
         </div>
       </div>
 
       {/* Main 3D Canvas Viewport */}
-      <div className="relative w-full h-[580px] bg-[#0A0D14] overflow-hidden">
+      <div
+        className={`relative w-full bg-[#0A0D14] overflow-hidden ${
+          isFullscreen ? "flex-1 h-full min-h-[500px]" : "h-[600px]"
+        }`}
+      >
         {/* Three.js Canvas Container */}
         <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
 
@@ -1412,8 +1476,8 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
             }`}
           >
             {transferMode === "DMA"
-              ? "⚡ DMA ROUTE: NIC ➔ DMAC ➔ DDR RAM (CPU 100% UNBURDENED)"
-              : "⚠️ CPU PROGRAMMED I/O: NIC ➔ CPU CORE ➔ DDR RAM (STALL HAZARD)"}
+              ? "DMA ROUTE: NIC -> DMAC -> DDR RAM (CPU 100% UNBURDENED)"
+              : "CPU PROGRAMMED I/O: NIC -> CPU CORE -> DDR RAM (STALL HAZARD)"}
           </div>
 
           {lastStep && (
@@ -1425,8 +1489,8 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
               }`}
             >
               {lastStep.hit
-                ? `⚡ SRAM HIT (Set ${lastStep.setIndex}, Tag 0x${lastStep.tag.toString(16).toUpperCase()}) ➔ 1 CYCLE`
-                : `⚠️ SRAM MISS ➔ BUS FETCH PENALTY ~80 CYCLES`}
+                ? `SRAM HIT (Set ${lastStep.setIndex}, Tag 0x${lastStep.tag.toString(16).toUpperCase()}) -> 1 CYCLE`
+                : `SRAM MISS -> BUS FETCH PENALTY ~80 CYCLES`}
             </div>
           )}
         </div>
