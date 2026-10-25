@@ -176,30 +176,30 @@ export const HowItWorks: React.FC = () => {
           })}
         </div>
 
-        {/* Interactive Architecture Analysis Suite (Feature in space between Stepper and Cache Toy) */}
-        <div className="mb-16 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2">
+        {/* Interactive Architecture Analysis Suite (Live Analytical Engine - Yellow Backdrop) */}
+        <div className="mb-16 p-6 sm:p-8 rounded-2xl bg-[#D7FF38] border-3 border-[#171717] shadow-[8px_8px_0_#171717] space-y-6 text-[#171717]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b-2 border-[#171717]">
             <div>
-              <span className="font-mono text-xs uppercase tracking-widest text-[#2457FF] font-bold px-3 py-1 bg-[#2457FF]/10 border border-[#2457FF] rounded inline-block shadow-[2px_2px_0_#2457FF]">
+              <span className="font-mono text-xs uppercase tracking-widest text-[#D7FF38] font-black px-3 py-1 bg-[#171717] rounded-md inline-block shadow-[2px_2px_0_#2457FF]">
                 Live Analytical Engine
               </span>
-              <h3 className="font-display text-2xl sm:text-3xl text-[#171717] mt-2">
+              <h3 className="font-display text-2xl sm:text-3xl text-[#171717] font-black mt-2 tracking-tight">
                 Hardware Performance Analysis & AMAT Curves
               </h3>
             </div>
-            <span className="font-mono text-xs text-[#5A6372]">
-              Interactive Preview from Simulation Lab
+            <span className="font-mono text-xs font-bold text-[#171717] bg-[#FFFFFF] px-3 py-1.5 rounded-lg border-2 border-[#171717] shadow-[2px_2px_0_#171717]">
+              Interactive Simulation Engine
             </span>
           </div>
 
           {/* Tab Navigation */}
-          <div className="flex flex-wrap items-center gap-2 border-b-2 border-[#171717] pb-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => setAnalysisTab("charts")}
-              className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3.5 py-2 rounded-lg font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
                 analysisTab === "charts"
-                  ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
-                  : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
+                  ? "bg-[#171717] text-[#D7FF38] shadow-[3px_3px_0_#2457FF]"
+                  : "bg-[#FFFFFF] text-[#171717] hover:bg-[#F5F5F0] shadow-[2px_2px_0_#171717]"
               }`}
             >
               <TrendingUp size={15} />
@@ -208,10 +208,10 @@ export const HowItWorks: React.FC = () => {
 
             <button
               onClick={() => setAnalysisTab("pipeline")}
-              className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3.5 py-2 rounded-lg font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
                 analysisTab === "pipeline"
-                  ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
-                  : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
+                  ? "bg-[#171717] text-[#D7FF38] shadow-[3px_3px_0_#2457FF]"
+                  : "bg-[#FFFFFF] text-[#171717] hover:bg-[#F5F5F0] shadow-[2px_2px_0_#171717]"
               }`}
             >
               <GitCommit size={15} />
@@ -220,10 +220,10 @@ export const HowItWorks: React.FC = () => {
 
             <button
               onClick={() => setAnalysisTab("debugger")}
-              className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3.5 py-2 rounded-lg font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
                 analysisTab === "debugger"
-                  ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
-                  : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
+                  ? "bg-[#171717] text-[#D7FF38] shadow-[3px_3px_0_#2457FF]"
+                  : "bg-[#FFFFFF] text-[#171717] hover:bg-[#F5F5F0] shadow-[2px_2px_0_#171717]"
               }`}
             >
               <History size={15} />
@@ -232,10 +232,10 @@ export const HowItWorks: React.FC = () => {
 
             <button
               onClick={() => setAnalysisTab("handcheck")}
-              className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3.5 py-2 rounded-lg font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
                 analysisTab === "handcheck"
-                  ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
-                  : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
+                  ? "bg-[#171717] text-[#D7FF38] shadow-[3px_3px_0_#2457FF]"
+                  : "bg-[#FFFFFF] text-[#171717] hover:bg-[#F5F5F0] shadow-[2px_2px_0_#171717]"
               }`}
             >
               <Calculator size={15} />
@@ -244,7 +244,7 @@ export const HowItWorks: React.FC = () => {
           </div>
 
           {/* Tab Contents */}
-          <div>
+          <div className="bg-[#FFFFFF] border-2 border-[#171717] rounded-xl shadow-[4px_4px_0_#171717] p-2 overflow-hidden">
             {analysisTab === "charts" && <ChartsView currentConfig={DEFAULT_CONFIG} />}
             {analysisTab === "pipeline" && (
               <PipelineView
