@@ -5,7 +5,6 @@ import { LabHeader } from "../components/lab/LabHeader";
 import { Controls } from "../components/lab/Controls";
 import { Motherboard3D } from "../components/lab/Motherboard3D";
 import { CacheVisualizer } from "../components/lab/CacheVisualizer";
-import { TelemetryHUD } from "../components/lab/TelemetryHUD";
 import { RaceMode } from "../components/lab/RaceMode";
 
 export const LabPage: React.FC = () => {
@@ -131,9 +130,6 @@ export const LabPage: React.FC = () => {
       />
 
       <div className="max-w-7xl mx-auto w-full px-4 md:px-8 py-6 space-y-6 flex-1">
-        {/* Top Cockpit: Primary Live Telemetry HUD */}
-        <TelemetryHUD metrics={metrics} config={config} />
-
         {isRaceMode ? (
           /* Race Mode View */
           <RaceMode baseConfig={config} />
