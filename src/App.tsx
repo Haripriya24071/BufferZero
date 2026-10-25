@@ -34,7 +34,7 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F2EB] text-[#12151A]">
+    <div className="min-h-screen flex flex-col bg-[#F5F5F0] text-[#171717]">
       <Navbar currentView={currentView} onNavigate={navigateTo} />
 
       <div className="flex-1">
