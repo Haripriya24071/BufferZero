@@ -91,7 +91,7 @@ export const LabPage: React.FC = () => {
       });
     } else if (presetName === "weak_4k") {
       handleConfigChange({
-        quality: "480p",
+        quality: "4K",
         cacheSizeKB: 4,
         blockSizeB: 16,
         transferMode: "CPU",
@@ -111,7 +111,7 @@ export const LabPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F5F5F0] flex flex-col">
-      {/* Top Controls Header */}
+      {/* Top Controls Header: Transport on left, Race Mode on far right corner */}
       <LabHeader
         isRunning={isRunning}
         onTogglePlay={() => setIsRunning(!isRunning)}
@@ -119,8 +119,6 @@ export const LabPage: React.FC = () => {
         onReset={handleReset}
         speed={speed}
         onChangeSpeed={setSpeed}
-        activePreset={activePreset}
-        onSelectPreset={handleSelectPreset}
         isRaceMode={isRaceMode}
         onToggleRaceMode={() => setIsRaceMode(!isRaceMode)}
       />
@@ -133,7 +131,7 @@ export const LabPage: React.FC = () => {
           /* Balanced 2-Column Lab Workspace (4 cols : 8 cols) */
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              {/* Left Column: Architecture Controls + Stress Knobs (4 cols) */}
+              {/* Left Column: Architecture Controls + Workload Presets + Stress Knobs (4 cols) */}
               <div className="lg:col-span-4 space-y-4">
                 <Controls
                   config={config}
@@ -142,6 +140,10 @@ export const LabPage: React.FC = () => {
                   onSeekStorm={() => simRef.current.triggerSeekStorm()}
                   onColdFlush={() => simRef.current.triggerColdFlush()}
                   onNetworkBurst={() => simRef.current.triggerNetworkBurst()}
+                  activePreset={activePreset}
+                  onSelectPreset={handleSelectPreset}
+                  isRaceMode={isRaceMode}
+                  onToggleRaceMode={() => setIsRaceMode(!isRaceMode)}
                 />
               </div>
 

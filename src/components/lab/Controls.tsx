@@ -10,7 +10,7 @@ import {
   AccessPattern,
 } from "../../engine/types";
 import { BITRATE_MBPS } from "../../engine/timing";
-import { Sliders, HelpCircle, HardDrive, Cpu, Radio, Film, Flame } from "lucide-react";
+import { Sliders, HelpCircle, HardDrive, Cpu, Radio, Film, Flame, Swords } from "lucide-react";
 
 interface ControlsProps {
   config: SimConfig;
@@ -19,6 +19,10 @@ interface ControlsProps {
   onSeekStorm?: () => void;
   onColdFlush?: () => void;
   onNetworkBurst?: () => void;
+  activePreset?: string;
+  onSelectPreset?: (presetName: string) => void;
+  isRaceMode?: boolean;
+  onToggleRaceMode?: () => void;
 }
 
 export const Controls: React.FC<ControlsProps> = ({
@@ -28,8 +32,39 @@ export const Controls: React.FC<ControlsProps> = ({
   onSeekStorm,
   onColdFlush,
   onNetworkBurst,
+  activePreset = "balanced",
+  onSelectPreset,
+  isRaceMode,
+  onToggleRaceMode,
 }) => {
   const [showAdvanced, setShowAdvanced] = React.useState<boolean>(false);
+
+  const presets = [
+    {
+      id: "balanced",
+      label: "Balanced (1080p)",
+      sub: "1080p • 16KB • DMA",
+      tooltip: "Optimal sweet spot for everyday 1080p streaming with DMA hardware transfer",
+    },
+    {
+      id: "phone",
+      label: "Phone (480p)",
+      sub: "480p • 8KB • DMA",
+      tooltip: "Low-power mobile tier with compact cache footprint",
+    },
+    {
+      id: "weak_4k",
+      label: "Weak Device (4K)",
+      sub: "4K • 4KB • CPU Copy",
+      tooltip: "Stresses CPU-driven word copying under heavy 4K bitrates, exposing stall bottlenecks",
+    },
+    {
+      id: "scrubbing",
+      label: "Seek Scrubbing",
+      sub: "1080p • Seeking Storm",
+      tooltip: "Forces non-sequential macroblock access, causing spatial cache thrashing",
+    },
+  ];
 
   const cacheSizes: CacheSizeKB[] = [4, 8, 16, 32, 64];
   const blockSizes: BlockSizeB[] = [16, 32, 64, 128, 256];
@@ -52,12 +87,59 @@ export const Controls: React.FC<ControlsProps> = ({
           <Sliders size={18} className="text-[#171717]" />
           <h3 className="font-display text-lg text-[#171717]">Architecture Controls</h3>
         </div>
-        <button
-          onClick={onResetDefaults}
-          className="text-[11px] font-mono text-[#525252] hover:text-[#2457FF] underline cursor-pointer"
-        >
-          Reset Defaults
-        </button>
+        <div className="flex items-center gap-2">
+          {onToggleRaceMode && (
+            <button
+              onClick={onToggleRaceMode}
+              className={`px-2.5 py-1 rounded-md font-mono text-[11px] font-bold border transition-all cursor-pointer flex items-center gap-1 shadow-xs ${
+                isRaceMode
+                  ? "bg-[#2457FF] text-white border-[#171717]"
+                  : "bg-[#171717] text-[#D7FF38] border-[#171717] hover:bg-[#262626]"
+              }`}
+              title="Launch Dual-Architecture Race Mode (CPU vs DMA)"
+            >
+              <Swords size={12} />
+              <span>{isRaceMode ? "Exit Race" : "Race Mode"}</span>
+            </button>
+          )}
+          <button
+            onClick={onResetDefaults}
+            className="text-[11px] font-mono text-[#525252] hover:text-[#2457FF] underline cursor-pointer"
+          >
+            Reset Defaults
+          </button>
+        </div>
+      </div>
+
+      {/* 0. Workload Presets Quick-Selector */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
+            <Sliders size={13} className="text-[#2457FF]" />
+            <span>Workload Presets</span>
+          </label>
+          <span className="text-[10px] font-mono text-[#525252]">
+            Preconfigured Profiles
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-1.5">
+          {presets.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => onSelectPreset?.(p.id)}
+              className={`p-2 rounded-lg text-left font-mono transition-all cursor-pointer flex flex-col gap-0.5 ${
+                activePreset === p.id
+                  ? "bg-[#171717] text-[#D7FF38] border-2 border-[#171717] shadow-[2px_2px_0_#2457FF]"
+                  : "bg-[#F5F5F0] hover:bg-[#EBEBE6] text-[#171717] border border-[#171717]/20"
+              }`}
+              title={p.tooltip}
+            >
+              <span className="text-xs font-bold leading-tight">{p.label}</span>
+              <span className="text-[9px] opacity-80 leading-none">{p.sub}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* 1. Big Two-State Transfer Mode Switch (CPU vs DMA) */}

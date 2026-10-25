@@ -15,8 +15,8 @@ interface LabHeaderProps {
   onReset: () => void;
   speed: number;
   onChangeSpeed: (s: number) => void;
-  activePreset: string;
-  onSelectPreset: (presetName: string) => void;
+  activePreset?: string;
+  onSelectPreset?: (presetName: string) => void;
   isRaceMode: boolean;
   onToggleRaceMode: () => void;
 }
@@ -28,48 +28,15 @@ export const LabHeader: React.FC<LabHeaderProps> = ({
   onReset,
   speed,
   onChangeSpeed,
-  activePreset,
-  onSelectPreset,
   isRaceMode,
   onToggleRaceMode,
 }) => {
-  const presets = [
-    { id: "balanced", label: "Balanced (1080p)" },
-    { id: "phone", label: "Phone (480p)" },
-    { id: "weak_4k", label: "Weak Device (4K)" },
-    { id: "scrubbing", label: "Seek Scrubbing" },
-  ];
-
   const speeds = [0.25, 0.5, 1, 2, 4];
 
   return (
     <div className="border-b-2 border-[#171717] bg-[#FFFFFF] shadow-sm sticky top-[57px] z-30 px-4 md:px-8 py-2.5">
-      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-        {/* Left: Architecture Presets */}
-        <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-1.5 font-mono text-xs font-bold text-[#171717] uppercase mr-1">
-            <Sliders size={14} className="text-[#2457FF]" />
-            <span>Presets:</span>
-          </div>
-          <div className="flex flex-wrap items-center gap-1.5">
-            {presets.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => onSelectPreset(p.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
-                  activePreset === p.id
-                    ? "bg-[#171717] text-[#D7FF38] border-2 border-[#171717] shadow-[2px_2px_0_#2457FF]"
-                    : "bg-[#F5F5F0] hover:bg-[#EBEBE6] text-[#171717] border border-[#171717]/20"
-                }`}
-                title={p.label}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Center/Right: Playback Transport + Race Mode */}
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        {/* Left: Simulation Playback Transport (RUN/PAUSE, STEP, RESET, SPEED) */}
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Play/Pause */}
           <button
@@ -121,15 +88,18 @@ export const LabHeader: React.FC<LabHeaderProps> = ({
               </button>
             ))}
           </div>
+        </div>
 
-          {/* Flagship: Race Mode Toggle Button */}
+        {/* Right Side Corner: Flagship Race Mode Toggle Button */}
+        <div className="flex items-center">
           <button
             onClick={onToggleRaceMode}
-            className={`px-3.5 py-1.5 rounded-lg font-mono text-xs font-bold border-2 transition-all flex items-center gap-2 cursor-pointer shadow-[2px_2px_0_#171717] active:translate-y-0.5 ${
+            className={`px-4 py-1.5 rounded-lg font-mono text-xs font-bold border-2 transition-all flex items-center gap-2 cursor-pointer shadow-[2px_2px_0_#171717] active:translate-y-0.5 ${
               isRaceMode
                 ? "bg-[#2457FF] text-white border-[#171717] shadow-[3px_3px_0_#171717]"
                 : "bg-[#171717] hover:bg-[#262626] text-white border-[#171717]"
             }`}
+            title="Dual Architecture Race: CPU Copy vs DMA Hardware Transfer"
           >
             <Swords size={15} className={isRaceMode ? "text-white" : "text-[#D7FF38]"} />
             <span>{isRaceMode ? "EXIT RACE MODE" : "🏆 RACE MODE (CPU vs DMA)"}</span>
