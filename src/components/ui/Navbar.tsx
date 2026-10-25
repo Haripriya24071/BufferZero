@@ -58,12 +58,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
               >
                 Concepts
               </a>
-              <a
-                href="#outcomes"
-                className="hidden md:inline-block px-3 py-1.5 text-xs font-mono font-bold text-[#171717] hover:bg-[#EBEBE6] rounded transition-colors"
-              >
-                CO1–CO6
-              </a>
 
               <button
                 onClick={() => onNavigate("lab")}
