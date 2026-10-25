@@ -1,7 +1,35 @@
-import React, { useState } from "react";
-import { Sliders, PlayCircle, BarChart3, Sparkles, RefreshCcw } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import {
+  Sliders,
+  PlayCircle,
+  BarChart3,
+  RefreshCcw,
+  TrendingUp,
+  GitCommit,
+  History,
+  Calculator,
+} from "lucide-react";
+import { ChartsView } from "../lab/ChartsView";
+import { PipelineView } from "../lab/PipelineView";
+import { RewindDebugger } from "../lab/RewindDebugger";
+import { HandCheckPanel } from "../lab/HandCheckPanel";
+import { Simulation, DEFAULT_CONFIG } from "../../engine/simulation";
 
 export const HowItWorks: React.FC = () => {
+  // Active bottom analysis tab for live preview
+  const [analysisTab, setAnalysisTab] = useState<"charts" | "pipeline" | "debugger" | "handcheck">("charts");
+
+  // Sample simulation for live interactive charts & pipeline preview on landing page
+  const landingSim = useMemo(() => {
+    const sim = new Simulation(DEFAULT_CONFIG);
+    for (let i = 0; i < 28; i++) {
+      sim.step();
+    }
+    return sim;
+  }, []);
+
+  const landingMetrics = landingSim.getMetrics();
+
   // Interactive 8-block Cache Toy state
   const [toyBlocks, setToyBlocks] = useState<Array<{ id: number; tag: number; status: "empty" | "hit" | "miss" }>>([
     { id: 0, tag: 0x1A, status: "empty" },
@@ -93,9 +121,9 @@ export const HowItWorks: React.FC = () => {
     },
     {
       num: "4",
-      title: "Auto-Analyze",
-      desc: "Let the parameter sweep test all configurations in a Web Worker, locate the U-curve sweet spot, and apply optimal settings with 1 click.",
-      icon: Sparkles,
+      title: "Analyze Curves",
+      desc: "Inspect empirical U-curve trade-offs across block sizes (16B–256B), pipeline stalls, and DMA hardware efficiency.",
+      icon: TrendingUp,
     },
   ];
 
@@ -148,6 +176,94 @@ export const HowItWorks: React.FC = () => {
           })}
         </div>
 
+        {/* Interactive Architecture Analysis Suite (Feature in space between Stepper and Cache Toy) */}
+        <div className="mb-16 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2">
+            <div>
+              <span className="font-mono text-xs uppercase tracking-widest text-[#2457FF] font-bold px-3 py-1 bg-[#2457FF]/10 border border-[#2457FF] rounded inline-block shadow-[2px_2px_0_#2457FF]">
+                Live Analytical Engine
+              </span>
+              <h3 className="font-display text-2xl sm:text-3xl text-[#171717] mt-2">
+                Hardware Performance Analysis & AMAT Curves
+              </h3>
+            </div>
+            <span className="font-mono text-xs text-[#5A6372]">
+              Interactive Preview from Simulation Lab
+            </span>
+          </div>
+
+          {/* Tab Navigation */}
+          <div className="flex flex-wrap items-center gap-2 border-b-2 border-[#171717] pb-2">
+            <button
+              onClick={() => setAnalysisTab("charts")}
+              className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
+                analysisTab === "charts"
+                  ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
+                  : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
+              }`}
+            >
+              <TrendingUp size={15} />
+              <span>U-Shaped AMAT & Performance Charts</span>
+            </button>
+
+            <button
+              onClick={() => setAnalysisTab("pipeline")}
+              className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
+                analysisTab === "pipeline"
+                  ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
+                  : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
+              }`}
+            >
+              <GitCommit size={15} />
+              <span>5-Stage Instruction Pipeline (CO6)</span>
+            </button>
+
+            <button
+              onClick={() => setAnalysisTab("debugger")}
+              className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
+                analysisTab === "debugger"
+                  ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
+                  : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
+              }`}
+            >
+              <History size={15} />
+              <span>Rewind Cycle Debugger</span>
+            </button>
+
+            <button
+              onClick={() => setAnalysisTab("handcheck")}
+              className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
+                analysisTab === "handcheck"
+                  ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
+                  : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
+              }`}
+            >
+              <Calculator size={15} />
+              <span>Architecture Formula Verifier (CO5 / CO6)</span>
+            </button>
+          </div>
+
+          {/* Tab Contents */}
+          <div>
+            {analysisTab === "charts" && <ChartsView currentConfig={DEFAULT_CONFIG} />}
+            {analysisTab === "pipeline" && (
+              <PipelineView
+                missRatio={landingMetrics.missRatio}
+                missPenalty={landingMetrics.missPenalty}
+              />
+            )}
+            {analysisTab === "debugger" && (
+              <RewindDebugger
+                history={landingSim.history}
+                geometry={landingSim.cache.geometry}
+              />
+            )}
+            {analysisTab === "handcheck" && (
+              <HandCheckPanel config={DEFAULT_CONFIG} metrics={landingMetrics} />
+            )}
+          </div>
+        </div>
+
         {/* Interactive Cache Toy */}
         <div className="bg-[#FFFFFF] border-3 border-[#171717] p-6 md:p-8 rounded-xl shadow-[8px_8px_0_#171717] max-w-4xl mx-auto">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b-2 border-[#171717]/10">
@@ -179,47 +295,39 @@ export const HowItWorks: React.FC = () => {
                 className="p-1.5 bg-[#F5F5F0] hover:bg-[#EBEBE6] border border-[#171717] rounded text-[#171717] transition-colors"
                 title="Reset Cache Toy"
               >
-                <RefreshCcw size={14} />
+                <RefreshCcw size={16} />
               </button>
             </div>
           </div>
 
-          {/* 8 Blocks Row */}
-          <div className="grid grid-cols-4 sm:grid-cols-8 gap-3 mb-4">
-            {toyBlocks.map((block, idx) => (
+          <div className="grid grid-cols-4 sm:grid-cols-8 gap-3 mb-6">
+            {toyBlocks.map((b, idx) => (
               <button
-                key={block.id}
+                key={b.id}
                 onClick={() => handleBlockClick(idx)}
-                className={`h-20 rounded-md border-2 border-[#171717] flex flex-col items-center justify-between p-2 cursor-pointer transition-all transform active:scale-95 ${
-                  block.status === "hit"
-                    ? "bg-[#D7FF38] shadow-[3px_3px_0_#171717]"
-                    : block.status === "miss"
-                    ? "bg-[#FF3B30] text-white shadow-[3px_3px_0_#171717]"
-                    : "bg-[#F5F5F0] hover:bg-[#EBEBE6] shadow-[2px_2px_0_#171717]"
+                className={`h-20 rounded-lg border-2 border-[#171717] font-mono flex flex-col items-center justify-center gap-1 transition-all cursor-pointer shadow-[3px_3px_0_#171717] active:translate-y-0.5 ${
+                  b.status === "hit"
+                    ? "bg-[#D7FF38] text-[#171717]"
+                    : b.status === "miss"
+                    ? "bg-[#FF3B30] text-white"
+                    : "bg-[#F5F5F0] hover:bg-[#EBEBE6] text-[#5A6372]"
                 }`}
               >
-                <span className="font-mono text-[10px] font-bold opacity-75">
-                  Line {block.id}
-                </span>
-
-                <div className="font-mono text-xs font-extrabold uppercase">
-                  {block.status === "empty" ? "Empty" : block.status === "hit" ? "HIT" : "MISS"}
-                </div>
-
-                <span className="font-mono text-[9px] opacity-70">
-                  Tag 0x{block.tag.toString(16).toUpperCase()}
+                <span className="text-[10px] opacity-75">#{b.id}</span>
+                <span className="text-xs font-bold">0x{b.tag.toString(16).toUpperCase()}</span>
+                <span className="text-[9px] uppercase font-bold tracking-wider">
+                  {b.status}
                 </span>
               </button>
             ))}
           </div>
 
-          {/* Running Status Feed */}
-          <div className="bg-[#171717] text-[#D7FF38] font-mono text-xs p-3 rounded border border-[#171717] flex items-center justify-between">
+          <div className="p-3 bg-[#171717] text-white rounded font-mono text-xs flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#D7FF38] animate-ping"></span>
-              <span>{toyStats.lastAction}</span>
+              <span className="w-2 h-2 rounded-full bg-[#D7FF38] animate-pulse"></span>
+              <span className="text-[#EBEBE6]">{toyStats.lastAction}</span>
             </div>
-            <span className="text-[10px] text-[#8E99A8] hidden sm:inline">Click cached block to trigger HIT</span>
+            <span className="text-[10px] text-[#A3A3A3] hidden sm:inline">LRU Replacement</span>
           </div>
         </div>
       </div>
