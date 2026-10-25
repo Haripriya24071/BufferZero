@@ -14,11 +14,11 @@ export const Footer: React.FC<FooterProps> = ({ onLaunchLab }) => {
           {/* Col 1: Product & Academic Summary */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-[#171717] rounded-lg flex items-end justify-center gap-0.5 p-1.5 border border-[#171717] shadow-[2px_2px_0_#000000]">
-                <span className="w-1.5 h-3 bg-[#2457FF] rounded-xs"></span>
-                <span className="w-1.5 h-5 bg-[#D7FF38] rounded-xs"></span>
-                <span className="w-1.5 h-3.5 bg-[#2457FF] rounded-xs"></span>
-              </div>
+              <img
+                src="/logo.png"
+                alt="BufferZero Logo"
+                className="w-8 h-8 rounded-lg object-contain border-2 border-[#171717] shadow-[2px_2px_0_#000000] bg-[#171717]"
+              />
               <span className="font-display text-2xl font-black tracking-tight text-[#171717]">
                 {PROJECT_CONFIG.productName}
               </span>
