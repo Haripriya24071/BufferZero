@@ -11,7 +11,7 @@ export const TelemetryHUD: React.FC<TelemetryHUDProps> = ({ metrics, config }) =
   // AMAT curve health assessment
   const getAmatHealth = () => {
     if (config.blockSizeB === 64 || config.blockSizeB === 128) {
-      return { text: "OPTIMAL U-CURVE", color: "bg-[#D7FF38] text-[#171717]" };
+      return { text: "OPTIMAL U-CURVE", color: "bg-[#D8C336] text-[#171717]" };
     }
     if (config.blockSizeB < 64) {
       return { text: "HIGH MISS RATE", color: "bg-[#FFFFFF] text-[#FF3B30]" };
