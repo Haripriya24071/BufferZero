@@ -178,7 +178,7 @@ export const RaceMode: React.FC<RaceModeProps> = ({ baseConfig }) => {
           </div>
 
           <div className="mt-4 pt-3 border-t border-[#171717]/10 font-mono text-[11px] text-[#FF3B30]">
-            ❌ <strong>Problem:</strong> CPU must execute 6 clock cycles per word copied from network.
+            <strong>Problem:</strong> CPU must execute 6 clock cycles per word copied from network.
           </div>
         </div>
 
@@ -247,7 +247,7 @@ export const RaceMode: React.FC<RaceModeProps> = ({ baseConfig }) => {
           </div>
 
           <div className="mt-4 pt-3 border-t border-[#171717]/10 font-mono text-[11px] text-[#2457FF]">
-            ✅ <strong>Result:</strong> DMA offloads data transport; CPU decodes every frame on time.
+            <strong>Result:</strong> DMA offloads data transport; CPU decodes every frame on time.
           </div>
         </div>
       </div>
