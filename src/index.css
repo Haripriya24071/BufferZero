@@ -1,32 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  --bone: #F5F2EB;
-  --bone-light: #FAF8F5;
-  --bone-dark: #EAE5DB;
-  --ink: #12151A;
-  --ink-light: #2A303A;
-  --ink-subtle: #5A6372;
-  --ink-muted: #8E99A8;
+  --canvas: #F5F5F0;
+  --bone: #F5F5F0;
+  --bone-light: #FAFAF7;
+  --bone-dark: #EBEBE6;
   
-  --acid-lime: #CCFF00;
-  --acid-lime-hover: #BBEE00;
-  --acid-lime-dim: rgba(204, 255, 0, 0.22);
+  --ink: #171717;
+  --ink-light: #262626;
+  --ink-subtle: #525252;
+  --ink-muted: #737373;
+  
+  --electric-blue: #2457FF;
+  --blue: #2457FF;
+  --blue-hover: #1A46E0;
+  --blue-dim: rgba(36, 87, 255, 0.15);
+  
+  --lime: #D7FF38;
+  --acid-lime: #D7FF38;
+  --lime-hover: #C5F024;
+  --lime-dim: rgba(215, 255, 56, 0.22);
   
   --tomato: #FF3B30;
   --tomato-hover: #E83228;
   --tomato-dim: rgba(255, 59, 48, 0.18);
   
-  --navy: #02167F;
-  --navy-light: #0B2299;
-  --navy-dim: rgba(2, 22, 127, 0.12);
-  --navy-border: rgba(2, 22, 127, 0.25);
-  
   --white: #FFFFFF;
   
-  --shadow-hard-sm: 2px 2px 0 #12151A;
-  --shadow-hard: 4px 4px 0 #12151A;
-  --shadow-hard-lg: 6px 6px 0 #12151A;
+  --shadow-hard-sm: 2px 2px 0 #171717;
+  --shadow-hard: 4px 4px 0 #171717;
+  --shadow-hard-lg: 6px 6px 0 #171717;
+  --shadow-blue: 4px 4px 0 #2457FF;
 
   --font-display: 'Archivo', -apple-system, sans-serif;
   --font-body: 'Inter', -apple-system, sans-serif;
@@ -41,7 +45,7 @@
 
 html, body {
   font-family: var(--font-body);
-  background-color: var(--bone);
+  background-color: var(--canvas);
   color: var(--ink);
   scroll-behavior: smooth;
   text-rendering: optimizeLegibility;
@@ -167,14 +171,14 @@ code, pre, .font-mono {
 .py-16 { padding-top: 4rem; padding-bottom: 4rem; }
 .py-20 { padding-top: 5rem; padding-bottom: 5rem; }
 
-.border { border: 1px solid #12151A; }
-.border-2 { border: 2px solid #12151A; }
-.border-3 { border: 3px solid #12151A; }
-.border-b { border-bottom: 1px solid #12151A; }
-.border-b-2 { border-bottom: 2px solid #12151A; }
-.border-t { border-top: 1px solid #12151A; }
-.border-t-2 { border-top: 2px solid #12151A; }
-.border-r { border-right: 1px solid #12151A; }
+.border { border: 1px solid #171717; }
+.border-2 { border: 2px solid #171717; }
+.border-3 { border: 3px solid #171717; }
+.border-b { border-bottom: 1px solid #171717; }
+.border-b-2 { border-bottom: 2px solid #171717; }
+.border-t { border-top: 1px solid #171717; }
+.border-t-2 { border-top: 2px solid #171717; }
+.border-r { border-right: 1px solid #171717; }
 
 .rounded { border-radius: 0.25rem; }
 .rounded-sm { border-radius: 0.125rem; }
@@ -190,8 +194,8 @@ code, pre, .font-mono {
 /* Tactile neo-brutalist buttons & cards */
 .card-tactile {
   background: #FFFFFF;
-  border: 2px solid #12151A;
-  box-shadow: 4px 4px 0 #12151A;
+  border: 2px solid #171717;
+  box-shadow: 4px 4px 0 #171717;
   border-radius: 8px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -202,14 +206,14 @@ code, pre, .font-mono {
   justify-content: center;
   gap: 8px;
   padding: 10px 18px;
-  background: #CCFF00;
-  color: #12151A;
+  background: #D7FF38;
+  color: #171717;
   font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
-  border: 2px solid #12151A;
-  box-shadow: 4px 4px 0 #12151A;
+  border: 2px solid #171717;
+  box-shadow: 4px 4px 0 #171717;
   border-radius: 6px;
   cursor: pointer;
   text-decoration: none;
@@ -217,14 +221,45 @@ code, pre, .font-mono {
 }
 
 .btn-primary:hover {
-  background: #BBEE00;
+  background: #C5F024;
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 #12151A;
+  box-shadow: 6px 6px 0 #171717;
 }
 
 .btn-primary:active {
   transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 #12151A;
+  box-shadow: 2px 2px 0 #171717;
+}
+
+.btn-electric {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: #2457FF;
+  color: #FFFFFF;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 2px solid #171717;
+  box-shadow: 4px 4px 0 #171717;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.12s ease;
+}
+
+.btn-electric:hover {
+  background: #1A46E0;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #171717;
+}
+
+.btn-electric:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #171717;
 }
 
 .btn-secondary {
@@ -234,12 +269,12 @@ code, pre, .font-mono {
   gap: 8px;
   padding: 10px 18px;
   background: #FFFFFF;
-  color: #12151A;
+  color: #171717;
   font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 700;
-  border: 2px solid #12151A;
-  box-shadow: 4px 4px 0 #12151A;
+  border: 2px solid #171717;
+  box-shadow: 4px 4px 0 #171717;
   border-radius: 6px;
   cursor: pointer;
   text-decoration: none;
@@ -247,14 +282,14 @@ code, pre, .font-mono {
 }
 
 .btn-secondary:hover {
-  background: #FAF8F5;
+  background: #FAFAF7;
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 #12151A;
+  box-shadow: 6px 6px 0 #171717;
 }
 
 .bg-grid-pattern {
   background-image: 
-    linear-gradient(to right, rgba(18, 21, 26, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(18, 21, 26, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(23, 23, 23, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(23, 23, 23, 0.05) 1px, transparent 1px);
   background-size: 24px 24px;
 }
