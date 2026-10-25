@@ -169,12 +169,19 @@ export const LabPage: React.FC = () => {
           /* Standard 3-Column Lab View */
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              {/* Left Column: Hardware Controls (3 cols) */}
+              {/* Left Column: Hardware Controls + Break-It Deck (3 cols) */}
               <div className="lg:col-span-3 space-y-4">
                 <Controls
                   config={config}
                   onChangeConfig={handleConfigChange}
                   onResetDefaults={() => handleConfigChange(DEFAULT_CONFIG)}
+                />
+
+                {/* Break-It Stress Test Deck sits flush under Controls */}
+                <BreakItDeck
+                  onSeekStorm={() => simRef.current.triggerSeekStorm()}
+                  onColdFlush={() => simRef.current.triggerColdFlush()}
+                  onNetworkBurst={() => simRef.current.triggerNetworkBurst()}
                 />
               </div>
 
@@ -255,16 +262,9 @@ export const LabPage: React.FC = () => {
                 )}
               </div>
 
-              {/* Right Column: Live Telemetry & Stress Deck (3 cols) */}
-              <div className="lg:col-span-3 space-y-6">
+              {/* Right Column: Live Telemetry (3 cols) */}
+              <div className="lg:col-span-3">
                 <MetricsPanel metrics={metrics} config={config} />
-
-                {/* Break-It Stress Test Deck */}
-                <BreakItDeck
-                  onSeekStorm={() => simRef.current.triggerSeekStorm()}
-                  onColdFlush={() => simRef.current.triggerColdFlush()}
-                  onNetworkBurst={() => simRef.current.triggerNetworkBurst()}
-                />
               </div>
             </div>
 
