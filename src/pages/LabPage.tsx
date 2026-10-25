@@ -3,8 +3,6 @@ import { Simulation, DEFAULT_CONFIG } from "../engine/simulation";
 import { SimConfig, SimMetrics, SimStep } from "../engine/types";
 import { LabHeader } from "../components/lab/LabHeader";
 import { Controls } from "../components/lab/Controls";
-import { Motherboard3D } from "../components/lab/Motherboard3D";
-import { CacheVisualizer } from "../components/lab/CacheVisualizer";
 import { RaceMode } from "../components/lab/RaceMode";
 
 export const LabPage: React.FC = () => {
@@ -20,9 +18,6 @@ export const LabPage: React.FC = () => {
   const [lastStep, setLastStep] = useState<SimStep | undefined>();
   const [recentSteps, setRecentSteps] = useState<SimStep[]>([]);
   const [history, setHistory] = useState<SimStep[]>([]);
-
-  // Active Center Stage View ("motherboard" | "cache")
-  const [centerStage, setCenterStage] = useState<"motherboard" | "cache">("motherboard");
 
   // Simulation Ticker: Calmed down to a steady, explainable pace (1-2 accesses/sec on 1x)
   useEffect(() => {
@@ -149,62 +144,8 @@ export const LabPage: React.FC = () => {
                 />
               </div>
 
-              {/* Right Column: Visual Stage & Hardware Logic Explainer (8 cols) */}
-              <div className="lg:col-span-8 space-y-4">
-                {/* Stage Selector Pills */}
-                <div className="flex items-center justify-between bg-[#FFFFFF] border-2 border-[#171717] p-1.5 rounded-lg shadow-[3px_3px_0_#171717]">
-                  <div className="flex items-center gap-1 font-mono text-xs">
-                    <button
-                      onClick={() => setCenterStage("motherboard")}
-                      className={`px-3 py-1.5 rounded font-bold transition-all cursor-pointer ${
-                        centerStage === "motherboard"
-                          ? "bg-[#171717] text-[#D7FF38] shadow-[2px_2px_0_#2457FF]"
-                          : "text-[#525252] hover:text-[#171717]"
-                      }`}
-                    >
-                      🏙️ 3D Motherboard
-                    </button>
-
-                    <button
-                      onClick={() => setCenterStage("cache")}
-                      className={`px-3 py-1.5 rounded font-bold transition-all cursor-pointer ${
-                        centerStage === "cache"
-                          ? "bg-[#171717] text-[#D7FF38] shadow-[2px_2px_0_#2457FF]"
-                          : "text-[#525252] hover:text-[#171717]"
-                      }`}
-                    >
-                      🔬 Cache Bit Inspector
-                    </button>
-                  </div>
-
-                  {/* Calm persistent mini-status */}
-                  <div className="hidden sm:flex items-center gap-2 font-mono text-[10px] text-[#525252] pr-2">
-                    <span className="w-2 h-2 rounded-full bg-[#2457FF] animate-pulse"></span>
-                    <span>ADDR: <strong className="text-[#171717]">{lastStep ? lastStep.hexAddress : "0x20000000"}</strong></span>
-                  </div>
-                </div>
-
-                {/* Active Focused Visual Stage */}
-                <div className="flex flex-col">
-                  {centerStage === "motherboard" && (
-                    <Motherboard3D
-                      transferMode={config.transferMode}
-                      isBuffering={metrics.isBuffering}
-                      cpuUtilizationFree={metrics.cpuUtilizationFree}
-                      hitRatio={metrics.hitRatio}
-                      currentAddressHex={lastStep?.hexAddress}
-                    />
-                  )}
-
-                  {centerStage === "cache" && (
-                    <CacheVisualizer
-                      cache={simRef.current.cache}
-                      lastStep={lastStep}
-                      recentSteps={recentSteps}
-                    />
-                  )}
-                </div>
-              </div>
+              {/* Right Column: Reserved Empty Space (8 cols) */}
+              <div className="lg:col-span-8 min-h-[500px]" />
             </div>
           </div>
         )}
