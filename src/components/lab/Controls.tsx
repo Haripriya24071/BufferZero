@@ -23,6 +23,8 @@ export const Controls: React.FC<ControlsProps> = ({
   onChangeConfig,
   onResetDefaults,
 }) => {
+  const [showAdvanced, setShowAdvanced] = React.useState<boolean>(false);
+
   const cacheSizes: CacheSizeKB[] = [4, 8, 16, 32, 64];
   const blockSizes: BlockSizeB[] = [16, 32, 64, 128, 256];
   const associativities: { val: Associativity; label: string }[] = [
@@ -130,85 +132,7 @@ export const Controls: React.FC<ControlsProps> = ({
         </p>
       </div>
 
-      {/* 3. Cache Size Segmented Selector */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#12151A]">
-            Total Cache Capacity
-          </label>
-          <span className="font-mono text-xs font-bold text-[#12151A]">
-            {config.cacheSizeKB} KB
-          </span>
-        </div>
-
-        <div className="grid grid-cols-5 gap-1">
-          {cacheSizes.map((size) => (
-            <button
-              key={size}
-              onClick={() => onChangeConfig({ cacheSizeKB: size })}
-              className={`py-1.5 rounded font-mono text-xs transition-all ${
-                config.cacheSizeKB === size
-                  ? "bg-[#12151A] text-white font-bold shadow-[2px_2px_0_#12151A]"
-                  : "bg-[#F5F2EB] hover:bg-[#EAE5DB] text-[#12151A] border border-[#12151A]/20"
-              }`}
-            >
-              {size}KB
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* 4. Set Associativity */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#12151A]">
-            Set Associativity
-          </label>
-          <span className="font-mono text-xs text-[#5A6372]">
-            {config.associativity === 1 ? "1-Way Direct" : `${config.associativity}-Way Set`}
-          </span>
-        </div>
-
-        <div className="grid grid-cols-4 gap-1">
-          {associativities.map((assoc) => (
-            <button
-              key={assoc.val}
-              onClick={() => onChangeConfig({ associativity: assoc.val })}
-              className={`py-1.5 rounded font-mono text-xs transition-all ${
-                config.associativity === assoc.val
-                  ? "bg-[#12151A] text-white font-bold shadow-[2px_2px_0_#12151A]"
-                  : "bg-[#F5F2EB] hover:bg-[#EAE5DB] text-[#12151A] border border-[#12151A]/20"
-              }`}
-            >
-              {assoc.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* 5. Replacement Policy */}
-      <div className="space-y-2">
-        <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#12151A] block">
-          Eviction Policy
-        </label>
-        <div className="grid grid-cols-3 gap-1">
-          {replacements.map((r) => (
-            <button
-              key={r}
-              onClick={() => onChangeConfig({ replacement: r })}
-              className={`py-1.5 rounded font-mono text-xs transition-all ${
-                config.replacement === r
-                  ? "bg-[#12151A] text-white font-bold shadow-[2px_2px_0_#12151A]"
-                  : "bg-[#F5F2EB] hover:bg-[#EAE5DB] text-[#12151A] border border-[#12151A]/20"
-              }`}
-            >
-              {r}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* 6. Video Stream Quality */}
+      {/* 3. Video Stream Quality */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#12151A] flex items-center gap-1.5">
@@ -237,33 +161,125 @@ export const Controls: React.FC<ControlsProps> = ({
         </div>
       </div>
 
-      {/* 7. Access Pattern (Sequential vs Seeking) */}
-      <div className="space-y-2">
-        <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#12151A] block">
-          Stream Pattern
-        </label>
-        <div className="grid grid-cols-2 gap-1">
-          <button
-            onClick={() => onChangeConfig({ accessPattern: "sequential", seekFrequency: 0.05 })}
-            className={`py-1.5 rounded font-mono text-xs transition-all ${
-              config.accessPattern === "sequential"
-                ? "bg-[#12151A] text-white font-bold shadow-[2px_2px_0_#12151A]"
-                : "bg-[#F5F2EB] hover:bg-[#EAE5DB] text-[#12151A] border border-[#12151A]/20"
-            }`}
-          >
-            Normal Sequential
-          </button>
-          <button
-            onClick={() => onChangeConfig({ accessPattern: "seeking", seekFrequency: 0.45 })}
-            className={`py-1.5 rounded font-mono text-xs transition-all ${
-              config.accessPattern === "seeking"
-                ? "bg-[#12151A] text-white font-bold shadow-[2px_2px_0_#12151A]"
-                : "bg-[#F5F2EB] hover:bg-[#EAE5DB] text-[#12151A] border border-[#12151A]/20"
-            }`}
-          >
-            Frequent Seeking
-          </button>
-        </div>
+      {/* Collapsible Advanced Hardware Knobs */}
+      <div className="pt-2 border-t border-[#12151A]/10">
+        <button
+          type="button"
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          className="w-full flex items-center justify-between text-xs font-mono font-bold text-[#12151A] bg-[#F5F2EB] hover:bg-[#EAE5DB] p-2.5 rounded border border-[#12151A] transition-colors"
+        >
+          <span>⚙️ Advanced Hardware Tuning</span>
+          <span className="text-[10px] text-[#5A6372]">{showAdvanced ? "▲ Hide" : "▼ Show (Associativity, Capacity)"}</span>
+        </button>
+
+        {showAdvanced && (
+          <div className="space-y-4 pt-3">
+            {/* Cache Size */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="font-mono text-[11px] font-bold uppercase text-[#12151A]">
+                  Cache Capacity
+                </label>
+                <span className="font-mono text-[11px] font-bold text-[#12151A]">
+                  {config.cacheSizeKB} KB
+                </span>
+              </div>
+              <div className="grid grid-cols-5 gap-1">
+                {cacheSizes.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => onChangeConfig({ cacheSizeKB: size })}
+                    className={`py-1 rounded font-mono text-[11px] transition-all ${
+                      config.cacheSizeKB === size
+                        ? "bg-[#12151A] text-white font-bold"
+                        : "bg-[#FFFFFF] text-[#12151A] border border-[#12151A]/20"
+                    }`}
+                  >
+                    {size}K
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Set Associativity */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="font-mono text-[11px] font-bold uppercase text-[#12151A]">
+                  Associativity
+                </label>
+                <span className="font-mono text-[11px] text-[#5A6372]">
+                  {config.associativity === 1 ? "Direct" : `${config.associativity}-Way`}
+                </span>
+              </div>
+              <div className="grid grid-cols-4 gap-1">
+                {associativities.map((assoc) => (
+                  <button
+                    key={assoc.val}
+                    onClick={() => onChangeConfig({ associativity: assoc.val })}
+                    className={`py-1 rounded font-mono text-[11px] transition-all ${
+                      config.associativity === assoc.val
+                        ? "bg-[#12151A] text-white font-bold"
+                        : "bg-[#FFFFFF] text-[#12151A] border border-[#12151A]/20"
+                    }`}
+                  >
+                    {assoc.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Replacement Policy */}
+            <div className="space-y-1.5">
+              <label className="font-mono text-[11px] font-bold uppercase text-[#12151A] block">
+                Eviction Policy
+              </label>
+              <div className="grid grid-cols-3 gap-1">
+                {replacements.map((r) => (
+                  <button
+                    key={r}
+                    onClick={() => onChangeConfig({ replacement: r })}
+                    className={`py-1 rounded font-mono text-[11px] transition-all ${
+                      config.replacement === r
+                        ? "bg-[#12151A] text-white font-bold"
+                        : "bg-[#FFFFFF] text-[#12151A] border border-[#12151A]/20"
+                    }`}
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Stream Pattern */}
+            <div className="space-y-1.5">
+              <label className="font-mono text-[11px] font-bold uppercase text-[#12151A] block">
+                Playback Pattern
+              </label>
+              <div className="grid grid-cols-2 gap-1">
+                <button
+                  onClick={() => onChangeConfig({ accessPattern: "sequential", seekFrequency: 0.05 })}
+                  className={`py-1 rounded font-mono text-[11px] transition-all ${
+                    config.accessPattern === "sequential"
+                      ? "bg-[#12151A] text-white font-bold"
+                      : "bg-[#FFFFFF] text-[#12151A] border border-[#12151A]/20"
+                  }`}
+                >
+                  Sequential
+                </button>
+                <button
+                  onClick={() => onChangeConfig({ accessPattern: "seeking", seekFrequency: 0.45 })}
+                  className={`py-1 rounded font-mono text-[11px] transition-all ${
+                    config.accessPattern === "seeking"
+                      ? "bg-[#12151A] text-white font-bold"
+                      : "bg-[#FFFFFF] text-[#12151A] border border-[#12151A]/20"
+                  }`}
+                >
+                  Seeking
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -43,20 +43,23 @@ export const LabPage: React.FC = () => {
   // Active Bottom Tab
   const [bottomTab, setBottomTab] = useState<"charts" | "pipeline" | "debugger" | "handcheck">("charts");
 
-  // Simulation Ticker
+  // Active Center Stage View ("motherboard" | "cache" | "player")
+  const [centerStage, setCenterStage] = useState<"motherboard" | "cache" | "player">("motherboard");
+
+  // Simulation Ticker: Calmed down to a steady, explainable pace (1-2 accesses/sec on 1x)
   useEffect(() => {
     if (!isRunning || isRaceMode) return;
 
-    // Steps per tick scales with selected speed (0.25x to 4x)
-    const stepCount = Math.max(1, Math.round(4 * speed));
-    const intervalTime = Math.max(20, Math.round(100 / speed));
+    // Calm step count and readable interval (e.g., 500ms at 1x speed)
+    const stepCount = speed >= 2 ? Math.round(2 * (speed / 2)) : 1;
+    const intervalTime = Math.max(100, Math.round(500 / speed));
 
     const interval = setInterval(() => {
       const steps = simRef.current.step(stepCount);
       if (steps.length > 0) {
         const latest = steps[steps.length - 1];
         setLastStep(latest);
-        setRecentSteps((prev) => [...prev.slice(-20), ...steps]);
+        setRecentSteps((prev) => [...prev.slice(-16), ...steps]);
         setHistory([...simRef.current.history]);
       }
       setMetrics({ ...simRef.current.getMetrics() });
@@ -175,33 +178,81 @@ export const LabPage: React.FC = () => {
                 />
               </div>
 
-              {/* Center Column: Simulation Stage (6 cols) */}
-              <div className="lg:col-span-6 space-y-6">
-                {/* 1. 3D Motherboard with Circuit City 01 */}
-                <Motherboard3D
-                  transferMode={config.transferMode}
-                  isBuffering={metrics.isBuffering}
-                  cpuUtilizationFree={metrics.cpuUtilizationFree}
-                  hitRatio={metrics.hitRatio}
-                  currentAddressHex={lastStep?.hexAddress}
-                />
+              {/* Center Column: Focused Simulation Stage (6 cols) */}
+              <div className="lg:col-span-6 space-y-4">
+                {/* Stage Selector Pills */}
+                <div className="flex items-center justify-between bg-[#FFFFFF] border-2 border-[#12151A] p-1.5 rounded-lg shadow-[3px_3px_0_#12151A]">
+                  <div className="flex items-center gap-1 font-mono text-xs">
+                    <button
+                      onClick={() => setCenterStage("motherboard")}
+                      className={`px-3 py-1.5 rounded font-bold transition-all ${
+                        centerStage === "motherboard"
+                          ? "bg-[#12151A] text-[#CCFF00] shadow-[2px_2px_0_#12151A]"
+                          : "text-[#5A6372] hover:text-[#12151A]"
+                      }`}
+                    >
+                      🏙️ 3D Motherboard
+                    </button>
 
-                {/* 2. Cache Bit Inspector & Canvas Grid */}
-                <CacheVisualizer
-                  cache={simRef.current.cache}
-                  lastStep={lastStep}
-                  recentSteps={recentSteps}
-                />
+                    <button
+                      onClick={() => setCenterStage("cache")}
+                      className={`px-3 py-1.5 rounded font-bold transition-all ${
+                        centerStage === "cache"
+                          ? "bg-[#12151A] text-[#CCFF00] shadow-[2px_2px_0_#12151A]"
+                          : "text-[#5A6372] hover:text-[#12151A]"
+                      }`}
+                    >
+                      🔬 Cache Bit Inspector
+                    </button>
 
-                {/* 3. Video Player Simulation */}
-                <PlayerSim
-                  quality={config.quality}
-                  transferMode={config.transferMode}
-                  bufferLevelPct={metrics.bufferLevelPct}
-                  isBuffering={metrics.isBuffering}
-                  fps={metrics.fps}
-                  frameCounter={metrics.frameCounter}
-                />
+                    <button
+                      onClick={() => setCenterStage("player")}
+                      className={`px-3 py-1.5 rounded font-bold transition-all ${
+                        centerStage === "player"
+                          ? "bg-[#12151A] text-[#CCFF00] shadow-[2px_2px_0_#12151A]"
+                          : "text-[#5A6372] hover:text-[#12151A]"
+                      }`}
+                    >
+                      📺 Video Monitor
+                    </button>
+                  </div>
+
+                  {/* Calm persistent mini-status */}
+                  <div className="hidden sm:flex items-center gap-2 font-mono text-[10px] text-[#5A6372] pr-2">
+                    <span className="w-2 h-2 rounded-full bg-[#CCFF00] animate-pulse"></span>
+                    <span>ADDR: <strong className="text-[#12151A]">{lastStep ? lastStep.hexAddress : "0x20000000"}</strong></span>
+                  </div>
+                </div>
+
+                {/* Active Focused Visual Stage */}
+                {centerStage === "motherboard" && (
+                  <Motherboard3D
+                    transferMode={config.transferMode}
+                    isBuffering={metrics.isBuffering}
+                    cpuUtilizationFree={metrics.cpuUtilizationFree}
+                    hitRatio={metrics.hitRatio}
+                    currentAddressHex={lastStep?.hexAddress}
+                  />
+                )}
+
+                {centerStage === "cache" && (
+                  <CacheVisualizer
+                    cache={simRef.current.cache}
+                    lastStep={lastStep}
+                    recentSteps={recentSteps}
+                  />
+                )}
+
+                {centerStage === "player" && (
+                  <PlayerSim
+                    quality={config.quality}
+                    transferMode={config.transferMode}
+                    bufferLevelPct={metrics.bufferLevelPct}
+                    isBuffering={metrics.isBuffering}
+                    fps={metrics.fps}
+                    frameCounter={metrics.frameCounter}
+                  />
+                )}
               </div>
 
               {/* Right Column: Live Telemetry & Stress Deck (3 cols) */}
