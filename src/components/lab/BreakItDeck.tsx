@@ -32,7 +32,7 @@ export const BreakItDeck: React.FC<BreakItDeckProps> = ({
         >
           <div className="flex items-center justify-between mb-1.5">
             <span className="font-mono text-xs font-bold text-[#171717]">
-              🌪️ Seek Storm
+              Seek Storm
             </span>
             <Wind size={14} className="text-[#171717]" />
           </div>
@@ -48,7 +48,7 @@ export const BreakItDeck: React.FC<BreakItDeckProps> = ({
         >
           <div className="flex items-center justify-between mb-1.5">
             <span className="font-mono text-xs font-bold text-[#171717]">
-              ❄️ Cold Flush
+              Cold Flush
             </span>
             <Snowflake size={14} className="text-[#02167F]" />
           </div>
@@ -64,7 +64,7 @@ export const BreakItDeck: React.FC<BreakItDeckProps> = ({
         >
           <div className="flex items-center justify-between mb-1.5">
             <span className="font-mono text-xs font-extrabold text-[#171717]">
-              ⚡ Network Burst
+              Network Burst
             </span>
             <AlertTriangle size={14} className="text-[#171717]" />
           </div>
