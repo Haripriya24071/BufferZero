@@ -3,6 +3,7 @@ import { Simulation, DEFAULT_CONFIG } from "../engine/simulation";
 import { SimConfig, SimMetrics, SimStep } from "../engine/types";
 import { LabHeader } from "../components/lab/LabHeader";
 import { Controls } from "../components/lab/Controls";
+import { Motherboard3D } from "../components/lab/Motherboard3D";
 import { RaceMode } from "../components/lab/RaceMode";
 
 export const LabPage: React.FC = () => {
@@ -144,8 +145,19 @@ export const LabPage: React.FC = () => {
                 />
               </div>
 
-              {/* Right Column: Reserved Empty Space (8 cols) */}
-              <div className="lg:col-span-8 min-h-[500px]" />
+              {/* Right Column: Custom 3D Architecture Motherboard Simulator (8 cols) */}
+              <div className="lg:col-span-8">
+                <Motherboard3D
+                  transferMode={config.transferMode}
+                  isBuffering={metrics.isBuffering}
+                  cpuUtilizationFree={metrics.cpuUtilizationFree}
+                  hitRatio={metrics.hitRatio}
+                  currentAddressHex={lastStep?.hexAddress}
+                  lastStep={lastStep}
+                  blockSizeB={config.blockSizeB}
+                  cacheSizeKB={config.cacheSizeKB}
+                />
+              </div>
             </div>
           </div>
         )}
