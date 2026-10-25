@@ -8,19 +8,6 @@ import { CacheVisualizer } from "../components/lab/CacheVisualizer";
 import { MetricsPanel } from "../components/lab/MetricsPanel";
 import { TelemetryHUD } from "../components/lab/TelemetryHUD";
 import { RaceMode } from "../components/lab/RaceMode";
-import { RewindDebugger } from "../components/lab/RewindDebugger";
-import { BreakItDeck } from "../components/lab/BreakItDeck";
-import { HandCheckPanel } from "../components/lab/HandCheckPanel";
-import { ChartsView } from "../components/lab/ChartsView";
-import { PipelineView } from "../components/lab/PipelineView";
-import {
-  TrendingUp,
-  GitCommit,
-  History,
-  Calculator,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
 
 export const LabPage: React.FC = () => {
   const [config, setConfig] = useState<SimConfig>(DEFAULT_CONFIG);
@@ -35,11 +22,6 @@ export const LabPage: React.FC = () => {
   const [lastStep, setLastStep] = useState<SimStep | undefined>();
   const [recentSteps, setRecentSteps] = useState<SimStep[]>([]);
   const [history, setHistory] = useState<SimStep[]>([]);
-
-  // Active Bottom Tab
-  const [bottomTab, setBottomTab] = useState<"charts" | "pipeline" | "debugger" | "handcheck">("charts");
-  // Collapsible Architecture Deep-Dive Deck (collapsed by default to prevent endless 2000px scrolling)
-  const [isDeepDiveOpen, setIsDeepDiveOpen] = useState<boolean>(false);
 
   // Active Center Stage View ("motherboard" | "cache")
   const [centerStage, setCenterStage] = useState<"motherboard" | "cache">("motherboard");
@@ -231,115 +213,6 @@ export const LabPage: React.FC = () => {
                 {/* Hardware Logic Explainer & Secondary Telemetry */}
                 <MetricsPanel metrics={metrics} config={config} />
               </div>
-            </div>
-
-            {/* Collapsible Architecture Deep-Dive Deck (Prevents endless 2000px scrolling) */}
-            <div className="border-2 border-[#171717] rounded-xl bg-[#FFFFFF] shadow-[4px_4px_0_#171717] overflow-hidden">
-              {/* Accordion / Drawer Header Button */}
-              <button
-                type="button"
-                onClick={() => setIsDeepDiveOpen(!isDeepDiveOpen)}
-                className="w-full px-5 py-3.5 flex items-center justify-between bg-[#171717] text-white hover:bg-[#242424] transition-colors cursor-pointer select-none text-left"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="px-2 py-1 rounded bg-[#D7FF38] text-[#171717] font-bold text-xs font-mono">
-                    🔬 DEEP-DIVE
-                  </span>
-                  <div>
-                    <span className="font-mono text-sm font-bold text-white block">
-                      Architecture Analytics & Pipeline Workbench
-                    </span>
-                    <span className="text-xs font-mono text-[#D7FF38]">
-                      AMAT Sweep Curves • 5-Stage Hazard Pipeline • Rewind Cycle Trace • Formula Verifier
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="hidden sm:inline-block font-mono text-xs px-2.5 py-1 rounded bg-[#2A303A] text-[#D7FF38] font-bold border border-[#2A303A]">
-                    {isDeepDiveOpen ? "Collapse Analytics ▲" : "Expand 4 Interactive Modules ▼"}
-                  </span>
-                  <div className={`p-1 rounded bg-[#D7FF38] text-[#171717] font-bold transition-transform duration-200 ${isDeepDiveOpen ? "rotate-180" : ""}`}>
-                    <ChevronDown size={18} />
-                  </div>
-                </div>
-              </button>
-
-              {/* Expanded Tab Deck */}
-              {isDeepDiveOpen && (
-                <div className="p-5 space-y-4 bg-[#F5F5F0] border-t-2 border-[#171717]">
-                  {/* Tab Navigation */}
-                  <div className="flex flex-wrap items-center gap-2 border-b-2 border-[#171717]/20 pb-3">
-                    <button
-                      onClick={() => setBottomTab("charts")}
-                      className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
-                        bottomTab === "charts"
-                          ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
-                          : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
-                      }`}
-                    >
-                      <TrendingUp size={15} />
-                      <span>U-Shaped AMAT & Performance Charts</span>
-                    </button>
-
-                    <button
-                      onClick={() => setBottomTab("pipeline")}
-                      className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
-                        bottomTab === "pipeline"
-                          ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
-                          : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
-                      }`}
-                    >
-                      <GitCommit size={15} />
-                      <span>5-Stage Instruction Pipeline</span>
-                    </button>
-
-                    <button
-                      onClick={() => setBottomTab("debugger")}
-                      className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
-                        bottomTab === "debugger"
-                          ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
-                          : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
-                      }`}
-                    >
-                      <History size={15} />
-                      <span>Rewind Cycle Debugger</span>
-                    </button>
-
-                    <button
-                      onClick={() => setBottomTab("handcheck")}
-                      className={`px-3 py-1.5 rounded font-mono text-xs font-bold border-2 border-[#171717] flex items-center gap-1.5 transition-all cursor-pointer ${
-                        bottomTab === "handcheck"
-                          ? "bg-[#2457FF] text-white shadow-[3px_3px_0_#171717]"
-                          : "bg-[#FFFFFF] text-[#525252] hover:text-[#171717]"
-                      }`}
-                    >
-                      <Calculator size={15} />
-                      <span>Architecture Formula Verifier</span>
-                    </button>
-                  </div>
-
-                  {/* Tab Contents */}
-                  <div>
-                    {bottomTab === "charts" && <ChartsView currentConfig={config} />}
-                    {bottomTab === "pipeline" && (
-                      <PipelineView
-                        missRatio={metrics.missRatio}
-                        missPenalty={metrics.missPenalty}
-                      />
-                    )}
-                    {bottomTab === "debugger" && (
-                      <RewindDebugger
-                        history={history}
-                        geometry={simRef.current.cache.geometry}
-                      />
-                    )}
-                    {bottomTab === "handcheck" && (
-                      <HandCheckPanel config={config} metrics={metrics} />
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         )}
