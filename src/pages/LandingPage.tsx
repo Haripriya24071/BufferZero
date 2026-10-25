@@ -3,6 +3,7 @@ import { Hero } from "../components/landing/Hero";
 import { ProblemBand } from "../components/landing/ProblemBand";
 import { HowItWorks } from "../components/landing/HowItWorks";
 import { ConceptCards } from "../components/landing/ConceptCards";
+
 interface LandingPageProps {
   onLaunchLab: () => void;
 }
