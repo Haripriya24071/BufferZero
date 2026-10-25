@@ -133,15 +133,15 @@ export const HowItWorks: React.FC = () => {
   return (
     <section id="how-it-works" className="py-20 md:py-28 px-4 md:px-8 bg-[#FFFFFF] border-b-2 border-[#171717]">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <div className="text-center max-w-4xl mx-auto mb-10">
           <span className="font-mono text-xs uppercase tracking-widest text-[#171717] font-bold px-3 py-1 bg-[#D7FF38] border border-[#171717] rounded inline-block shadow-[2px_2px_0_#171717]">
             Interactive Workflow
           </span>
-          <h2 className="font-display text-4xl sm:text-5xl text-[#171717] mt-3 tracking-tight">
+          <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl text-[#171717] mt-2 tracking-tight whitespace-nowrap">
             Four Steps to Hardware Mastery
           </h2>
-          <p className="text-[#5A6372] mt-3 text-sm sm:text-base">
-            From adjusting raw silicon bus parameters to evaluating high-fidelity memory hierarchy and streaming telemetry.
+          <p className="text-[#525252] mt-1.5 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed">
+            From adjusting raw silicon bus parameters to evaluating memory hierarchy and streaming telemetry.
           </p>
         </div>
 
