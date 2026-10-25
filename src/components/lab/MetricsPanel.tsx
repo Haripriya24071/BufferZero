@@ -63,7 +63,7 @@ export const MetricsPanel: React.FC<MetricsPanelProps> = ({
         <div className="flex items-center gap-2">
           <Terminal size={17} className="text-[#2457FF]" />
           <h4 className="font-display text-sm uppercase tracking-wider text-[#171717]">
-            Hardware Logic Explainer (CO4 / CO5)
+            Hardware Architecture Logic Engine
           </h4>
         </div>
         <span className="text-[10px] font-mono font-bold text-[#525252] flex items-center gap-1">

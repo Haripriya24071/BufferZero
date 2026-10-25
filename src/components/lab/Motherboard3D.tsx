@@ -20,14 +20,14 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
   const [viewMode, setViewMode] = useState<"3d_city" | "schematic">("3d_city");
   const [activeChip, setActiveChip] = useState<string>("cpu");
 
-  const chipsInfo: Record<string, { title: string; role: string; status: string; coa: string }> = {
+  const chipsInfo: Record<string, { title: string; role: string; status: string; domain: string }> = {
     cpu: {
       title: "Central Processing Unit (CPU)",
       role: transferMode === "CPU" 
         ? "OVERLOADED: Busy executing load/store copy instructions for each word of the video stream."
         : "FREE: Dedicated to video frame decoding (H.264/HEVC) and pipeline execution.",
       status: transferMode === "CPU" ? "Bottlenecked (100% Load)" : `${Math.round(cpuUtilizationFree)}% Free Cycles`,
-      coa: "CO1 (CPU Architecture) & CO6 (Instruction Pipelining)",
+      domain: "Processor Architecture & Instruction Pipeline",
     },
     dma: {
       title: "Direct Memory Access Controller (DMAC)",
@@ -35,25 +35,25 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
         ? "ACTIVE: Directly streaming packets from Network NIC into DRAM via bus cycle stealing."
         : "IDLE: Programmed I/O mode active; CPU handles all transfers word-by-word.",
       status: transferMode === "DMA" ? "Autonomous Bus Master" : "Bypassed / Standby",
-      coa: "CO4 (I/O Organization & Direct Memory Access)",
+      domain: "I/O Organization & Autonomous Bus Mastering",
     },
     cache: {
       title: "On-Chip SRAM Cache Bank (L1/L2)",
       role: "Filters high-speed macroblock reads. Servicing hits in 1 cycle to prevent DRAM stalls.",
       status: `${hitRatio}% Hit Ratio`,
-      coa: "CO5 (Memory Hierarchy & Spatial Locality)",
+      domain: "High-Speed Memory Hierarchy & Spatial Locality",
     },
     ram: {
       title: "DDR Main Memory (Frame Buffer)",
       role: "Holds the circular video frame buffer and decoded macroblock textures.",
       status: "80 Cycle Access Latency",
-      coa: "CO5 (Primary Storage Hierarchy)",
+      domain: "Primary System Storage & Bus Contention",
     },
     nic: {
       title: "Network Streaming Ingestion Buffer",
       role: "Receives raw compressed bitstream packets from the network interface.",
       status: isBuffering ? "STARVED / WAITING" : "STREAMING ACTIVE",
-      coa: "CO4 (I/O Peripheral Interfacing)",
+      domain: "Network I/O Peripheral Interfacing",
     },
   };
 
@@ -97,7 +97,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       </div>
 
       {/* Main Visual Stage */}
-      <div className="relative w-full h-[380px] bg-[#0A0D12] overflow-hidden">
+      <div className="relative w-full h-[480px] lg:h-[520px] bg-[#0A0D12] overflow-hidden">
         {viewMode === "3d_city" ? (
           /* Sketchfab 3D Embed provided by the user */
           <div className="w-full h-full relative">
@@ -236,8 +236,8 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
             <span className="font-bold text-[#171717]">{chipsInfo[activeChip].status}</span>
           </div>
           <div className="bg-[#171717] text-[#D7FF38] px-2.5 py-1 rounded">
-            <span className="text-[10px] text-[#8E99A8] block">SYLLABUS</span>
-            <span className="font-bold text-[10px]">{chipsInfo[activeChip].coa}</span>
+            <span className="text-[10px] text-[#8E99A8] block">SUBSYSTEM</span>
+            <span className="font-bold text-[10px]">{chipsInfo[activeChip].domain}</span>
           </div>
         </div>
       </div>

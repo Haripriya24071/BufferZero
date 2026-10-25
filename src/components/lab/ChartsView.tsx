@@ -43,7 +43,7 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
           <div className="flex items-center gap-2">
             <TrendingUp size={18} className="text-[#171717]" />
             <h3 className="font-display text-base text-[#171717]">
-              Architecture Performance Analysis (CO5 Curves)
+              Architecture Performance Analysis (U-Shaped AMAT Curves)
             </h3>
           </div>
           <span className="text-[10px] font-mono text-[#5A6372]">

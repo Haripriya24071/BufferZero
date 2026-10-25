@@ -28,7 +28,7 @@ export const TelemetryHUD: React.FC<TelemetryHUDProps> = ({ metrics, config }) =
         <div className="flex items-center justify-between mb-1.5">
           <span className="text-[11px] font-bold text-[#525252] uppercase tracking-wider flex items-center gap-1.5">
             <Activity size={14} className="text-[#2457FF]" />
-            <span>AMAT (CO5)</span>
+            <span>Memory Latency (AMAT)</span>
           </span>
           <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-[#171717] ${amatHealth.color}`}>
             {amatHealth.text}
@@ -74,7 +74,7 @@ export const TelemetryHUD: React.FC<TelemetryHUDProps> = ({ metrics, config }) =
         <div className="flex items-center justify-between mb-1.5">
           <span className="text-[11px] font-bold text-[#525252] uppercase tracking-wider flex items-center gap-1.5">
             <Radio size={14} className={config.transferMode === "DMA" ? "text-[#2457FF]" : "text-[#FF3B30]"} />
-            <span>CPU Headroom (CO4)</span>
+            <span>CPU Free Headroom</span>
           </span>
           <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-[#171717] ${
             config.transferMode === "DMA" ? "bg-[#2457FF] text-white" : "bg-[#FF3B30] text-white"

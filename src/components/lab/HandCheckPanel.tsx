@@ -30,10 +30,10 @@ export const HandCheckPanel: React.FC<HandCheckPanelProps> = ({
           <Calculator size={18} className="text-[#171717]" />
           <div>
             <h3 className="font-display text-base text-[#171717]">
-              Architectural Formula Verification (CO5 / CO6)
+              Architectural Formula Verification Engine
             </h3>
             <span className="text-[10px] font-mono text-[#5A6372]">
-              Real-time numbers computed through textbook COA memory hierarchy models
+              Real-time calculations computed through standard memory hierarchy & pipeline models
             </span>
           </div>
         </div>
@@ -47,7 +47,7 @@ export const HandCheckPanel: React.FC<HandCheckPanelProps> = ({
         {/* Formula 1: Miss Penalty */}
         <div className="p-3.5 bg-[#FFFFFF] border-2 border-[#171717] rounded-lg space-y-2">
           <span className="text-[10px] font-bold uppercase text-[#5A6372] block">
-            1. Miss Penalty Formula (CO5)
+            1. Miss Penalty Calculation
           </span>
           <code className="text-[11px] text-[#171717] block font-bold">
             Penalty = t_mem + (Block / BusWidth) × Cycles
@@ -62,7 +62,7 @@ export const HandCheckPanel: React.FC<HandCheckPanelProps> = ({
         {/* Formula 2: AMAT */}
         <div className="p-3.5 bg-[#FFFFFF] border-2 border-[#171717] rounded-lg space-y-2">
           <span className="text-[10px] font-bold uppercase text-[#5A6372] block">
-            2. AMAT Calculation (CO5)
+            2. AMAT Calculation
           </span>
           <code className="text-[11px] text-[#171717] block font-bold">
             AMAT = HitTime + (MissRate × MissPenalty)
@@ -77,7 +77,7 @@ export const HandCheckPanel: React.FC<HandCheckPanelProps> = ({
         {/* Formula 3: CPI */}
         <div className="p-3.5 bg-[#FFFFFF] border-2 border-[#171717] rounded-lg space-y-2">
           <span className="text-[10px] font-bold uppercase text-[#5A6372] block">
-            3. Instruction CPI (CO6)
+            3. Pipeline CPI & Memory Stalls
           </span>
           <code className="text-[11px] text-[#171717] block font-bold">
             CPI = BaseCPI + (MemAcc × MissRate × Penalty)

@@ -215,7 +215,7 @@ export const HowItWorks: React.FC = () => {
               }`}
             >
               <GitCommit size={15} />
-              <span>5-Stage Instruction Pipeline (CO6)</span>
+              <span>5-Stage Instruction Pipeline</span>
             </button>
 
             <button
@@ -239,7 +239,7 @@ export const HowItWorks: React.FC = () => {
               }`}
             >
               <Calculator size={15} />
-              <span>Architecture Formula Verifier (CO5 / CO6)</span>
+              <span>Architecture Formula Verifier</span>
             </button>
           </div>
 

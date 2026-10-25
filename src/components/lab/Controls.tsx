@@ -65,7 +65,7 @@ export const Controls: React.FC<ControlsProps> = ({
         <div className="flex items-center justify-between">
           <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
             <Radio size={13} className="text-[#2457FF]" />
-            <span>Data Transfer Mode (CO4)</span>
+            <span>Data Transfer Architecture</span>
           </label>
           <span className="text-[10px] font-mono text-[#525252]">
             {config.transferMode === "DMA" ? "Dedicated Hardware" : "Programmed I/O"}
@@ -104,7 +104,7 @@ export const Controls: React.FC<ControlsProps> = ({
         <div className="flex items-center justify-between">
           <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
             <HardDrive size={13} className="text-[#2457FF]" />
-            <span>Cache Block Size (CO5)</span>
+            <span>Cache Block Size (L1 Line)</span>
           </label>
           <div className="flex items-center gap-2">
             <div
