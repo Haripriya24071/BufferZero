@@ -148,7 +148,7 @@ export const CacheVisualizer: React.FC<CacheVisualizerProps> = ({
       {/* Canvas Cache Set Grid */}
       <div className="bg-[#FFFFFF] border-2 border-[#171717] p-2 rounded-lg">
         <div className="flex items-center justify-between text-[10px] font-mono text-[#5A6372] px-2 mb-1">
-          <span>Set 0 ➔ {Math.min(32, geometry.numSets) - 1}</span>
+          <span>Set 0 to {Math.min(32, geometry.numSets) - 1}</span>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <span className="w-2.5 h-2.5 bg-[#D7FF38] border border-[#171717] rounded-xs"></span>
