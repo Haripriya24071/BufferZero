@@ -117,9 +117,9 @@ export const LabPage: React.FC = () => {
         ) : (
           /* Balanced 2-Column Lab Workspace (4 cols : 8 cols) */
           <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
               {/* Left Column: Architecture Controls + Primary Transport + Workload Presets (4 cols) */}
-              <div className="lg:col-span-4 space-y-4">
+              <div className="lg:col-span-4 h-full">
                 <Controls
                   config={config}
                   onChangeConfig={handleConfigChange}
@@ -138,7 +138,7 @@ export const LabPage: React.FC = () => {
               </div>
 
               {/* Right Column: Custom 3D Architecture Motherboard Simulator (8 cols) */}
-              <div className="lg:col-span-8">
+              <div className="lg:col-span-8 h-full">
                 <Motherboard3D
                   transferMode={config.transferMode}
                   isBuffering={metrics.isBuffering}
