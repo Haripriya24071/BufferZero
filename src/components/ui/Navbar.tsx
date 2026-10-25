@@ -1,6 +1,6 @@
 import React from "react";
 import { PROJECT_CONFIG } from "../../config/project";
-import { Zap, Play, Terminal } from "lucide-react";
+import { Zap, Terminal } from "lucide-react";
 
 interface NavbarProps {
   currentView: "landing" | "lab";
