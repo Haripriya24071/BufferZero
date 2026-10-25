@@ -72,6 +72,13 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchLab }) => {
             BufferZero lets you simulate a computer’s hardware cache, bus data transfers, and DMA controller in real time. Change one setting, watch the memory accesses flow, and see whether the video plays smoothly or stalls.
           </p>
 
+          {/* Academic Context Badge */}
+          <div className="p-3 bg-[#FFFFFF] border-2 border-[#171717] rounded-lg shadow-[3px_3px_0_#171717] max-w-lg font-mono text-xs text-[#525252]">
+            <p>
+              <span className="font-bold text-[#171717]">Mini Project Scope:</span> Solves how cache block sizing & DMA affect video playback. Covers <strong className="text-[#2457FF]">CO4 (I/O Organization)</strong>, <strong className="text-[#2457FF]">CO5 (Memory Hierarchy)</strong>, and <strong className="text-[#2457FF]">CO6 (Pipelining)</strong>.
+            </p>
+          </div>
+
           <div className="flex flex-wrap items-center gap-4 pt-2">
             <button
               onClick={onLaunchLab}
