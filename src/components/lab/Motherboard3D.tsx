@@ -473,29 +473,51 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     // --- ADDITIONAL REALISTIC HARDWARE COMPONENTS (UNNAMED) ---
     // ==========================================================
 
-    // A. VRM Power Delivery Stage (Capacitors, Chokes & MOSFETs around CPU)
+    // A. CPU Socket Retention Frame & Chrome Lever Arm
+    const leverMat = new THREE.MeshStandardMaterial({ color: 0xd1d5db, metalness: 0.95, roughness: 0.1 });
+    const cpuLever = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 6.2, 12), leverMat);
+    cpuLever.rotation.z = Math.PI / 2;
+    cpuLever.position.set(-3.0, 0.75, -6.1);
+    scene.add(cpuLever);
+
+    const leverHook = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.25, 0.4), leverMat);
+    leverHook.position.set(0.1, 0.8, -6.1);
+    scene.add(leverHook);
+
+    // B. VRM Power Delivery Stage (DrMOS, Chokes, Solid Capacitors)
     const chokeMat = new THREE.MeshStandardMaterial({ color: 0x1a202c, metalness: 0.6, roughness: 0.3 });
     const capBodyMat = new THREE.MeshStandardMaterial({ color: 0xa0aec0, metalness: 0.85, roughness: 0.2 });
     const capStripeMat = new THREE.MeshBasicMaterial({ color: 0x2457ff });
+    const drmosMat = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.3, metalness: 0.5 });
+    const solidCapMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.7, roughness: 0.3 });
 
     // Left VRM bank (vertical)
     for (let z = -6.0; z <= 0.0; z += 1.2) {
-      // Ferrite Choke
+      // High-power Choke
       const choke = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.6, 0.7), chokeMat);
       choke.position.set(-7.2, 0.7, z);
       choke.castShadow = true;
       scene.add(choke);
 
-      // Solid Aluminum Capacitor
+      // Main Electrolytic/Polymer Cap
       const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.75, 12), capBodyMat);
       cap.position.set(-8.4, 0.78, z);
       cap.castShadow = true;
       scene.add(cap);
 
-      // Capacitor blue stripe
       const stripe = new THREE.Mesh(new THREE.CylinderGeometry(0.305, 0.305, 0.2, 12), capStripeMat);
       stripe.position.set(-8.4, 1.0, z);
       scene.add(stripe);
+
+      // DrMOS Power Stage Chip behind choke
+      const drmos = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.12, 0.45), drmosMat);
+      drmos.position.set(-6.2, 0.5, z);
+      scene.add(drmos);
+
+      // Low-ESR Solid Polymer Cap in front
+      const sCap = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.5, 12), solidCapMat);
+      sCap.position.set(-5.5, 0.65, z);
+      scene.add(sCap);
     }
 
     // Top VRM bank (horizontal)
@@ -509,9 +531,36 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       cap.position.set(x, 0.78, -8.4);
       cap.castShadow = true;
       scene.add(cap);
+
+      const drmos = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.12, 0.45), drmosMat);
+      drmos.position.set(x, 0.5, -6.2);
+      scene.add(drmos);
+
+      const sCap = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.5, 12), solidCapMat);
+      sCap.position.set(x, 0.65, -5.5);
+      scene.add(sCap);
     }
 
-    // B. PCH / Southbridge Heatsink (Lower-right corner)
+    // VRM Aluminum Heatsink Armor Blocks
+    const vrmArmorMat = new THREE.MeshStandardMaterial({ color: 0x242a35, metalness: 0.8, roughness: 0.25 });
+    const leftVrmArmor = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.4, 7.5), vrmArmorMat);
+    leftVrmArmor.position.set(-9.4, 1.1, -3.0);
+    leftVrmArmor.castShadow = true;
+    scene.add(leftVrmArmor);
+
+    const topVrmArmor = new THREE.Mesh(new THREE.BoxGeometry(6.5, 1.4, 1.2), vrmArmorMat);
+    topVrmArmor.position.set(-3.0, 1.1, -9.4);
+    topVrmArmor.castShadow = true;
+    scene.add(topVrmArmor);
+
+    // Heatpipe connecting Left and Top VRM Heatsinks
+    const copperPipeMat = new THREE.MeshStandardMaterial({ color: 0xb87333, metalness: 0.9, roughness: 0.2 });
+    const heatpipe = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 3.5, 12), copperPipeMat);
+    heatpipe.rotation.z = Math.PI / 4;
+    heatpipe.position.set(-8.0, 1.6, -8.0);
+    scene.add(heatpipe);
+
+    // C. PCH / Southbridge Heatsink (Lower-right corner)
     const pchBaseMat = new THREE.MeshStandardMaterial({ color: 0x2d3748, metalness: 0.7, roughness: 0.3 });
     const pchBase = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.6, 4.2), pchBaseMat);
     pchBase.position.set(7.5, 0.7, 7.5);
@@ -526,7 +575,15 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       scene.add(fin);
     }
 
-    // C. M.2 NVMe PCIe 4.0 SSD Drive & Slot
+    // Brushed Aluminum Accent Badge on PCH
+    const pchBadge = new THREE.Mesh(
+      new THREE.BoxGeometry(2.4, 0.08, 1.2),
+      new THREE.MeshStandardMaterial({ color: 0xd7ff38, metalness: 0.9, roughness: 0.2 })
+    );
+    pchBadge.position.set(7.5, 1.48, 7.5);
+    scene.add(pchBadge);
+
+    // D. M.2 NVMe PCIe 4.0 SSD Drive 1 & Slot
     const m2Slot = new THREE.Mesh(
       new THREE.BoxGeometry(0.5, 0.3, 1.6),
       new THREE.MeshStandardMaterial({ color: 0x1a202c })
@@ -534,7 +591,6 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     m2Slot.position.set(-6.5, 0.55, 1.5);
     scene.add(m2Slot);
 
-    // M.2 2280 PCB Stick
     const m2Stick = new THREE.Mesh(
       new THREE.BoxGeometry(1.5, 0.12, 5.2),
       new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.5 })
@@ -543,7 +599,6 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     m2Stick.castShadow = true;
     scene.add(m2Stick);
 
-    // 2x NAND Flash ICs on SSD
     [-0.5, 1.0].forEach((zOff) => {
       const nand = new THREE.Mesh(
         new THREE.BoxGeometry(1.1, 0.18, 1.3),
@@ -553,7 +608,6 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       scene.add(nand);
     });
 
-    // M.2 Standoff Screw
     const m2Screw = new THREE.Mesh(
       new THREE.CylinderGeometry(0.2, 0.2, 0.35, 12),
       new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9 })
@@ -561,7 +615,16 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     m2Screw.position.set(-6.5, 0.6, -3.8);
     scene.add(m2Screw);
 
-    // D. CMOS Coin Cell Battery (CR2032)
+    // E. Second M.2 Armor Heatshield (Between CPU and PCH)
+    const m2Armor2 = new THREE.Mesh(
+      new THREE.BoxGeometry(1.6, 0.3, 5.6),
+      new THREE.MeshStandardMaterial({ color: 0x2d3748, metalness: 0.8, roughness: 0.3 })
+    );
+    m2Armor2.position.set(1.5, 0.55, 1.8);
+    m2Armor2.castShadow = true;
+    scene.add(m2Armor2);
+
+    // F. CMOS Coin Cell Battery (CR2032)
     const cmosHolder = new THREE.Mesh(
       new THREE.CylinderGeometry(1.2, 1.2, 0.35, 24),
       new THREE.MeshStandardMaterial({ color: 0x1a202c, roughness: 0.7 })
@@ -576,53 +639,384 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     cmosBattery.position.set(1.5, 0.75, 6.8);
     scene.add(cmosBattery);
 
-    // E. 24-Pin ATX Main Power Connector (Right Edge)
+    // G. Secondary & Tertiary PCIe Expansion Slots + Retention Latches
+    const pcie2Slot = new THREE.Mesh(
+      new THREE.BoxGeometry(0.7, 0.45, 11),
+      new THREE.MeshStandardMaterial({ color: 0x718096, metalness: 0.9, roughness: 0.25 }) // Metal armor shield
+    );
+    pcie2Slot.position.set(-8.8, 0.62, 5.5);
+    pcie2Slot.castShadow = true;
+    scene.add(pcie2Slot);
+
+    const pcieX1Slot = new THREE.Mesh(
+      new THREE.BoxGeometry(0.6, 0.4, 3.4),
+      new THREE.MeshStandardMaterial({ color: 0x171923 })
+    );
+    pcieX1Slot.position.set(-8.8, 0.6, -7.0);
+    scene.add(pcieX1Slot);
+
+    // Third PCIe slot (PCIe x4)
+    const pcie3Slot = new THREE.Mesh(
+      new THREE.BoxGeometry(0.6, 0.4, 7.0),
+      new THREE.MeshStandardMaterial({ color: 0x1f2937 })
+    );
+    pcie3Slot.position.set(-6.0, 0.6, 8.2);
+    scene.add(pcie3Slot);
+
+    // Translucent white retention clip latches at slot ends
+    const latchMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.4 });
+    [[-11.5, 5.8], [-8.8, 11.2], [-6.0, 11.8]].forEach(([lx, lz]) => {
+      const latch = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.6, 0.5), latchMat);
+      latch.position.set(lx, 0.75, lz);
+      scene.add(latch);
+    });
+
+    // M.2 Key-E Wi-Fi / Bluetooth Module Card Slot
+    const wifiSlot = new THREE.Mesh(
+      new THREE.BoxGeometry(1.2, 0.35, 1.8),
+      new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.6 })
+    );
+    wifiSlot.position.set(-13.8, 0.6, -5.5);
+    scene.add(wifiSlot);
+
+    // H. Isolated Hi-Fi Audio Section (Bottom Left Corner)
+    // Solder mask isolation trace line (amber glow)
+    addTrace(-15.5, 4.0, -10.5, 11.5, new THREE.MeshBasicMaterial({ color: 0xffaa00 }));
+
+    // Audio DAC Chip with Metal Shield
+    const dacShield = new THREE.Mesh(
+      new THREE.BoxGeometry(1.8, 0.35, 1.8),
+      new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.85, roughness: 0.25 })
+    );
+    dacShield.position.set(-13.0, 0.6, 7.5);
+    dacShield.castShadow = true;
+    scene.add(dacShield);
+
+    // Realtek ALC1220 / ESS Sabre Audio Codec Chip
+    const audioCodec = new THREE.Mesh(
+      new THREE.BoxGeometry(1.2, 0.2, 1.2),
+      new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.3 })
+    );
+    audioCodec.position.set(-11.2, 0.55, 8.5);
+    scene.add(audioCodec);
+
+    // 6x Japanese Nichicon Gold Audio Capacitors
+    const goldCapMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9, roughness: 0.15 });
+    [-0.6, 0, 0.6].forEach((gx) => {
+      [-0.6, 0.6].forEach((gz) => {
+        const aCap = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.8, 16), goldCapMat);
+        aCap.position.set(-13.0 + gx, 0.8, 9.5 + gz);
+        aCap.castShadow = true;
+        scene.add(aCap);
+      });
+    });
+
+    // I. High-Capacity Stacked SATA 6 Gbps Storage Towers (Right Edge)
+    const sataMat = new THREE.MeshStandardMaterial({ color: 0x171923, roughness: 0.5 });
+    const redSataMat = new THREE.MeshStandardMaterial({ color: 0xef4444 });
+
+    // Primary 6-port SATA block
+    const sataPortBlock = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.3, 4.2), sataMat);
+    sataPortBlock.position.set(14.8, 1.05, 6.5);
+    sataPortBlock.castShadow = true;
+    scene.add(sataPortBlock);
+
+    [-1.2, 0, 1.2].forEach((sz) => {
+      const redPort = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.45, 0.8), redSataMat);
+      redPort.position.set(15.4, 0.9, 6.5 + sz);
+      scene.add(redPort);
+    });
+
+    // Secondary 4-port SATA block
+    const sataPortBlock2 = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.3, 2.8), sataMat);
+    sataPortBlock2.position.set(14.8, 1.05, 2.2);
+    sataPortBlock2.castShadow = true;
+    scene.add(sataPortBlock2);
+
+    [-0.6, 0.6].forEach((sz) => {
+      const redPort = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.45, 0.8), redSataMat);
+      redPort.position.set(15.4, 0.9, 2.2 + sz);
+      scene.add(redPort);
+    });
+
+    // J. Front Panel USB Internal Headers (Right Edge)
+    // USB 3.2 Gen 2x2 Type-C Front Header (Metal Shielded Box)
+    const typeCHeader = new THREE.Mesh(
+      new THREE.BoxGeometry(0.8, 0.9, 1.2),
+      new THREE.MeshStandardMaterial({ color: 0x8e99a8, metalness: 0.9, roughness: 0.2 })
+    );
+    typeCHeader.position.set(14.8, 0.85, -3.2);
+    scene.add(typeCHeader);
+
+    // USB 3.0 19-Pin Front Panel Header (Blue Keyed Box)
+    const usb3Header = new THREE.Mesh(
+      new THREE.BoxGeometry(0.9, 0.7, 1.8),
+      new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.5 })
+    );
+    usb3Header.position.set(14.8, 0.75, -5.0);
+    scene.add(usb3Header);
+
+    // 24-Pin ATX Main Power Connector
     const atxMat = new THREE.MeshStandardMaterial({ color: 0x171923, roughness: 0.6 });
     const atxBlock = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.1, 4.6), atxMat);
-    atxBlock.position.set(14.8, 0.95, 0);
+    atxBlock.position.set(14.8, 0.95, -0.5);
     atxBlock.castShadow = true;
     scene.add(atxBlock);
 
-    // Gold Pin Sockets inside ATX
     const pinMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9 });
     for (let pz = -1.8; pz <= 1.8; pz += 0.38) {
       [-0.25, 0.25].forEach((px) => {
         const pin = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.2, 0.12), pinMat);
-        pin.position.set(14.8 + px, 1.55, pz);
+        pin.position.set(14.8 + px, 1.55, -0.5 + pz);
         scene.add(pin);
       });
     }
 
-    // F. Rear I/O Shield Connectors (Top edge z = -11.4)
+    // K. 8-Pin + 4-Pin EPS CPU 12V Power Connectors (Top Left)
+    const epsBlock = new THREE.Mesh(
+      new THREE.BoxGeometry(1.2, 1.1, 2.2),
+      new THREE.MeshStandardMaterial({ color: 0x171923, roughness: 0.6 })
+    );
+    epsBlock.position.set(-13.5, 0.95, -10.5);
+    epsBlock.castShadow = true;
+    scene.add(epsBlock);
+
+    const epsAux4 = new THREE.Mesh(
+      new THREE.BoxGeometry(1.2, 1.1, 1.2),
+      new THREE.MeshStandardMaterial({ color: 0x171923, roughness: 0.6 })
+    );
+    epsAux4.position.set(-11.5, 0.95, -10.5);
+    epsAux4.castShadow = true;
+    scene.add(epsAux4);
+
+    // L. 7-Segment Debug LED POST Display & Hardware Buttons (Top Right)
+    const postDisplayMat = new THREE.MeshBasicMaterial({ color: 0x00ff66 });
+    const postDisplay = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.45, 1.4), new THREE.MeshStandardMaterial({ color: 0x0f172a }));
+    postDisplay.position.set(13.2, 0.65, -9.5);
+    scene.add(postDisplay);
+
+    const postDigit = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 0.35), postDisplayMat);
+    postDigit.rotation.x = -Math.PI / 2;
+    postDigit.position.set(13.2, 0.9, -9.5);
+    scene.add(postDigit);
+
+    // Onboard Power & Reset Tactile Buttons
+    const startBtn = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.4, 0.4, 0.35, 16),
+      new THREE.MeshStandardMaterial({ color: 0xef4444, metalness: 0.5, roughness: 0.2 })
+    );
+    startBtn.position.set(13.2, 0.65, -7.5);
+    scene.add(startBtn);
+
+    const resetBtn = new THREE.Mesh(
+      new THREE.BoxGeometry(0.6, 0.35, 0.6),
+      new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3 })
+    );
+    resetBtn.position.set(13.2, 0.65, -6.0);
+    scene.add(resetBtn);
+
+    // M. Rear I/O Shield Full Armor Casing & Complete Port Stack
+    const ioArmorMat = new THREE.MeshStandardMaterial({ color: 0x1e242d, metalness: 0.8, roughness: 0.3 });
+    const ioShroud = new THREE.Mesh(new THREE.BoxGeometry(11.0, 1.8, 2.2), ioArmorMat);
+    ioShroud.position.set(-9.5, 1.3, -11.0);
+    ioShroud.castShadow = true;
+    scene.add(ioShroud);
+
+    // Subtle Cyan Gamer Stripe along I/O Shroud
+    const shroudStripe = new THREE.Mesh(
+      new THREE.BoxGeometry(10.8, 0.08, 0.08),
+      new THREE.MeshBasicMaterial({ color: 0x00f0ff })
+    );
+    shroudStripe.position.set(-9.5, 2.22, -10.0);
+    scene.add(shroudStripe);
+
     const ioMetalMat = new THREE.MeshStandardMaterial({ color: 0x8e99a8, metalness: 0.85, roughness: 0.3 });
 
-    // Stacked Dual USB Ports
-    const usb1 = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.4, 1.4), ioMetalMat);
-    usb1.position.set(-11.5, 1.1, -11.2);
-    scene.add(usb1);
+    // DisplayPort 1.4
+    const dpBox = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 1.2), ioMetalMat);
+    dpBox.position.set(-7.0, 1.0, -11.4);
+    scene.add(dpBox);
 
-    const usb2 = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.4, 1.4), ioMetalMat);
-    usb2.position.set(-8.5, 1.1, -11.2);
-    scene.add(usb2);
+    // Dual Stacked RJ45 Ethernet Towers
+    const lanTower = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.6, 1.4), ioMetalMat);
+    lanTower.position.set(-10.2, 1.2, -11.4);
+    scene.add(lanTower);
 
-    // HDMI / DisplayPort Box
-    const hdmiBox = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.2, 1.2), ioMetalMat);
-    hdmiBox.position.set(-5.5, 1.0, -11.2);
-    scene.add(hdmiBox);
+    // Dual Ethernet Activity Micro LEDs (Amber & Green)
+    const ledAmber = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffaa00 }));
+    ledAmber.position.set(-10.4, 1.9, -11.9);
+    scene.add(ledAmber);
+    const ledGreen = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ff66 }));
+    ledGreen.position.set(-10.0, 1.9, -11.9);
+    scene.add(ledGreen);
 
-    // Audio Jacks (3 gold cylinder ports)
-    [0.8, 1.8, 2.8].forEach((xOff, idx) => {
-      const colors = [0x22c55e, 0xef4444, 0x3b82f6];
-      const jack = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.3, 0.3, 0.8, 16),
-        new THREE.MeshStandardMaterial({ color: colors[idx], roughness: 0.5 })
-      );
-      jack.rotation.x = Math.PI / 2;
-      jack.position.set(-2.5 + xOff, 1.0, -11.4);
-      scene.add(jack);
+    // Optical SPDIF TOSLINK Port (Square black with red emitter)
+    const toslinkBox = new THREE.Mesh(
+      new THREE.BoxGeometry(0.9, 0.9, 0.9),
+      new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.7 })
+    );
+    toslinkBox.position.set(-3.8, 0.9, -11.4);
+    scene.add(toslinkBox);
+    const optCore = new THREE.Mesh(new THREE.SphereGeometry(0.12, 8, 8), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+    optCore.position.set(-3.8, 0.9, -11.9);
+    scene.add(optCore);
+
+    // Dual Brass Gold Wi-Fi 6E/7 Antenna Screw Terminals
+    const goldAntennaMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.95, roughness: 0.1 });
+    [-12.8, -12.0].forEach((ax) => {
+      const sma = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.8, 16), goldAntennaMat);
+      sma.rotation.x = Math.PI / 2;
+      sma.position.set(ax, 1.2, -11.5);
+      scene.add(sma);
     });
 
-    // G. Quartz Crystal Oscillators (Clocks)
+    // BIOS Flashback tactile button & Type-C rear port
+    const biosFbBtn = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.15, 0.15, 0.3, 12),
+      new THREE.MeshStandardMaterial({ color: 0x3b82f6 })
+    );
+    biosFbBtn.rotation.x = Math.PI / 2;
+    biosFbBtn.position.set(-14.2, 1.4, -11.5);
+    scene.add(biosFbBtn);
+
+    // N. Super I/O Controller, Clock Synthesizer & Dual BIOS Chips
+    // Nuvoton / ITE Super I/O Controller (QFP-128 flat chip with 4-sided silver leads)
+    const superIoChip = new THREE.Mesh(
+      new THREE.BoxGeometry(2.2, 0.25, 2.2),
+      new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.3, metalness: 0.6 })
+    );
+    superIoChip.position.set(-3.0, 0.55, 9.8);
+    superIoChip.castShadow = true;
+    scene.add(superIoChip);
+
+    // Silver gull-wing leads around Super I/O perimeter
+    const leadMat = new THREE.MeshStandardMaterial({ color: 0xd1d5db, metalness: 0.95 });
+    [-1.2, 1.2].forEach((lx) => {
+      const pinBand = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.08, 1.8), leadMat);
+      pinBand.position.set(-3.0 + lx, 0.44, 9.8);
+      scene.add(pinBand);
+    });
+    [-1.2, 1.2].forEach((lz) => {
+      const pinBand = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.08, 0.12), leadMat);
+      pinBand.position.set(-3.0, 0.44, 9.8 + lz);
+      scene.add(pinBand);
+    });
+
+    // Dual SPI Flash BIOS Chips (SOIC-8 packages)
+    const biosChipMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.4 });
+    [-0.5, 0.5].forEach((bx) => {
+      const bChip = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.2, 0.8), biosChipMat);
+      bChip.position.set(0.5 + bx, 0.52, 4.2);
+      scene.add(bChip);
+    });
+
+    // BIOS Select Jumper (Yellow jumper cap)
+    const jumperCap = new THREE.Mesh(
+      new THREE.BoxGeometry(0.25, 0.35, 0.45),
+      new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.4 })
+    );
+    jumperCap.position.set(1.5, 0.6, 4.2);
+    scene.add(jumperCap);
+
+    // Clock Synthesizer / PCIe 5.0 Buffer IC
+    const clkGen = new THREE.Mesh(
+      new THREE.BoxGeometry(0.9, 0.2, 0.9),
+      new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.3 })
+    );
+    clkGen.position.set(-0.5, 0.52, 3.5);
+    scene.add(clkGen);
+
+    // Motherboard Piezo Beeper / Buzzer Cylinder
+    const buzzer = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.6, 0.6, 0.55, 24),
+      new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.8 })
+    );
+    buzzer.position.set(11.5, 0.7, 9.5);
+    buzzer.castShadow = true;
+    scene.add(buzzer);
+
+    // Clear CMOS 2-Pin Jumper with Blue Cap
+    const clrCmos = new THREE.Mesh(
+      new THREE.BoxGeometry(0.22, 0.35, 0.35),
+      new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.3 })
+    );
+    clrCmos.position.set(3.2, 0.6, 7.0);
+    scene.add(clrCmos);
+
+    // TPM 2.0 Security Module Header (14-pin dual row)
+    const tpmHeader = new THREE.Mesh(
+      new THREE.BoxGeometry(1.6, 0.3, 0.4),
+      new THREE.MeshStandardMaterial({ color: 0x1f2937 })
+    );
+    tpmHeader.position.set(-0.5, 0.55, 11.0);
+    scene.add(tpmHeader);
+
+    // Front Panel Audio (AAFP) 9-pin header (Left corner)
+    const aafpHeader = new THREE.Mesh(
+      new THREE.BoxGeometry(1.2, 0.3, 0.4),
+      new THREE.MeshStandardMaterial({ color: 0x171923 })
+    );
+    aafpHeader.position.set(-14.0, 0.55, 11.0);
+    scene.add(aafpHeader);
+
+    // Dual Internal USB 2.0 9-Pin Headers
+    [-7.5, -5.5].forEach((ux) => {
+      const uHeader = new THREE.Mesh(
+        new THREE.BoxGeometry(1.1, 0.3, 0.4),
+        new THREE.MeshStandardMaterial({ color: 0x171923 })
+      );
+      uHeader.position.set(ux, 0.55, 11.0);
+      scene.add(uHeader);
+    });
+
+    // Front Panel Control Switch Header (Colored pins: Power SW, Reset SW, HDD LED)
+    const fpHeader = new THREE.Mesh(
+      new THREE.BoxGeometry(1.4, 0.3, 0.4),
+      new THREE.MeshStandardMaterial({ color: 0x1f2937 })
+    );
+    fpHeader.position.set(13.5, 0.55, 11.0);
+    scene.add(fpHeader);
+
+    const fpColors = [0xef4444, 0x22c55e, 0x3b82f6, 0xfacc15];
+    [-0.5, -0.2, 0.1, 0.4].forEach((fx, idx) => {
+      const fpin = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.04, 0.04, 0.45, 8),
+        new THREE.MeshStandardMaterial({ color: fpColors[idx] })
+      );
+      fpin.position.set(13.5 + fx, 0.75, 11.0);
+      scene.add(fpin);
+    });
+
+    // 12V 4-Pin RGB & 5V 3-Pin ARGB Lighting Headers
+    const rgbHeader = new THREE.Mesh(
+      new THREE.BoxGeometry(0.8, 0.3, 0.3),
+      new THREE.MeshStandardMaterial({ color: 0xf8fafc })
+    );
+    rgbHeader.position.set(8.5, 0.55, 11.0);
+    scene.add(rgbHeader);
+
+    // O. DDR5 DIMM Ejector Latches & Onboard PMIC ICs
+    [-0.7, 0.7].forEach((offset) => {
+      // Ejector clips at top and bottom of each RAM slot
+      [-6.8, 6.8].forEach((ez) => {
+        const latch = new THREE.Mesh(
+          new THREE.BoxGeometry(0.35, 0.7, 0.4),
+          new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.4 })
+        );
+        latch.position.set(6.5 + offset, 1.4, ez);
+        scene.add(latch);
+      });
+
+      // On-DIMM Power Management IC (PMIC)
+      const pmic = new THREE.Mesh(
+        new THREE.BoxGeometry(0.3, 0.3, 0.3),
+        new THREE.MeshStandardMaterial({ color: 0x111827, metalness: 0.8 })
+      );
+      pmic.position.set(6.5 + offset, 2.8, 0);
+      scene.add(pmic);
+    });
+
+    // P. Quartz Crystal Oscillators (Clocks)
     const crystalMat = new THREE.MeshStandardMaterial({ color: 0xc0c7d0, metalness: 0.9, roughness: 0.2 });
     const crystal1 = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.2, 0.7), crystalMat);
     crystal1.position.set(-0.8, 0.52, -7.5);
@@ -632,26 +1026,57 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     crystal2.position.set(-2.5, 0.52, 5.0);
     scene.add(crystal2);
 
-    // H. Fan & Front Panel Pin Headers (Jumper Rows)
-    const headerMat = new THREE.MeshStandardMaterial({ color: 0x1f2937 });
-    [-10, -5, 5, 10].forEach((hx) => {
-      const header = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.3, 0.4), headerMat);
-      header.position.set(hx, 0.55, 11.0);
-      scene.add(header);
+    const crystal3 = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.2, 0.7), crystalMat);
+    crystal3.position.set(-11.5, 0.52, 7.0);
+    scene.add(crystal3);
 
-      for (let p = -0.3; p <= 0.3; p += 0.2) {
-        const hPin = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.5, 8), pinMat);
-        hPin.position.set(hx + p, 0.8, 11.0);
-        scene.add(hPin);
+    // Q. CPU Fan & Water Pump Headers near CPU Socket
+    [[-1.0, -6.0], [3.5, -6.0], [-7.5, -9.5], [10.0, -6.5]].forEach(([fx, fz]) => {
+      const fanH = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.3, 0.3), new THREE.MeshStandardMaterial({ color: 0xf8fafc }));
+      fanH.position.set(fx, 0.55, fz);
+      scene.add(fanH);
+      for (let fp = -0.25; fp <= 0.25; fp += 0.17) {
+        const fpin = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.45, 8), pinMat);
+        fpin.position.set(fx + fp, 0.75, fz);
+        scene.add(fpin);
       }
     });
 
-    // I. Dense SMD Micro Resistors & Decoupling Capacitors (80+ passives)
+    // R. High-Speed Serpentine Matched-Length Bus Traces
+    const serpentineMat = new THREE.MeshBasicMaterial({ color: 0xd4af37 });
+    for (let s = -2; s <= 2; s += 0.8) {
+      addTrace(3.8, s - 2.5, 4.4, s - 2.0, serpentineMat);
+      addTrace(4.4, s - 2.0, 4.8, s - 2.7, serpentineMat);
+      addTrace(4.8, s - 2.7, 5.4, s - 2.2, serpentineMat);
+    }
+
+    // S. Barcode Inventory Sticker & Silkscreen Fiducials
+    const sticker = new THREE.Mesh(
+      new THREE.PlaneGeometry(3.2, 1.0),
+      new THREE.MeshBasicMaterial({ color: 0xf8fafc })
+    );
+    sticker.rotation.x = -Math.PI / 2;
+    sticker.position.set(10.5, 0.42, -5.5);
+    scene.add(sticker);
+
+    // Silkscreen corner fiducial registration crosses (+)
+    const fiducialMat = new THREE.MeshBasicMaterial({ color: 0xf8fafc });
+    [[-14.5, -10.5], [14.5, -10.5], [-14.5, 10.5], [14.5, 10.5]].forEach(([fx, fz]) => {
+      const f1 = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.06), fiducialMat);
+      f1.rotation.x = -Math.PI / 2;
+      f1.position.set(fx, 0.42, fz);
+      scene.add(f1);
+      const f2 = new THREE.Mesh(new THREE.PlaneGeometry(0.06, 0.4), fiducialMat);
+      f2.rotation.x = -Math.PI / 2;
+      f2.position.set(fx, 0.42, fz);
+      scene.add(f2);
+    });
+
+    // T. Dense SMD Micro Resistors & Decoupling Capacitors (300+ passives across the entire plate)
     const smdMatResistor = new THREE.MeshStandardMaterial({ color: 0x171923, roughness: 0.4 });
     const smdMatCapacitor = new THREE.MeshStandardMaterial({ color: 0xa87948, roughness: 0.4 }); // ceramic brown
     const smdMatSilver = new THREE.MeshStandardMaterial({ color: 0x8e99a8, metalness: 0.8 });
 
-    // Seeded pseudo-random placement around components
     const placeSMDCluster = (cx: number, cz: number, count: number, spreadX: number, spreadZ: number) => {
       for (let i = 0; i < count; i++) {
         const px = cx + (Math.sin(i * 1.7) * spreadX);
@@ -663,12 +1088,35 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       }
     };
 
-    // Clusters around CPU, RAM, and Bus
-    placeSMDCluster(-3, 0.8, 24, 2.5, 0.6); // Below CPU
-    placeSMDCluster(6.5, 7.5, 18, 1.2, 0.8); // Top of RAM
-    placeSMDCluster(6.5, -7.5, 18, 1.2, 0.8); // Bottom of RAM
-    placeSMDCluster(-1.5, 4.0, 16, 1.8, 1.5); // Around DMAC
-    placeSMDCluster(-7.5, 2.0, 14, 0.8, 2.0); // Near PCIe
+    // Distributed dense SMD clusters across all regions of the PCB plate
+    placeSMDCluster(-3, 0.8, 32, 2.8, 0.8);  // Below CPU
+    placeSMDCluster(6.5, 7.5, 28, 1.5, 1.0);  // Top of RAM
+    placeSMDCluster(6.5, -7.5, 28, 1.5, 1.0); // Bottom of RAM
+    placeSMDCluster(-1.5, 4.0, 26, 2.0, 1.8); // Around DMAC
+    placeSMDCluster(-7.5, 2.0, 22, 1.0, 2.2); // Near PCIe
+    placeSMDCluster(11.0, 3.0, 26, 2.0, 2.5); // Between RAM and SATA
+    placeSMDCluster(10.5, -3.0, 26, 2.0, 2.5); // Right of RAM
+    placeSMDCluster(-12.5, -5.0, 22, 1.8, 2.0); // Above PCIe NIC
+    placeSMDCluster(3.0, 9.5, 24, 2.5, 1.0);  // Lower center edge
+    placeSMDCluster(-1.0, 8.5, 20, 1.5, 1.2); // Near Super I/O
+    placeSMDCluster(4.5, 5.0, 18, 1.2, 1.5);  // Around CMOS battery
+
+    // U. PCB Ground Perimeter Stitching Vias (Gold dots along perimeter)
+    const viaMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.95 });
+    for (let vx = -14.5; vx <= 14.5; vx += 1.4) {
+      [-11.2, 11.2].forEach((vz) => {
+        const via = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.02, 8), viaMat);
+        via.position.set(vx, 0.42, vz);
+        scene.add(via);
+      });
+    }
+    for (let vz = -10.5; vz <= 10.5; vz += 1.4) {
+      [-15.2, 15.2].forEach((vx) => {
+        const via = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.02, 8), viaMat);
+        via.position.set(vx, 0.42, vz);
+        scene.add(via);
+      });
+    }
 
     // 12. Dynamic Traveling Data Packets
     const packetGeo = new THREE.SphereGeometry(0.22, 12, 12);
