@@ -259,7 +259,7 @@ export const RaceMode: React.FC<RaceModeProps> = ({ baseConfig }) => {
             !
           </div>
           <div>
-            <span className="text-[#D7FF38] font-bold block">VIVA CONCLUSION (CO4 & CO5):</span>
+            <span className="text-[#D7FF38] font-bold block">EMPIRICAL ARCHITECTURE CONCLUSION:</span>
             <p className="text-[#EBEBE6] text-[11px]">
               Direct Memory Access eliminates the CPU copy bottleneck, freeing +{Math.round(metricsDMA.cpuUtilizationFree - metricsCPU.cpuUtilizationFree)}% CPU cycles and preventing buffer starvation during continuous video playback.
             </p>

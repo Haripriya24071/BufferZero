@@ -63,7 +63,7 @@ export const RewindDebugger: React.FC<RewindDebuggerProps> = ({
               Rewind Cycle Debugger
             </h3>
             <span className="text-[10px] font-mono text-[#5A6372]">
-              Scrub through last {history.length} memory accesses cycle-by-cycle (Viva Inspector)
+              Scrub through last {history.length} memory accesses cycle-by-cycle (Cycle Trace Inspector)
             </span>
           </div>
         </div>

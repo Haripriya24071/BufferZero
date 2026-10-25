@@ -114,7 +114,7 @@ export const ConceptCards: React.FC = () => {
         {/* Compact Formula Strip */}
         <div className="bg-[#1E242D] border-2 border-[#2A303A] p-6 rounded-xl shadow-[6px_6px_0_#000000]">
           <span className="font-mono text-[10px] uppercase font-bold tracking-widest text-[#D7FF38] block mb-2">
-            VIVA EXAMINATION REFERENCE FORMULAS
+            CORE COMPUTER ORGANIZATION ARCHITECTURE FORMULAS
           </span>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs sm:text-sm">
             <div className="p-3 bg-[#171717] rounded border border-[#2A303A]">

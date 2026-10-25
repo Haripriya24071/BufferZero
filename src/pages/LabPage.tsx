@@ -14,8 +14,6 @@ import { BreakItDeck } from "../components/lab/BreakItDeck";
 import { HandCheckPanel } from "../components/lab/HandCheckPanel";
 import { ChartsView } from "../components/lab/ChartsView";
 import { PipelineView } from "../components/lab/PipelineView";
-import { AutoAnalyzeModal } from "../components/lab/AutoAnalyzeModal";
-import { FacultyReport } from "../components/lab/FacultyReport";
 import {
   TrendingUp,
   GitCommit,
@@ -36,10 +34,6 @@ export const LabPage: React.FC = () => {
   const [lastStep, setLastStep] = useState<SimStep | undefined>();
   const [recentSteps, setRecentSteps] = useState<SimStep[]>([]);
   const [history, setHistory] = useState<SimStep[]>([]);
-
-  // Modals
-  const [showAutoAnalyze, setShowAutoAnalyze] = useState<boolean>(false);
-  const [showReport, setShowReport] = useState<boolean>(false);
 
   // Active Bottom Tab
   const [bottomTab, setBottomTab] = useState<"charts" | "pipeline" | "debugger" | "handcheck">("charts");
@@ -136,14 +130,6 @@ export const LabPage: React.FC = () => {
     }
   };
 
-  // Apply best configuration from Auto-Analyze sweep
-  const handleApplyBestConfig = (best: { blockSizeB: any; transferMode: any }) => {
-    handleConfigChange({
-      blockSizeB: best.blockSizeB,
-      transferMode: best.transferMode,
-    });
-  };
-
   return (
     <div className="min-h-screen bg-[#F5F5F0] flex flex-col">
       {/* Top Controls Header */}
@@ -156,8 +142,6 @@ export const LabPage: React.FC = () => {
         onChangeSpeed={setSpeed}
         activePreset={activePreset}
         onSelectPreset={handleSelectPreset}
-        onOpenAutoAnalyze={() => setShowAutoAnalyze(true)}
-        onOpenReport={() => setShowReport(true)}
         isRaceMode={isRaceMode}
         onToggleRaceMode={() => setIsRaceMode(!isRaceMode)}
       />
@@ -317,7 +301,7 @@ export const LabPage: React.FC = () => {
                   }`}
                 >
                   <Calculator size={15} />
-                  <span>Viva Hand-Check Formula Verifier</span>
+                  <span>Architecture Formula Verifier (CO5 / CO6)</span>
                 </button>
               </div>
 
@@ -344,21 +328,6 @@ export const LabPage: React.FC = () => {
           </div>
         )}
       </div>
-
-      {/* Modals */}
-      <AutoAnalyzeModal
-        isOpen={showAutoAnalyze}
-        onClose={() => setShowAutoAnalyze(false)}
-        currentConfig={config}
-        onApplyBestConfig={handleApplyBestConfig}
-      />
-
-      <FacultyReport
-        isOpen={showReport}
-        onClose={() => setShowReport(false)}
-        config={config}
-        metrics={metrics}
-      />
     </div>
   );
 };

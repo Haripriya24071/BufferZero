@@ -176,7 +176,7 @@ export const ChartsView: React.FC<ChartsViewProps> = ({ currentConfig }) => {
           <div className="p-3 bg-[#171717] text-white rounded-lg font-mono text-xs flex items-start gap-2">
             <Info size={16} className="text-[#D7FF38] shrink-0 mt-0.5" />
             <p className="text-[11px] text-[#EBEBE6] leading-relaxed">
-              <strong>Viva Explanation:</strong> Notice the distinct <strong>U-shape</strong>. At 16B, high miss rate increases AMAT. At 64B, spatial locality drives AMAT to its minimum ({minAmatItem.amat}c). Beyond 128B, the bus transfer penalty (208 cycles) forces AMAT to rise again!
+              <strong>Architectural Insight:</strong> Notice the distinct <strong>U-shape</strong>. At 16B, high miss rate increases AMAT. At 64B, spatial locality drives AMAT to its minimum ({minAmatItem.amat}c). Beyond 128B, the bus transfer penalty (208 cycles) forces AMAT to rise again!
             </p>
           </div>
         </div>

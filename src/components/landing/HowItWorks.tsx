@@ -113,7 +113,7 @@ export const HowItWorks: React.FC = () => {
             Four Steps to Hardware Mastery
           </h2>
           <p className="text-[#5A6372] mt-3 text-sm sm:text-base">
-            From adjusting raw silicon bus parameters to exporting a faculty-ready viva defense report.
+            From adjusting raw silicon bus parameters to evaluating high-fidelity memory hierarchy and streaming telemetry.
           </p>
         </div>
 

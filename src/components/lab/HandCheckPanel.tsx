@@ -30,16 +30,16 @@ export const HandCheckPanel: React.FC<HandCheckPanelProps> = ({
           <Calculator size={18} className="text-[#171717]" />
           <div>
             <h3 className="font-display text-base text-[#171717]">
-              Viva Hand-Check & Formula Verification
+              Architectural Formula Verification (CO5 / CO6)
             </h3>
             <span className="text-[10px] font-mono text-[#5A6372]">
-              Real numbers plugged into COA textbook formulas (Paper checkable)
+              Real-time numbers computed through textbook COA memory hierarchy models
             </span>
           </div>
         </div>
         <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#D7FF38] text-[#171717] rounded font-mono text-[10px] font-bold border border-[#171717]">
           <CheckCircle2 size={13} />
-          <span>VIVA DEFENSE READY</span>
+          <span>MATHEMATICALLY VERIFIED</span>
         </div>
       </div>
 
