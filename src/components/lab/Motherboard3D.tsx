@@ -40,6 +40,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
   const [isAutoRotate, setIsAutoRotate] = useState<boolean>(false);
   const [showLabels, setShowLabels] = useState<boolean>(true);
   const [cameraView, setCameraView] = useState<"iso" | "top" | "cpu" | "dma">("iso");
+  const [isInfoBoxCollapsed, setIsInfoBoxCollapsed] = useState<boolean>(false);
 
   // Three.js mutable state refs
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -1157,6 +1158,100 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       });
     }
 
+    // V. 4-Position Red Configuration DIP Switch Bank
+    const dipHousing = new THREE.Mesh(
+      new THREE.BoxGeometry(1.6, 0.45, 1.0),
+      new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.3 })
+    );
+    dipHousing.position.set(10.5, 0.6, -2.0);
+    dipHousing.castShadow = true;
+    scene.add(dipHousing);
+
+    const toggleMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.2 });
+    [-0.5, -0.16, 0.16, 0.5].forEach((dx, idx) => {
+      const toggle = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.25, 0.28), toggleMat);
+      toggle.position.set(10.5 + dx, 0.78, -2.0 + (idx % 2 === 0 ? 0.15 : -0.15));
+      scene.add(toggle);
+    });
+
+    // W. Clock Synthesizer Quartz Resonators with Solder Terminals & RTC Crystal
+    const quartzBody = new THREE.Mesh(
+      new THREE.BoxGeometry(0.5, 0.35, 1.1),
+      new THREE.MeshStandardMaterial({ color: 0xd1d5db, metalness: 0.95, roughness: 0.15 })
+    );
+    quartzBody.position.set(-1.2, 0.6, 2.5);
+    quartzBody.castShadow = true;
+    scene.add(quartzBody);
+
+    const rtcCrystal = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.14, 0.14, 0.8, 16),
+      new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9, roughness: 0.2 })
+    );
+    rtcCrystal.rotation.x = Math.PI / 2;
+    rtcCrystal.position.set(2.8, 0.52, 6.8);
+    scene.add(rtcCrystal);
+
+    // X. Auxiliary Logic Buffers & Bus Transceiver ICs (SOIC-16 packages)
+    [-4.5, 3.2].forEach((lx) => {
+      const soicChip = new THREE.Mesh(
+        new THREE.BoxGeometry(0.8, 0.22, 1.4),
+        new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4 })
+      );
+      soicChip.position.set(lx, 0.52, 3.5);
+      scene.add(soicChip);
+
+      for (let pz = -0.5; pz <= 0.5; pz += 0.25) {
+        [-0.45, 0.45].forEach((px) => {
+          const pin = new THREE.Mesh(
+            new THREE.BoxGeometry(0.12, 0.06, 0.08),
+            new THREE.MeshStandardMaterial({ color: 0xd1d5db, metalness: 0.95 })
+          );
+          pin.position.set(lx + px, 0.43, 3.5 + pz);
+          scene.add(pin);
+        });
+      }
+    });
+
+    // Y. Miniature SOT-23 Surface-Mount Transistors
+    [
+      [-5.5, -4.5],
+      [4.2, -4.5],
+      [9.5, 0.5],
+      [-2.0, 7.2],
+      [-10.5, 3.2],
+      [12.0, -1.5],
+    ].forEach(([tx, tz]) => {
+      const sot = new THREE.Mesh(
+        new THREE.BoxGeometry(0.28, 0.12, 0.35),
+        new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.5 })
+      );
+      sot.position.set(tx, 0.45, tz);
+      scene.add(sot);
+    });
+
+    // Z. Hardware Test Points (Gold Circular Pads with Silkscreen Rings)
+    const tpMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.98, roughness: 0.1 });
+    const tpRingMat = new THREE.MeshBasicMaterial({ color: 0xf8fafc });
+    [
+      [-1.5, -1.0],
+      [0.2, -1.0],
+      [4.2, 1.2],
+      [-5.2, 3.8],
+      [8.5, -4.5],
+      [12.5, 4.5],
+      [-10.2, -2.5],
+      [2.5, -7.5],
+    ].forEach(([tpx, tpz]) => {
+      const tp = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.02, 16), tpMat);
+      tp.position.set(tpx, 0.42, tpz);
+      scene.add(tp);
+
+      const tpRing = new THREE.Mesh(new THREE.RingGeometry(0.18, 0.22, 16), tpRingMat);
+      tpRing.rotation.x = -Math.PI / 2;
+      tpRing.position.set(tpx, 0.422, tpz);
+      scene.add(tpRing);
+    });
+
     // 12. Dynamic Traveling Data Packets
     const packetGeo = new THREE.SphereGeometry(0.22, 12, 12);
     const dmaPacketMat = new THREE.MeshBasicMaterial({ color: 0xd7ff38 });
@@ -1370,20 +1465,11 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       }`}
     >
       {/* Top Header Bar */}
-      <div className="bg-[#171717] text-white px-4 py-2.5 flex items-center justify-between border-b-2 border-[#171717]">
+      <div className="bg-[#171717] text-white px-4 py-2 flex items-center justify-between border-b-2 border-[#171717]">
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full bg-[#D7FF38] animate-pulse"></span>
           <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#FFFFFF]">
-            BufferZero 3D Architecture Simulator
-          </span>
-          <span
-            className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold ${
-              transferMode === "DMA"
-                ? "bg-[#D7FF38]/20 text-[#D7FF38] border border-[#D7FF38]/40"
-                : "bg-[#FF3B30]/20 text-[#FF3B30] border border-[#FF3B30]/40"
-            }`}
-          >
-            {transferMode === "DMA" ? "DMA EXPRESSWAY ACTIVE" : "CPU BOUND (WORD COPY)"}
+            3D Motherboard Architecture
           </span>
         </div>
 
@@ -1459,41 +1545,114 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
         {/* Three.js Canvas Container */}
         <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
 
-        {/* Live Kinetic HUD Telemetry Overlay */}
-        <div className="absolute top-3 left-3 pointer-events-none z-10 flex flex-col gap-1.5 font-mono text-[11px]">
-          <div className="bg-[#171717]/90 text-white px-2.5 py-1 rounded border border-[#D7FF38]/40 backdrop-blur-xs flex items-center gap-2 shadow-[2px_2px_0_#000]">
-            <span className="w-2 h-2 rounded-full bg-[#D7FF38] animate-ping"></span>
-            <span>
-              BUS ADDR: <strong className="text-[#D7FF38]">{currentAddressHex}</strong>
-            </span>
-          </div>
-
-          <div
-            className={`px-2.5 py-1 rounded border text-[10px] font-bold backdrop-blur-xs shadow-[2px_2px_0_#000] ${
-              transferMode === "DMA"
-                ? "bg-[#D7FF38]/20 text-[#D7FF38] border-[#D7FF38]"
-                : "bg-[#FF3B30]/20 text-[#FF3B30] border-[#FF3B30]"
-            }`}
-          >
-            {transferMode === "DMA"
-              ? "DMA ROUTE: NIC -> DMAC -> DDR RAM (CPU 100% UNBURDENED)"
-              : "CPU PROGRAMMED I/O: NIC -> CPU CORE -> DDR RAM (STALL HAZARD)"}
-          </div>
-
+        {/* Sleek Minimal HUD Capsule (Clean, single-line, uncluttered) */}
+        <div className="absolute top-3 left-3 pointer-events-none z-10 flex items-center gap-2.5 font-mono text-[11px] bg-[#0A0D14]/85 text-white px-3 py-1.5 rounded-lg border border-[#2A303A] backdrop-blur-md shadow-lg">
+          <span className="w-2 h-2 rounded-full bg-[#D7FF38] animate-ping shrink-0" />
+          <span className="text-white/80">
+            BUS <strong className="text-[#D7FF38]">{currentAddressHex}</strong>
+          </span>
+          <span className="text-[#3A4454]">|</span>
+          <span className={transferMode === "DMA" ? "text-[#D7FF38] font-bold" : "text-[#FF3B30] font-bold"}>
+            {transferMode === "DMA" ? "DMA ROUTE" : "CPU I/O"}
+          </span>
           {lastStep && (
-            <div
-              className={`px-2.5 py-1 rounded border text-[10px] font-bold backdrop-blur-xs shadow-[2px_2px_0_#000] ${
-                lastStep.hit
-                  ? "bg-[#2457FF]/20 text-[#D7FF38] border-[#2457FF]"
-                  : "bg-[#FF3B30]/20 text-[#FF3B30] border-[#FF3B30]"
-              }`}
-            >
-              {lastStep.hit
-                ? `SRAM HIT (Set ${lastStep.setIndex}, Tag 0x${lastStep.tag.toString(16).toUpperCase()}) -> 1 CYCLE`
-                : `SRAM MISS -> BUS FETCH PENALTY ~80 CYCLES`}
-            </div>
+            <>
+              <span className="text-[#3A4454]">|</span>
+              <span className={lastStep.hit ? "text-[#00F0FF] font-semibold" : "text-[#FF3B30] font-semibold"}>
+                {lastStep.hit ? "SRAM HIT (1c)" : "SRAM MISS"}
+              </span>
+            </>
           )}
         </div>
+
+        {/* Fullscreen Floating Information Box: How Video Streaming Architecture Works */}
+        {isFullscreen && (
+          <div
+            className={`absolute top-3 right-3 z-20 pointer-events-auto transition-all duration-300 ${
+              isInfoBoxCollapsed ? "w-auto" : "w-80 sm:w-96"
+            }`}
+          >
+            <div className="bg-[#0A0D14]/92 border border-[#2A303A] text-white rounded-xl shadow-2xl backdrop-blur-md overflow-hidden">
+              {/* Header */}
+              <div className="px-3.5 py-2.5 bg-[#171923] border-b border-[#2A303A] flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#D7FF38] animate-pulse" />
+                  <span className="font-mono text-xs font-bold text-[#D7FF38] uppercase tracking-wider">
+                    How Video Streaming Works
+                  </span>
+                </div>
+                <button
+                  onClick={() => setIsInfoBoxCollapsed(!isInfoBoxCollapsed)}
+                  className="text-xs font-mono text-[#8E99A8] hover:text-white px-2 py-0.5 rounded bg-[#242A35] hover:bg-[#2A303A] transition-colors cursor-pointer"
+                  title={isInfoBoxCollapsed ? "Expand Architecture Guide" : "Collapse Guide"}
+                >
+                  {isInfoBoxCollapsed ? "Expand" : "Minimize"}
+                </button>
+              </div>
+
+              {/* Body */}
+              {!isInfoBoxCollapsed && (
+                <div className="p-3.5 space-y-2.5 font-mono text-[11px] leading-relaxed">
+                  <div className="space-y-2 text-[#C9D1D9]">
+                    <div className="p-2 bg-[#12161F] rounded border border-[#202736]">
+                      <div className="font-bold text-[#D7FF38] flex items-center gap-1.5 mb-0.5">
+                        <span className="w-4 h-4 rounded-full bg-[#D7FF38]/20 text-[#D7FF38] text-[10px] flex items-center justify-center font-bold">1</span>
+                        <span>NIC Ingestion</span>
+                      </div>
+                      <p className="text-[10px] text-[#8E99A8]">
+                        Network interface receives compressed video bitstream packets over Ethernet / Wi-Fi.
+                      </p>
+                    </div>
+
+                    <div className="p-2 bg-[#12161F] rounded border border-[#202736]">
+                      <div className="font-bold text-[#00F0FF] flex items-center gap-1.5 mb-0.5">
+                        <span className="w-4 h-4 rounded-full bg-[#00F0FF]/20 text-[#00F0FF] text-[10px] flex items-center justify-center font-bold">2</span>
+                        <span>DMA Direct Bus Bypass</span>
+                      </div>
+                      <p className="text-[10px] text-[#8E99A8]">
+                        DMAC copies packet payloads directly into DDR RAM via cycle stealing — completely freeing CPU from word-copy loops.
+                      </p>
+                    </div>
+
+                    <div className="p-2 bg-[#12161F] rounded border border-[#202736]">
+                      <div className="font-bold text-[#2457FF] flex items-center gap-1.5 mb-0.5">
+                        <span className="w-4 h-4 rounded-full bg-[#2457FF]/30 text-[#2457FF] text-[10px] flex items-center justify-center font-bold">3</span>
+                        <span>SRAM Cache Locality</span>
+                      </div>
+                      <p className="text-[10px] text-[#8E99A8]">
+                        L1/L2 hardware cache captures spatial video macroblocks. Hits service in 1 cycle, avoiding 80-cycle DDR penalty stalls.
+                      </p>
+                    </div>
+
+                    <div className="p-2 bg-[#12161F] rounded border border-[#202736]">
+                      <div className="font-bold text-[#22C55E] flex items-center gap-1.5 mb-0.5">
+                        <span className="w-4 h-4 rounded-full bg-[#22C55E]/20 text-[#22C55E] text-[10px] flex items-center justify-center font-bold">4</span>
+                        <span>Stall-Free Decode</span>
+                      </div>
+                      <p className="text-[10px] text-[#8E99A8]">
+                        RISC-V CPU executes decode algorithms at a rock-solid 60 FPS without buffer starvation or audio desync!
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Current Active Pipeline State */}
+                  <div className="pt-2 border-t border-[#202736] flex items-center justify-between text-[10px]">
+                    <span className="text-[#8E99A8]">Current Mode:</span>
+                    <span
+                      className={`font-bold px-2 py-0.5 rounded ${
+                        transferMode === "DMA"
+                          ? "bg-[#D7FF38]/20 text-[#D7FF38] border border-[#D7FF38]/40"
+                          : "bg-[#FF3B30]/20 text-[#FF3B30] border border-[#FF3B30]/40"
+                      }`}
+                    >
+                      {transferMode === "DMA" ? "DMA Active (0% CPU Load)" : "CPU-Bound (Buffer Stall Hazard)"}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Bottom Interactive Component Quick-Selector */}
         <div className="absolute bottom-3 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-2 pointer-events-auto">
