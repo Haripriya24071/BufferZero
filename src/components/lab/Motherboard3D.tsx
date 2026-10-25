@@ -97,7 +97,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       </div>
 
       {/* Main Visual Stage */}
-      <div className="relative w-full h-[480px] lg:h-[520px] bg-[#0A0D12] overflow-hidden">
+      <div className="relative w-full h-[540px] lg:h-[600px] bg-[#0A0D12] overflow-hidden">
         {viewMode === "3d_city" ? (
           /* Sketchfab 3D Embed provided by the user */
           <div className="w-full h-full relative">

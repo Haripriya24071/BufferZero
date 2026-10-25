@@ -5,7 +5,6 @@ import { LabHeader } from "../components/lab/LabHeader";
 import { Controls } from "../components/lab/Controls";
 import { Motherboard3D } from "../components/lab/Motherboard3D";
 import { CacheVisualizer } from "../components/lab/CacheVisualizer";
-import { MetricsPanel } from "../components/lab/MetricsPanel";
 import { TelemetryHUD } from "../components/lab/TelemetryHUD";
 import { RaceMode } from "../components/lab/RaceMode";
 
@@ -209,9 +208,6 @@ export const LabPage: React.FC = () => {
                     />
                   )}
                 </div>
-
-                {/* Hardware Logic Explainer & Secondary Telemetry */}
-                <MetricsPanel metrics={metrics} config={config} />
               </div>
             </div>
           </div>
