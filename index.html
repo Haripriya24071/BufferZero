@@ -10,8 +10,31 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS Engine -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bone: '#F5F2EB',
+              'bone-dark': '#EAE5DB',
+              ink: '#12151A',
+              'acid-lime': '#CCFF00',
+              tomato: '#FF3B30',
+              navy: '#02167F',
+            },
+            fontFamily: {
+              display: ['Archivo', '-apple-system', 'sans-serif'],
+              body: ['Inter', '-apple-system', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            }
+          }
+        }
+      }
+    </script>
   </head>
-  <body>
+  <body class="bg-[#F5F2EB] text-[#12151A]">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
