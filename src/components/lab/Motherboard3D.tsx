@@ -3,17 +3,9 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { TransferMode, SimStep } from "../../engine/types";
 import {
-  Cpu,
-  Radio,
-  HardDrive,
-  Layers,
-  Sparkles,
-  Maximize2,
   RotateCw,
-  Compass,
-  Eye,
   Activity,
-  Zap,
+  Tag,
 } from "lucide-react";
 
 interface Motherboard3DProps {
@@ -42,6 +34,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
   const mountRef = useRef<HTMLDivElement | null>(null);
   const [activeChip, setActiveChip] = useState<ChipId>("cpu");
   const [isAutoRotate, setIsAutoRotate] = useState<boolean>(false);
+  const [showLabels, setShowLabels] = useState<boolean>(true);
   const [cameraView, setCameraView] = useState<"iso" | "top" | "cpu" | "dma">("iso");
 
   // Three.js mutable state refs
@@ -51,13 +44,14 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const reqIdRef = useRef<number | null>(null);
 
-  // Dynamic mesh refs for real-time updates
+  // Dynamic mesh refs
   const cpuDieRef = useRef<THREE.Mesh | null>(null);
   const cpuLightRef = useRef<THREE.PointLight | null>(null);
   const cacheMeshesRef = useRef<THREE.Mesh[]>([]);
   const dmaLedRef = useRef<THREE.Mesh | null>(null);
   const dmaLightRef = useRef<THREE.PointLight | null>(null);
   const packetMeshesRef = useRef<{ mesh: THREE.Mesh; progress: number; pathType: "dma" | "cpu" | "mem" }[]>([]);
+  const labelSpritesRef = useRef<THREE.Sprite[]>([]);
 
   // Flash animation state
   const lastFlashTimeRef = useRef<number>(0);
@@ -110,6 +104,52 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     },
   };
 
+  // Helper to create high-resolution crisp 2D billboard sprite labels
+  const createChipLabel = (text: string, accentHex: string = "#D7FF38") => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 128;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return new THREE.Sprite();
+
+    // Background pill badge
+    ctx.fillStyle = "rgba(10, 14, 22, 0.92)";
+    ctx.strokeStyle = accentHex;
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.roundRect(14, 14, 484, 100, 26);
+    ctx.fill();
+    ctx.stroke();
+
+    // Glowing status dot
+    ctx.fillStyle = accentHex;
+    ctx.shadowColor = accentHex;
+    ctx.shadowBlur = 12;
+    ctx.beginPath();
+    ctx.arc(58, 64, 15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Label Text
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 36px monospace";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, 92, 65);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.minFilter = THREE.LinearFilter;
+    const spriteMat = new THREE.SpriteMaterial({
+      map: texture,
+      transparent: true,
+      depthTest: false,
+      depthWrite: false,
+    });
+    const sprite = new THREE.Sprite(spriteMat);
+    sprite.scale.set(5.0, 1.25, 1.0);
+    return sprite;
+  };
+
   // Trigger cache flash on new memory access step
   useEffect(() => {
     if (!lastStep) return;
@@ -118,6 +158,13 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       ? new THREE.Color(0xd7ff38) // Neon Lime for Hit
       : new THREE.Color(0xff3b30); // Red for Miss
   }, [lastStep]);
+
+  // Sync label visibility
+  useEffect(() => {
+    labelSpritesRef.current.forEach((sprite) => {
+      sprite.visible = showLabels;
+    });
+  }, [showLabels]);
 
   // Main Three.js Scene Setup
   useEffect(() => {
@@ -157,18 +204,18 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     controlsRef.current = controls;
 
     // 4. Lighting System
-    const ambientLight = new THREE.AmbientLight(0x2a3648, 1.2);
+    const ambientLight = new THREE.AmbientLight(0x2d3748, 1.4);
     scene.add(ambientLight);
 
-    const sunLight = new THREE.DirectionalLight(0xffffff, 2.0);
-    sunLight.position.set(15, 30, 20);
+    const sunLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    sunLight.position.set(18, 32, 20);
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = 1024;
     sunLight.shadow.mapSize.height = 1024;
     scene.add(sunLight);
 
-    const fillLight = new THREE.DirectionalLight(0x2457ff, 0.8);
-    fillLight.position.set(-20, 15, -15);
+    const fillLight = new THREE.DirectionalLight(0x2457ff, 0.9);
+    fillLight.position.set(-20, 16, -16);
     scene.add(fillLight);
 
     // Component point lights
@@ -182,10 +229,10 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     scene.add(dmaLight);
     dmaLightRef.current = dmaLight;
 
-    // 5. Build Motherboard PCB Base
+    // 5. Motherboard PCB Base
     const boardMat = new THREE.MeshStandardMaterial({
       color: 0x0c1017,
-      roughness: 0.7,
+      roughness: 0.75,
       metalness: 0.25,
     });
     const boardMesh = new THREE.Mesh(new THREE.BoxGeometry(32, 0.8, 24), boardMat);
@@ -193,7 +240,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     boardMesh.receiveShadow = true;
     scene.add(boardMesh);
 
-    // Gold PCB Edge Connector
+    // Gold PCB Edge Connector Fingers
     const edgeConnectorMat = new THREE.MeshStandardMaterial({
       color: 0xd4af37,
       metalness: 0.9,
@@ -221,7 +268,6 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     const blueTraceMat = new THREE.MeshBasicMaterial({ color: 0x2457ff });
     const greenTraceMat = new THREE.MeshBasicMaterial({ color: 0xd7ff38 });
 
-    // Helper to add thin circuit track ribbons
     const addTrace = (x1: number, z1: number, x2: number, z2: number, mat: THREE.Material = traceMat) => {
       const dx = x2 - x1;
       const dz = z2 - z1;
@@ -246,7 +292,12 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     addTrace(6.5, 0, 1.5, -3, blueTraceMat);
     addTrace(1.5, -3, -3, -3, blueTraceMat);
 
-    // 7. CPU Socket & Processor Die
+    // Additional decorative bus lines
+    for (let i = -1; i <= 1; i += 0.5) {
+      addTrace(6.5 + i, 6.0, 14, 6.0 + i * 0.4, traceMat);
+    }
+
+    // 7. NAMED COMPONENT 1: CPU Socket & Processor Die
     const socketBase = new THREE.Mesh(
       new THREE.BoxGeometry(6.4, 0.3, 6.4),
       new THREE.MeshStandardMaterial({ color: 0x1f242e, roughness: 0.6 })
@@ -278,7 +329,6 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     scene.add(cpuDie);
     cpuDieRef.current = cpuDie;
 
-    // CPU Core Glowing Ring
     const ringMesh = new THREE.Mesh(
       new THREE.TorusGeometry(1.0, 0.08, 8, 24),
       new THREE.MeshBasicMaterial({ color: 0x00f0ff })
@@ -287,7 +337,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     ringMesh.position.set(-3, 1.25, -3);
     scene.add(ringMesh);
 
-    // 8. On-Chip SRAM Cache Bank (L1 / L2 Chips)
+    // 8. NAMED COMPONENT 2: On-Chip SRAM Cache Bank (L1 / L2 Chips)
     const cacheMat1 = new THREE.MeshStandardMaterial({
       color: 0x171923,
       emissive: 0x2457ff,
@@ -314,7 +364,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     scene.add(cacheChipB);
     cacheMeshesRef.current = [cacheChipA, cacheChipB];
 
-    // 9. DMA Controller (DMAC) IC Chip
+    // 9. NAMED COMPONENT 3: DMA Controller (DMAC) IC Chip
     const dmaChipMat = new THREE.MeshStandardMaterial({
       color: 0x1a202c,
       roughness: 0.4,
@@ -332,7 +382,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     scene.add(dmaLed);
     dmaLedRef.current = dmaLed;
 
-    // 10. Dual-Channel DDR RAM DIMM Slots & Sticks
+    // 10. NAMED COMPONENT 4: Dual-Channel DDR RAM DIMM Slots & Sticks
     const ramSlotMat = new THREE.MeshStandardMaterial({ color: 0x2d3748, roughness: 0.7 });
     [-0.7, 0.7].forEach((offset) => {
       const ramSlot = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.4, 13.5), ramSlotMat);
@@ -359,7 +409,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       }
     });
 
-    // 11. Network Streaming Ingestion Interface (PCIe Controller)
+    // 11. NAMED COMPONENT 5: Network Streaming Ingestion Interface (PCIe Controller)
     const pcieSlot = new THREE.Mesh(
       new THREE.BoxGeometry(0.8, 0.4, 11),
       new THREE.MeshStandardMaterial({ color: 0x171923 })
@@ -382,6 +432,244 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
     rj45.position.set(-11.5, 2.2, 5.4);
     scene.add(rj45);
 
+    // ==========================================
+    // --- 3D FLOATING COMPONENT LABELS (NAMED) ---
+    // ==========================================
+    const labelList: THREE.Sprite[] = [];
+
+    // 1. CPU Label
+    const cpuLabel = createChipLabel("CPU CORE (RISC-V)", "#00F0FF");
+    cpuLabel.position.set(-3, 3.4, -3);
+    scene.add(cpuLabel);
+    labelList.push(cpuLabel);
+
+    // 2. SRAM Cache Label
+    const cacheLabel = createChipLabel("L1/L2 SRAM CACHE", "#D7FF38");
+    cacheLabel.position.set(1.8, 2.6, -3);
+    scene.add(cacheLabel);
+    labelList.push(cacheLabel);
+
+    // 3. DMA Controller Label
+    const dmaLabel = createChipLabel("DMA CONTROLLER", "#00FF66");
+    dmaLabel.position.set(-4, 2.5, 5.5);
+    scene.add(dmaLabel);
+    labelList.push(dmaLabel);
+
+    // 4. DDR RAM Label
+    const ramLabel = createChipLabel("DDR5 MAIN MEMORY", "#2457FF");
+    ramLabel.position.set(6.5, 4.4, 0);
+    scene.add(ramLabel);
+    labelList.push(ramLabel);
+
+    // 5. Network NIC Label
+    const nicLabel = createChipLabel("NETWORK NIC (PCIe)", "#FFAA00");
+    nicLabel.position.set(-11.5, 4.0, 0);
+    scene.add(nicLabel);
+    labelList.push(nicLabel);
+
+    labelSpritesRef.current = labelList;
+
+    // ==========================================================
+    // --- ADDITIONAL REALISTIC HARDWARE COMPONENTS (UNNAMED) ---
+    // ==========================================================
+
+    // A. VRM Power Delivery Stage (Capacitors, Chokes & MOSFETs around CPU)
+    const chokeMat = new THREE.MeshStandardMaterial({ color: 0x1a202c, metalness: 0.6, roughness: 0.3 });
+    const capBodyMat = new THREE.MeshStandardMaterial({ color: 0xa0aec0, metalness: 0.85, roughness: 0.2 });
+    const capStripeMat = new THREE.MeshBasicMaterial({ color: 0x2457ff });
+
+    // Left VRM bank (vertical)
+    for (let z = -6.0; z <= 0.0; z += 1.2) {
+      // Ferrite Choke
+      const choke = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.6, 0.7), chokeMat);
+      choke.position.set(-7.2, 0.7, z);
+      choke.castShadow = true;
+      scene.add(choke);
+
+      // Solid Aluminum Capacitor
+      const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.75, 12), capBodyMat);
+      cap.position.set(-8.4, 0.78, z);
+      cap.castShadow = true;
+      scene.add(cap);
+
+      // Capacitor blue stripe
+      const stripe = new THREE.Mesh(new THREE.CylinderGeometry(0.305, 0.305, 0.2, 12), capStripeMat);
+      stripe.position.set(-8.4, 1.0, z);
+      scene.add(stripe);
+    }
+
+    // Top VRM bank (horizontal)
+    for (let x = -5.0; x <= -1.0; x += 1.2) {
+      const choke = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.6, 0.7), chokeMat);
+      choke.position.set(x, 0.7, -7.2);
+      choke.castShadow = true;
+      scene.add(choke);
+
+      const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.75, 12), capBodyMat);
+      cap.position.set(x, 0.78, -8.4);
+      cap.castShadow = true;
+      scene.add(cap);
+    }
+
+    // B. PCH / Southbridge Heatsink (Lower-right corner)
+    const pchBaseMat = new THREE.MeshStandardMaterial({ color: 0x2d3748, metalness: 0.7, roughness: 0.3 });
+    const pchBase = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.6, 4.2), pchBaseMat);
+    pchBase.position.set(7.5, 0.7, 7.5);
+    pchBase.castShadow = true;
+    scene.add(pchBase);
+
+    // Aluminum cooling fins on PCH
+    const finMat = new THREE.MeshStandardMaterial({ color: 0x4a5568, metalness: 0.8, roughness: 0.2 });
+    for (let f = -1.6; f <= 1.6; f += 0.5) {
+      const fin = new THREE.Mesh(new THREE.BoxGeometry(4.0, 0.5, 0.15), finMat);
+      fin.position.set(7.5, 1.2, 7.5 + f);
+      scene.add(fin);
+    }
+
+    // C. M.2 NVMe PCIe 4.0 SSD Drive & Slot
+    const m2Slot = new THREE.Mesh(
+      new THREE.BoxGeometry(0.5, 0.3, 1.6),
+      new THREE.MeshStandardMaterial({ color: 0x1a202c })
+    );
+    m2Slot.position.set(-6.5, 0.55, 1.5);
+    scene.add(m2Slot);
+
+    // M.2 2280 PCB Stick
+    const m2Stick = new THREE.Mesh(
+      new THREE.BoxGeometry(1.5, 0.12, 5.2),
+      new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.5 })
+    );
+    m2Stick.position.set(-6.5, 0.7, -1.2);
+    m2Stick.castShadow = true;
+    scene.add(m2Stick);
+
+    // 2x NAND Flash ICs on SSD
+    [-0.5, 1.0].forEach((zOff) => {
+      const nand = new THREE.Mesh(
+        new THREE.BoxGeometry(1.1, 0.18, 1.3),
+        new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.3, metalness: 0.6 })
+      );
+      nand.position.set(-6.5, 0.85, -1.2 + zOff);
+      scene.add(nand);
+    });
+
+    // M.2 Standoff Screw
+    const m2Screw = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.2, 0.2, 0.35, 12),
+      new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9 })
+    );
+    m2Screw.position.set(-6.5, 0.6, -3.8);
+    scene.add(m2Screw);
+
+    // D. CMOS Coin Cell Battery (CR2032)
+    const cmosHolder = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.2, 1.2, 0.35, 24),
+      new THREE.MeshStandardMaterial({ color: 0x1a202c, roughness: 0.7 })
+    );
+    cmosHolder.position.set(1.5, 0.58, 6.8);
+    scene.add(cmosHolder);
+
+    const cmosBattery = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.0, 1.0, 0.25, 24),
+      new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.95, roughness: 0.15 })
+    );
+    cmosBattery.position.set(1.5, 0.75, 6.8);
+    scene.add(cmosBattery);
+
+    // E. 24-Pin ATX Main Power Connector (Right Edge)
+    const atxMat = new THREE.MeshStandardMaterial({ color: 0x171923, roughness: 0.6 });
+    const atxBlock = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.1, 4.6), atxMat);
+    atxBlock.position.set(14.8, 0.95, 0);
+    atxBlock.castShadow = true;
+    scene.add(atxBlock);
+
+    // Gold Pin Sockets inside ATX
+    const pinMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9 });
+    for (let pz = -1.8; pz <= 1.8; pz += 0.38) {
+      [-0.25, 0.25].forEach((px) => {
+        const pin = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.2, 0.12), pinMat);
+        pin.position.set(14.8 + px, 1.55, pz);
+        scene.add(pin);
+      });
+    }
+
+    // F. Rear I/O Shield Connectors (Top edge z = -11.4)
+    const ioMetalMat = new THREE.MeshStandardMaterial({ color: 0x8e99a8, metalness: 0.85, roughness: 0.3 });
+
+    // Stacked Dual USB Ports
+    const usb1 = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.4, 1.4), ioMetalMat);
+    usb1.position.set(-11.5, 1.1, -11.2);
+    scene.add(usb1);
+
+    const usb2 = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.4, 1.4), ioMetalMat);
+    usb2.position.set(-8.5, 1.1, -11.2);
+    scene.add(usb2);
+
+    // HDMI / DisplayPort Box
+    const hdmiBox = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.2, 1.2), ioMetalMat);
+    hdmiBox.position.set(-5.5, 1.0, -11.2);
+    scene.add(hdmiBox);
+
+    // Audio Jacks (3 gold cylinder ports)
+    [0.8, 1.8, 2.8].forEach((xOff, idx) => {
+      const colors = [0x22c55e, 0xef4444, 0x3b82f6];
+      const jack = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.3, 0.3, 0.8, 16),
+        new THREE.MeshStandardMaterial({ color: colors[idx], roughness: 0.5 })
+      );
+      jack.rotation.x = Math.PI / 2;
+      jack.position.set(-2.5 + xOff, 1.0, -11.4);
+      scene.add(jack);
+    });
+
+    // G. Quartz Crystal Oscillators (Clocks)
+    const crystalMat = new THREE.MeshStandardMaterial({ color: 0xc0c7d0, metalness: 0.9, roughness: 0.2 });
+    const crystal1 = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.2, 0.7), crystalMat);
+    crystal1.position.set(-0.8, 0.52, -7.5);
+    scene.add(crystal1);
+
+    const crystal2 = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.2, 0.7), crystalMat);
+    crystal2.position.set(-2.5, 0.52, 5.0);
+    scene.add(crystal2);
+
+    // H. Fan & Front Panel Pin Headers (Jumper Rows)
+    const headerMat = new THREE.MeshStandardMaterial({ color: 0x1f2937 });
+    [-10, -5, 5, 10].forEach((hx) => {
+      const header = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.3, 0.4), headerMat);
+      header.position.set(hx, 0.55, 11.0);
+      scene.add(header);
+
+      for (let p = -0.3; p <= 0.3; p += 0.2) {
+        const hPin = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.5, 8), pinMat);
+        hPin.position.set(hx + p, 0.8, 11.0);
+        scene.add(hPin);
+      }
+    });
+
+    // I. Dense SMD Micro Resistors & Decoupling Capacitors (80+ passives)
+    const smdMatResistor = new THREE.MeshStandardMaterial({ color: 0x171923, roughness: 0.4 });
+    const smdMatCapacitor = new THREE.MeshStandardMaterial({ color: 0xa87948, roughness: 0.4 }); // ceramic brown
+    const smdMatSilver = new THREE.MeshStandardMaterial({ color: 0x8e99a8, metalness: 0.8 });
+
+    // Seeded pseudo-random placement around components
+    const placeSMDCluster = (cx: number, cz: number, count: number, spreadX: number, spreadZ: number) => {
+      for (let i = 0; i < count; i++) {
+        const px = cx + (Math.sin(i * 1.7) * spreadX);
+        const pz = cz + (Math.cos(i * 2.3) * spreadZ);
+        const mat = i % 3 === 0 ? smdMatCapacitor : i % 3 === 1 ? smdMatResistor : smdMatSilver;
+        const smd = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.08, 0.25), mat);
+        smd.position.set(px, 0.44, pz);
+        scene.add(smd);
+      }
+    };
+
+    // Clusters around CPU, RAM, and Bus
+    placeSMDCluster(-3, 0.8, 24, 2.5, 0.6); // Below CPU
+    placeSMDCluster(6.5, 7.5, 18, 1.2, 0.8); // Top of RAM
+    placeSMDCluster(6.5, -7.5, 18, 1.2, 0.8); // Bottom of RAM
+    placeSMDCluster(-1.5, 4.0, 16, 1.8, 1.5); // Around DMAC
+    placeSMDCluster(-7.5, 2.0, 14, 0.8, 2.0); // Near PCIe
+
     // 12. Dynamic Traveling Data Packets
     const packetGeo = new THREE.SphereGeometry(0.22, 12, 12);
     const dmaPacketMat = new THREE.MeshBasicMaterial({ color: 0xd7ff38 });
@@ -390,21 +678,18 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
 
     const packets: { mesh: THREE.Mesh; progress: number; pathType: "dma" | "cpu" | "mem" }[] = [];
 
-    // Create 8 DMA packets
     for (let i = 0; i < 8; i++) {
       const mesh = new THREE.Mesh(packetGeo, dmaPacketMat);
       scene.add(mesh);
       packets.push({ mesh, progress: i / 8, pathType: "dma" });
     }
 
-    // Create 8 CPU packets
     for (let i = 0; i < 8; i++) {
       const mesh = new THREE.Mesh(packetGeo, cpuPacketMat);
       scene.add(mesh);
       packets.push({ mesh, progress: i / 8, pathType: "cpu" });
     }
 
-    // Create 6 Memory Cache packets
     for (let i = 0; i < 6; i++) {
       const mesh = new THREE.Mesh(packetGeo, memPacketMat);
       scene.add(mesh);
@@ -423,7 +708,6 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
 
       controls.update();
 
-      // Auto-rotation toggle
       if (isAutoRotate) {
         controls.autoRotate = true;
         controls.autoRotateSpeed = 1.2;
@@ -434,14 +718,12 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       // Update CPU Core Ring & Light
       if (cpuDieRef.current && cpuLightRef.current) {
         if (transferMode === "CPU") {
-          // Burning red/orange pulse for overloaded CPU
           const pulse = 0.5 + 0.5 * Math.sin(now * 0.008);
           (cpuDieRef.current.material as THREE.MeshStandardMaterial).emissive.setHex(0xff3b30);
           (cpuDieRef.current.material as THREE.MeshStandardMaterial).emissiveIntensity = 0.8 + 0.5 * pulse;
           cpuLightRef.current.color.setHex(0xff3b30);
           cpuLightRef.current.intensity = 2.0 + 1.5 * pulse;
         } else {
-          // Serene electric cyan glow for free CPU
           (cpuDieRef.current.material as THREE.MeshStandardMaterial).emissive.setHex(0x00f0ff);
           (cpuDieRef.current.material as THREE.MeshStandardMaterial).emissiveIntensity = 0.5;
           cpuLightRef.current.color.setHex(0x00f0ff);
@@ -483,10 +765,8 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
         const p = item.progress;
 
         if (item.pathType === "dma") {
-          // Visible only in DMA mode
           item.mesh.visible = transferMode === "DMA";
           if (transferMode === "DMA") {
-            // Path: NIC (-11.5, 0) -> DMA (-4, 5.5) -> RAM (6.5, 0)
             if (p < 0.5) {
               const subP = p / 0.5;
               item.mesh.position.set(
@@ -504,10 +784,8 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
             }
           }
         } else if (item.pathType === "cpu") {
-          // Visible only in CPU mode
           item.mesh.visible = transferMode === "CPU";
           if (transferMode === "CPU") {
-            // Path: NIC (-11.5, 0) -> CPU (-3, -3) -> RAM (6.5, 0)
             if (p < 0.5) {
               const subP = p / 0.5;
               item.mesh.position.set(
@@ -525,7 +803,6 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
             }
           }
         } else if (item.pathType === "mem") {
-          // Path: RAM (6.5, 0) -> Cache (1.5, -3) -> CPU (-3, -3)
           if (p < 0.6) {
             const subP = p / 0.6;
             item.mesh.position.set(
@@ -616,8 +893,18 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
           </span>
         </div>
 
-        {/* Camera View Selector */}
+        {/* Camera View & Label Toggle Controls */}
         <div className="flex items-center gap-1 font-mono text-[11px]">
+          <button
+            onClick={() => setShowLabels(!showLabels)}
+            className={`px-2 py-1 rounded flex items-center gap-1 transition-colors cursor-pointer ${
+              showLabels ? "bg-[#D7FF38] text-[#171717] font-bold" : "text-[#8E99A8] hover:text-white"
+            }`}
+            title="Toggle Component Labels in 3D"
+          >
+            <Tag size={12} />
+            <span>Labels: {showLabels ? "ON" : "OFF"}</span>
+          </button>
           <button
             onClick={() => handleCameraPreset("iso")}
             className={`px-2 py-1 rounded transition-colors cursor-pointer ${
