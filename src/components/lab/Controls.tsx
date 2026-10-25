@@ -10,15 +10,30 @@ import {
   AccessPattern,
 } from "../../engine/types";
 import { BITRATE_MBPS } from "../../engine/timing";
-import { Sliders, HelpCircle, HardDrive, Cpu, Radio, Film, Flame, Swords } from "lucide-react";
+import {
+  Sliders,
+  HardDrive,
+  Cpu,
+  Radio,
+  Film,
+  Swords,
+  Play,
+  Pause,
+  SkipForward,
+  RotateCcw,
+} from "lucide-react";
 
 interface ControlsProps {
   config: SimConfig;
   onChangeConfig: (partial: Partial<SimConfig>) => void;
   onResetDefaults: () => void;
-  onSeekStorm?: () => void;
-  onColdFlush?: () => void;
-  onNetworkBurst?: () => void;
+  // Playback & Simulation Transport Controls (Moved to top of Controls)
+  isRunning: boolean;
+  onTogglePlay: () => void;
+  onStep: () => void;
+  onReset: () => void;
+  speed: number;
+  onChangeSpeed: (s: number) => void;
   activePreset?: string;
   onSelectPreset?: (presetName: string) => void;
   isRaceMode?: boolean;
@@ -29,15 +44,20 @@ export const Controls: React.FC<ControlsProps> = ({
   config,
   onChangeConfig,
   onResetDefaults,
-  onSeekStorm,
-  onColdFlush,
-  onNetworkBurst,
+  isRunning,
+  onTogglePlay,
+  onStep,
+  onReset,
+  speed,
+  onChangeSpeed,
   activePreset = "balanced",
   onSelectPreset,
-  isRaceMode,
+  isRaceMode = false,
   onToggleRaceMode,
 }) => {
   const [showAdvanced, setShowAdvanced] = React.useState<boolean>(false);
+
+  const speeds = [0.25, 0.5, 1, 2, 4];
 
   const presets = [
     {
@@ -82,36 +102,111 @@ export const Controls: React.FC<ControlsProps> = ({
 
   return (
     <div className="card-tactile p-5 space-y-6">
+      {/* Title Header with Reset Defaults */}
       <div className="flex items-center justify-between pb-3 border-b-2 border-[#171717]/10">
         <div className="flex items-center gap-2">
           <Sliders size={18} className="text-[#171717]" />
           <h3 className="font-display text-lg text-[#171717]">Architecture Controls</h3>
         </div>
-        <div className="flex items-center gap-2">
+        <button
+          onClick={onResetDefaults}
+          className="text-[11px] font-mono text-[#525252] hover:text-[#2457FF] underline cursor-pointer"
+        >
+          Reset Defaults
+        </button>
+      </div>
+
+      {/* 1. PRIMARY SIMULATION TRANSPORT (RUN, PAUSE, STEP, RESET, SPEED, RACE MODE) */}
+      <div className="p-3 bg-[#F5F5F0] border-2 border-[#171717] rounded-xl shadow-[2px_2px_0_#171717] space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
+            <Cpu size={13} className="text-[#2457FF]" />
+            <span>Simulation Transport</span>
+          </span>
+          <span
+            className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded ${
+              isRunning ? "bg-[#D7FF38] text-[#171717]" : "bg-[#EBEBE6] text-[#525252]"
+            }`}
+          >
+            {isRunning ? "ACTIVE" : "PAUSED"}
+          </span>
+        </div>
+
+        {/* Action Buttons Row */}
+        <div className="grid grid-cols-3 gap-2">
+          {/* RUN / PAUSE Button */}
+          <button
+            onClick={onTogglePlay}
+            className={`py-2 px-3 rounded-lg font-mono text-xs font-bold border-2 border-[#171717] shadow-[2px_2px_0_#171717] flex items-center justify-center gap-1.5 cursor-pointer transition-all active:translate-y-0.5 ${
+              isRunning
+                ? "bg-[#FF3B30] text-white hover:bg-[#E83228]"
+                : "bg-[#D7FF38] text-[#171717] hover:bg-[#C5F024]"
+            }`}
+            title="Spacebar to Play/Pause"
+          >
+            {isRunning ? <Pause size={14} /> : <Play size={14} className="fill-current" />}
+            <span>{isRunning ? "PAUSE" : "RUN"}</span>
+          </button>
+
+          {/* STEP Button */}
+          <button
+            onClick={onStep}
+            disabled={isRunning}
+            className="py-2 px-3 rounded-lg font-mono text-xs font-bold border-2 border-[#171717] bg-[#FFFFFF] hover:bg-[#F5F5F0] shadow-[2px_2px_0_#171717] disabled:opacity-40 flex items-center justify-center gap-1.5 cursor-pointer transition-all active:translate-y-0.5"
+            title="Step 1 memory cycle"
+          >
+            <SkipForward size={14} />
+            <span>STEP</span>
+          </button>
+
+          {/* RESET Button */}
+          <button
+            onClick={onReset}
+            className="py-2 px-3 rounded-lg font-mono text-xs font-bold border-2 border-[#171717] bg-[#FFFFFF] hover:bg-[#F5F5F0] shadow-[2px_2px_0_#171717] flex items-center justify-center gap-1.5 cursor-pointer transition-all active:translate-y-0.5"
+            title="Reset simulation state"
+          >
+            <RotateCcw size={14} />
+            <span>RESET</span>
+          </button>
+        </div>
+
+        {/* Speed Row + Race Mode Button */}
+        <div className="flex items-center justify-between gap-2 pt-1">
+          {/* Speeds */}
+          <div className="flex items-center bg-[#FFFFFF] border-2 border-[#171717] rounded-lg p-0.5 font-mono">
+            <span className="text-[10px] text-[#525252] px-1.5 font-bold">SPD:</span>
+            {speeds.map((s) => (
+              <button
+                key={s}
+                onClick={() => onChangeSpeed(s)}
+                className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors cursor-pointer ${
+                  speed === s ? "bg-[#2457FF] text-white" : "text-[#525252] hover:text-[#171717]"
+                }`}
+              >
+                {s}x
+              </button>
+            ))}
+          </div>
+
+          {/* Race Mode Trigger */}
           {onToggleRaceMode && (
             <button
               onClick={onToggleRaceMode}
-              className={`px-2.5 py-1 rounded-md font-mono text-[11px] font-bold border transition-all cursor-pointer flex items-center gap-1 shadow-xs ${
+              className={`py-1.5 px-3 rounded-lg font-mono text-xs font-bold border-2 transition-all flex items-center gap-1.5 cursor-pointer shadow-[2px_2px_0_#171717] active:translate-y-0.5 ${
                 isRaceMode
                   ? "bg-[#2457FF] text-white border-[#171717]"
-                  : "bg-[#171717] text-[#D7FF38] border-[#171717] hover:bg-[#262626]"
+                  : "bg-[#171717] hover:bg-[#262626] text-white border-[#171717]"
               }`}
-              title="Launch Dual-Architecture Race Mode (CPU vs DMA)"
+              title="Dual Architecture Race: CPU Copy vs DMA Hardware Transfer"
             >
-              <Swords size={12} />
-              <span>{isRaceMode ? "Exit Race" : "Race Mode"}</span>
+              <Swords size={13} className={isRaceMode ? "text-white" : "text-[#D7FF38]"} />
+              <span>{isRaceMode ? "EXIT RACE" : "RACE MODE"}</span>
             </button>
           )}
-          <button
-            onClick={onResetDefaults}
-            className="text-[11px] font-mono text-[#525252] hover:text-[#2457FF] underline cursor-pointer"
-          >
-            Reset Defaults
-          </button>
         </div>
       </div>
 
-      {/* 0. Workload Presets Quick-Selector */}
+      {/* 2. WORKLOAD PRESETS */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
@@ -142,7 +237,7 @@ export const Controls: React.FC<ControlsProps> = ({
         </div>
       </div>
 
-      {/* 1. Big Two-State Transfer Mode Switch (CPU vs DMA) */}
+      {/* 3. BIG TWO-STATE TRANSFER MODE SWITCH (CPU vs DMA) */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
@@ -181,7 +276,7 @@ export const Controls: React.FC<ControlsProps> = ({
         </div>
       </div>
 
-      {/* 2. Block Size Slider with Growth Visualizer */}
+      {/* 4. BLOCK SIZE SLIDER WITH GROWTH VISUALIZER */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
@@ -220,7 +315,7 @@ export const Controls: React.FC<ControlsProps> = ({
         </p>
       </div>
 
-      {/* 3. Video Stream Quality */}
+      {/* 5. VIDEO STREAM QUALITY */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
@@ -249,51 +344,20 @@ export const Controls: React.FC<ControlsProps> = ({
         </div>
       </div>
 
-      {/* 4. Hardware Stress Scenarios */}
-      {onSeekStorm && onColdFlush && onNetworkBurst && (
-        <div className="space-y-1.5 pt-2 border-t border-[#171717]/10">
-          <div className="flex items-center justify-between">
-            <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
-              <Flame size={13} className="text-[#FF3B30]" />
-              <span>Stress Triggers</span>
-            </label>
-            <span className="text-[9px] font-mono text-[#525252]">Edge Cases</span>
-          </div>
-          <div className="grid grid-cols-3 gap-1.5">
-            <button
-              onClick={onSeekStorm}
-              className="py-1.5 px-2 rounded font-mono text-xs font-bold border-2 border-[#171717] bg-[#F5F5F0] hover:bg-[#EBEBE6] shadow-[2px_2px_0_#171717] active:translate-y-0.5 text-center transition-all cursor-pointer"
-              title="Forces sudden video scrubbing. Tests spatial cache thrashing."
-            >
-              🌪️ Seek
-            </button>
-            <button
-              onClick={onColdFlush}
-              className="py-1.5 px-2 rounded font-mono text-xs font-bold border-2 border-[#171717] bg-[#F5F5F0] hover:bg-[#EBEBE6] shadow-[2px_2px_0_#171717] active:translate-y-0.5 text-center transition-all cursor-pointer"
-              title="Invalidates all cache lines. Tests compulsory miss latency."
-            >
-              ❄️ Flush
-            </button>
-            <button
-              onClick={onNetworkBurst}
-              className="py-1.5 px-2 rounded font-mono text-xs font-bold border-2 border-[#171717] bg-[#2457FF] hover:bg-[#1A46E0] text-white shadow-[2px_2px_0_#171717] active:translate-y-0.5 text-center transition-all cursor-pointer"
-              title="Spikes incoming packet bitrate. Tests DMA vs CPU saturation limit."
-            >
-              ⚡ Burst
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Collapsible Advanced Hardware Knobs */}
+      {/* 6. COLLAPSIBLE ADVANCED HARDWARE KNOBS (NO EMOJIS) */}
       <div className="pt-2 border-t border-[#171717]/10">
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
           className="w-full flex items-center justify-between text-xs font-mono font-bold text-[#171717] bg-[#F5F5F0] hover:bg-[#EBEBE6] p-2.5 rounded border border-[#171717] transition-colors cursor-pointer"
         >
-          <span>⚙️ Advanced Hardware Tuning</span>
-          <span className="text-[10px] text-[#525252]">{showAdvanced ? "▲ Hide" : "▼ Show (Associativity, Capacity)"}</span>
+          <span className="flex items-center gap-1.5">
+            <Sliders size={13} />
+            <span>Advanced Hardware Tuning</span>
+          </span>
+          <span className="text-[10px] text-[#525252]">
+            {showAdvanced ? "Hide Tuning" : "Show (Associativity, Capacity)"}
+          </span>
         </button>
 
         {showAdvanced && (
