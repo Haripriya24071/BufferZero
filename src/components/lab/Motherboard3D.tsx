@@ -8,6 +8,7 @@ import {
   Tag,
   Maximize2,
   Minimize2,
+  Info,
 } from "lucide-react";
 
 interface Motherboard3DProps {
@@ -41,6 +42,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
   const [showLabels, setShowLabels] = useState<boolean>(true);
   const [cameraView, setCameraView] = useState<"iso" | "top" | "cpu" | "dma">("iso");
   const [isInfoBoxCollapsed, setIsInfoBoxCollapsed] = useState<boolean>(false);
+  const [showGuide, setShowGuide] = useState<boolean>(false);
 
   // Three.js mutable state refs
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -1458,7 +1460,7 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
   return (
     <div
       ref={boardCardRef}
-      className={`card-tactile overflow-hidden flex flex-col bg-[#0A0D14] transition-all duration-300 ${
+      className={`card-tactile overflow-hidden flex flex-col h-full justify-between bg-[#0A0D14] transition-all duration-300 ${
         isFullscreen
           ? "fixed inset-0 z-[100] w-screen h-screen rounded-none border-0 shadow-2xl"
           : ""
@@ -1520,6 +1522,18 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
             <span>Orbit</span>
           </button>
 
+          {/* Guide Explainer Toggle */}
+          <button
+            onClick={() => setShowGuide(!showGuide)}
+            className={`px-2 py-1 rounded flex items-center gap-1 transition-colors cursor-pointer ${
+              showGuide ? "bg-[#D7FF38] text-[#171717] font-bold" : "text-[#8E99A8] hover:text-white"
+            }`}
+            title="Toggle Video Architecture Explanation Guide"
+          >
+            <Info size={12} />
+            <span>Guide</span>
+          </button>
+
           {/* Fullscreen Mode Button */}
           <button
             onClick={handleToggleFullscreen}
@@ -1538,8 +1552,8 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
 
       {/* Main 3D Canvas Viewport */}
       <div
-        className={`relative w-full bg-[#0A0D14] overflow-hidden ${
-          isFullscreen ? "flex-1 h-full min-h-[500px]" : "h-[600px]"
+        className={`relative w-full flex-1 bg-[#0A0D14] overflow-hidden ${
+          isFullscreen ? "h-full min-h-[500px]" : "min-h-[480px]"
         }`}
       >
         {/* Three.js Canvas Container */}
@@ -1565,87 +1579,96 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
           )}
         </div>
 
-        {/* Fullscreen Floating Information Box: How Video Streaming Architecture Works */}
-        {isFullscreen && (
+        {/* Compact Floating Information Box: How Video Streaming Architecture Works */}
+        {(isFullscreen || showGuide) && (
           <div
             className={`absolute top-3 right-3 z-20 pointer-events-auto transition-all duration-300 ${
-              isInfoBoxCollapsed ? "w-auto" : "w-80 sm:w-96"
+              isInfoBoxCollapsed ? "w-auto" : "w-60 sm:w-68"
             }`}
           >
-            <div className="bg-[#0A0D14]/92 border border-[#2A303A] text-white rounded-xl shadow-2xl backdrop-blur-md overflow-hidden">
+            <div className="bg-[#0A0D14]/92 border border-[#2A303A] text-white rounded-lg shadow-xl backdrop-blur-md overflow-hidden">
               {/* Header */}
-              <div className="px-3.5 py-2.5 bg-[#171923] border-b border-[#2A303A] flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#D7FF38] animate-pulse" />
-                  <span className="font-mono text-xs font-bold text-[#D7FF38] uppercase tracking-wider">
-                    How Video Streaming Works
+              <div className="px-2.5 py-1.5 bg-[#171923] border-b border-[#2A303A] flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#D7FF38] animate-pulse" />
+                  <span className="font-mono text-[10px] font-bold text-[#D7FF38] uppercase tracking-wider">
+                    How Streaming Works
                   </span>
                 </div>
-                <button
-                  onClick={() => setIsInfoBoxCollapsed(!isInfoBoxCollapsed)}
-                  className="text-xs font-mono text-[#8E99A8] hover:text-white px-2 py-0.5 rounded bg-[#242A35] hover:bg-[#2A303A] transition-colors cursor-pointer"
-                  title={isInfoBoxCollapsed ? "Expand Architecture Guide" : "Collapse Guide"}
-                >
-                  {isInfoBoxCollapsed ? "Expand" : "Minimize"}
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setIsInfoBoxCollapsed(!isInfoBoxCollapsed)}
+                    className="text-[9px] font-mono text-[#8E99A8] hover:text-white px-1.5 py-0.5 rounded bg-[#242A35] transition-colors cursor-pointer"
+                  >
+                    {isInfoBoxCollapsed ? "Expand" : "Min"}
+                  </button>
+                  {showGuide && !isFullscreen && (
+                    <button
+                      onClick={() => setShowGuide(false)}
+                      className="text-[9px] font-mono text-[#8E99A8] hover:text-white px-1.5 py-0.5 rounded bg-[#242A35] transition-colors cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Body */}
               {!isInfoBoxCollapsed && (
-                <div className="p-3.5 space-y-2.5 font-mono text-[11px] leading-relaxed">
-                  <div className="space-y-2 text-[#C9D1D9]">
-                    <div className="p-2 bg-[#12161F] rounded border border-[#202736]">
-                      <div className="font-bold text-[#D7FF38] flex items-center gap-1.5 mb-0.5">
-                        <span className="w-4 h-4 rounded-full bg-[#D7FF38]/20 text-[#D7FF38] text-[10px] flex items-center justify-center font-bold">1</span>
+                <div className="p-2 space-y-1.5 font-mono text-[9px] leading-snug">
+                  <div className="space-y-1 text-[#C9D1D9]">
+                    <div className="p-1.5 bg-[#12161F] rounded border border-[#202736]">
+                      <div className="font-bold text-[#D7FF38] flex items-center gap-1 mb-0.5">
+                        <span className="w-3.5 h-3.5 rounded-full bg-[#D7FF38]/20 text-[#D7FF38] text-[8px] flex items-center justify-center font-bold">1</span>
                         <span>NIC Ingestion</span>
                       </div>
-                      <p className="text-[10px] text-[#8E99A8]">
-                        Network interface receives compressed video bitstream packets over Ethernet / Wi-Fi.
+                      <p className="text-[9px] text-[#8E99A8]">
+                        Network card ingests compressed packets from socket.
                       </p>
                     </div>
 
-                    <div className="p-2 bg-[#12161F] rounded border border-[#202736]">
-                      <div className="font-bold text-[#00F0FF] flex items-center gap-1.5 mb-0.5">
-                        <span className="w-4 h-4 rounded-full bg-[#00F0FF]/20 text-[#00F0FF] text-[10px] flex items-center justify-center font-bold">2</span>
-                        <span>DMA Direct Bus Bypass</span>
+                    <div className="p-1.5 bg-[#12161F] rounded border border-[#202736]">
+                      <div className="font-bold text-[#00F0FF] flex items-center gap-1 mb-0.5">
+                        <span className="w-3.5 h-3.5 rounded-full bg-[#00F0FF]/20 text-[#00F0FF] text-[8px] flex items-center justify-center font-bold">2</span>
+                        <span>DMA Bus Bypass</span>
                       </div>
-                      <p className="text-[10px] text-[#8E99A8]">
-                        DMAC copies packet payloads directly into DDR RAM via cycle stealing — completely freeing CPU from word-copy loops.
+                      <p className="text-[9px] text-[#8E99A8]">
+                        DMAC writes directly to DDR RAM (0% CPU load).
                       </p>
                     </div>
 
-                    <div className="p-2 bg-[#12161F] rounded border border-[#202736]">
-                      <div className="font-bold text-[#2457FF] flex items-center gap-1.5 mb-0.5">
-                        <span className="w-4 h-4 rounded-full bg-[#2457FF]/30 text-[#2457FF] text-[10px] flex items-center justify-center font-bold">3</span>
-                        <span>SRAM Cache Locality</span>
+                    <div className="p-1.5 bg-[#12161F] rounded border border-[#202736]">
+                      <div className="font-bold text-[#2457FF] flex items-center gap-1 mb-0.5">
+                        <span className="w-3.5 h-3.5 rounded-full bg-[#2457FF]/30 text-[#2457FF] text-[8px] flex items-center justify-center font-bold">3</span>
+                        <span>SRAM Locality</span>
                       </div>
-                      <p className="text-[10px] text-[#8E99A8]">
-                        L1/L2 hardware cache captures spatial video macroblocks. Hits service in 1 cycle, avoiding 80-cycle DDR penalty stalls.
+                      <p className="text-[9px] text-[#8E99A8]">
+                        L1/L2 hits service in 1 cycle, avoiding 80-cycle stall.
                       </p>
                     </div>
 
-                    <div className="p-2 bg-[#12161F] rounded border border-[#202736]">
-                      <div className="font-bold text-[#22C55E] flex items-center gap-1.5 mb-0.5">
-                        <span className="w-4 h-4 rounded-full bg-[#22C55E]/20 text-[#22C55E] text-[10px] flex items-center justify-center font-bold">4</span>
-                        <span>Stall-Free Decode</span>
+                    <div className="p-1.5 bg-[#12161F] rounded border border-[#202736]">
+                      <div className="font-bold text-[#22C55E] flex items-center gap-1 mb-0.5">
+                        <span className="w-3.5 h-3.5 rounded-full bg-[#22C55E]/20 text-[#22C55E] text-[8px] flex items-center justify-center font-bold">4</span>
+                        <span>Stall-Free 60 FPS</span>
                       </div>
-                      <p className="text-[10px] text-[#8E99A8]">
-                        RISC-V CPU executes decode algorithms at a rock-solid 60 FPS without buffer starvation or audio desync!
+                      <p className="text-[9px] text-[#8E99A8]">
+                        CPU decodes smoothly with zero buffer stutter!
                       </p>
                     </div>
                   </div>
 
-                  {/* Current Active Pipeline State */}
-                  <div className="pt-2 border-t border-[#202736] flex items-center justify-between text-[10px]">
-                    <span className="text-[#8E99A8]">Current Mode:</span>
+                  {/* Status Indicator */}
+                  <div className="pt-1 border-t border-[#202736] flex items-center justify-between text-[9px]">
+                    <span className="text-[#8E99A8]">Mode:</span>
                     <span
-                      className={`font-bold px-2 py-0.5 rounded ${
+                      className={`font-bold px-1.5 py-0.5 rounded ${
                         transferMode === "DMA"
                           ? "bg-[#D7FF38]/20 text-[#D7FF38] border border-[#D7FF38]/40"
                           : "bg-[#FF3B30]/20 text-[#FF3B30] border border-[#FF3B30]/40"
                       }`}
                     >
-                      {transferMode === "DMA" ? "DMA Active (0% CPU Load)" : "CPU-Bound (Buffer Stall Hazard)"}
+                      {transferMode === "DMA" ? "DMA Active (0% CPU Load)" : "CPU Copy (Stall Hazard)"}
                     </span>
                   </div>
                 </div>
@@ -1685,29 +1708,29 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       </div>
 
       {/* Selected Chip Architecture Telemetry Bar */}
-      <div className="p-3.5 bg-[#FFFFFF] border-t-2 border-[#171717] flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono text-xs">
+      <div className="p-3 bg-[#FFFFFF] border-t-2 border-[#171717] flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono">
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-bold text-[#171717] text-sm block">
+            <span className="font-bold text-[#171717] text-xs sm:text-sm block">
               {chipsInfo[activeChip].title}
             </span>
-            <span className="text-[10px] bg-[#EBEBE6] px-1.5 py-0.5 rounded text-[#525252]">
+            <span className="text-[10px] bg-[#EBEBE6] px-1.5 py-0.5 rounded text-[#525252] font-semibold">
               {chipsInfo[activeChip].subtitle}
             </span>
           </div>
-          <p className="text-[#525252] text-[11px] mt-0.5 max-w-2xl">
+          <p className="text-[#333333] text-xs mt-0.5 max-w-2xl leading-relaxed">
             {chipsInfo[activeChip].role}
           </p>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <div className="bg-[#FFFFFF] border border-[#171717] px-2.5 py-1 rounded">
-            <span className="text-[10px] text-[#525252] block">STATUS</span>
-            <span className="font-bold text-[#171717]">{chipsInfo[activeChip].status}</span>
+            <span className="text-[9px] text-[#525252] font-bold block">STATUS</span>
+            <span className="font-bold text-xs text-[#171717]">{chipsInfo[activeChip].status}</span>
           </div>
           <div className="bg-[#171717] text-[#D7FF38] px-2.5 py-1 rounded border border-[#171717]">
-            <span className="text-[10px] text-[#8E99A8] block">SUBSYSTEM</span>
-            <span className="font-bold text-[10px]">{chipsInfo[activeChip].domain}</span>
+            <span className="text-[9px] text-[#8E99A8] font-bold block">SUBSYSTEM</span>
+            <span className="font-bold text-xs">{chipsInfo[activeChip].domain}</span>
           </div>
         </div>
       </div>
