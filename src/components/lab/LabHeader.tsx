@@ -102,7 +102,7 @@ export const LabHeader: React.FC<LabHeaderProps> = ({
             title="Dual Architecture Race: CPU Copy vs DMA Hardware Transfer"
           >
             <Swords size={15} className={isRaceMode ? "text-white" : "text-[#D7FF38]"} />
-            <span>{isRaceMode ? "EXIT RACE MODE" : "🏆 RACE MODE (CPU vs DMA)"}</span>
+            <span>{isRaceMode ? "EXIT RACE MODE" : "RACE MODE (CPU vs DMA)"}</span>
           </button>
         </div>
       </div>
