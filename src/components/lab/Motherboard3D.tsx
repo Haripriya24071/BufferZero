@@ -1981,13 +1981,13 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       </div>
 
       {/* Selected Chip Architecture Telemetry Bar - Slim Low-Ratio Strip */}
-      <div className="px-3 py-1.5 sm:py-2 bg-[#D7FF38] border-t-2 border-[#171717] flex flex-col md:flex-row md:items-center justify-between gap-1.5 md:gap-3 font-mono shrink-0">
+      <div className="px-3 py-1.5 sm:py-2 bg-[#E2EA58] border-t-2 border-[#171717] flex flex-col md:flex-row md:items-center justify-between gap-1.5 md:gap-3 font-mono shrink-0">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="font-black text-[#171717] text-xs tracking-tight whitespace-nowrap">
               {chipsInfo[activeChip].title}
             </span>
-            <span className="text-[9px] bg-[#171717] text-[#D7FF38] px-1.5 py-0.5 rounded font-extrabold whitespace-nowrap">
+            <span className="text-[9px] bg-[#171717] text-[#E2EA58] px-1.5 py-0.5 rounded font-extrabold whitespace-nowrap">
               {chipsInfo[activeChip].subtitle}
             </span>
           </div>
@@ -2004,10 +2004,10 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
             <span className="text-[8px] text-[#525252] font-black tracking-wider uppercase">STATUS</span>
             <span className="font-extrabold text-[#171717] whitespace-nowrap">{chipsInfo[activeChip].status}</span>
           </div>
-          <div className="bg-[#171717] text-[#D7FF38] px-2 py-0.5 rounded border border-[#171717] shadow-[1px_1px_0_#171717] flex items-center gap-1.5 text-[10px]">
+          <div className="bg-[#171717] text-[#E2EA58] px-2 py-0.5 rounded border border-[#171717] shadow-[1px_1px_0_#171717] flex items-center gap-1.5 text-[10px]">
             <span className="text-[8px] text-[#8E99A8] font-bold tracking-wider uppercase">SUBSYSTEM</span>
             <span
-              className="font-extrabold text-[#D7FF38] whitespace-nowrap truncate max-w-[160px] sm:max-w-[220px]"
+              className="font-extrabold text-[#E2EA58] whitespace-nowrap truncate max-w-[160px] sm:max-w-[220px]"
               title={chipsInfo[activeChip].domain}
             >
               {chipsInfo[activeChip].domain}
