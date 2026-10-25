@@ -24,15 +24,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
           </div>
 
           <div>
-            <div className="font-display text-xl tracking-tight text-[#171717] flex items-center gap-2">
-              <span>{PROJECT_CONFIG.productName}</span>
-              <span className="text-[10px] uppercase font-mono px-2 py-0.5 bg-[#2457FF] text-white rounded font-bold shadow-[1px_1px_0_#171717]">
-                COA v1.0
-              </span>
+            <div className="font-display text-2xl tracking-tight text-[#171717] font-extrabold">
+              {PROJECT_CONFIG.productName}
             </div>
-            <p className="text-[10px] font-mono text-[#525252] hidden sm:block">
-              {PROJECT_CONFIG.studentName} • {PROJECT_CONFIG.usn}
-            </p>
           </div>
         </button>
 
@@ -61,27 +55,27 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
 
               <button
                 onClick={() => onNavigate("lab")}
-                className="btn-primary text-xs py-2 px-4 shadow-[3px_3px_0_#171717] hover:shadow-[5px_5px_0_#171717] flex items-center gap-2"
+                className="btn-primary text-xs py-2 px-4 shadow-[3px_3px_0_#171717] hover:shadow-[5px_5px_0_#171717] flex items-center gap-2 cursor-pointer"
               >
                 <Zap size={15} className="fill-[#171717]" />
                 <span>Launch Simulation Lab</span>
               </button>
             </>
           ) : (
-            <>
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => onNavigate("landing")}
-                className="btn-secondary text-xs py-2 px-3 flex items-center gap-1.5"
+                className="h-10 px-4 rounded-lg font-mono text-xs font-bold border-2 border-[#171717] bg-[#FFFFFF] hover:bg-[#F5F5F0] text-[#171717] shadow-[2px_2px_0_#171717] flex items-center justify-center gap-2 cursor-pointer transition-all active:translate-y-0.5"
               >
                 <Terminal size={14} />
                 <span>Overview & Concepts</span>
               </button>
 
-              <div className="flex items-center gap-1.5 px-3 py-1 bg-[#D7FF38] border-2 border-[#171717] shadow-[2px_2px_0_#171717] rounded font-mono text-xs font-bold text-[#171717]">
-                <span className="w-2 h-2 rounded-full bg-[#2457FF] animate-ping mr-0.5"></span>
+              <div className="h-10 px-4 rounded-lg font-mono text-xs font-bold border-2 border-[#171717] bg-[#D7FF38] text-[#171717] shadow-[2px_2px_0_#171717] flex items-center justify-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#2457FF] animate-ping"></span>
                 <span>SIMULATION ACTIVE</span>
               </div>
-            </>
+            </div>
           )}
         </nav>
       </div>
