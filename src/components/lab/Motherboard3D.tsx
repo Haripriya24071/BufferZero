@@ -1254,6 +1254,279 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       scene.add(tpRing);
     });
 
+    // ========================================================
+    // --- FLAGSHIP HARDWARE ARMOR & BIG STRUCTURES (NO GAPS) ---
+    // ========================================================
+
+    // 1. Large Central M.2 Thermal Armor Heatsink Shield (Spanning Center Bridge)
+    const m2ArmorMat = new THREE.MeshStandardMaterial({
+      color: 0x1e242d,
+      metalness: 0.85,
+      roughness: 0.25,
+    });
+    const bigM2Shield = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.45, 6.8), m2ArmorMat);
+    bigM2Shield.position.set(3.2, 0.65, 2.2);
+    bigM2Shield.castShadow = true;
+    scene.add(bigM2Shield);
+
+    // CNC Milling grooves across Big M.2 Shield
+    const grooveMat = new THREE.MeshStandardMaterial({ color: 0x0f131a, metalness: 0.9 });
+    for (let g = -2.2; g <= 2.2; g += 1.1) {
+      const groove = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.1, 0.2), grooveMat);
+      groove.position.set(3.2, 0.88, 2.2 + g);
+      scene.add(groove);
+    }
+
+    // Laser-etched Metal Logo Badge on M.2 Shield
+    const m2Badge = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.8, 0.5),
+      new THREE.MeshBasicMaterial({ color: 0x00f0ff })
+    );
+    m2Badge.rotation.x = -Math.PI / 2;
+    m2Badge.position.set(3.2, 0.89, 2.2);
+    scene.add(m2Badge);
+
+    // 2. Heavy Steel Armor Reinforcement Casing for Secondary PCIe x16 Slot
+    const steelArmorMat = new THREE.MeshStandardMaterial({
+      color: 0xd1d5db,
+      metalness: 0.95,
+      roughness: 0.15,
+    });
+    const pcieSteelArmor = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.55, 11.2), steelArmorMat);
+    pcieSteelArmor.position.set(-8.8, 0.68, 5.5);
+    pcieSteelArmor.castShadow = true;
+    scene.add(pcieSteelArmor);
+
+    // 3. Large Metallic Audio Faraday Shield Enclosure (Lower Left Corner)
+    const audioShieldMat = new THREE.MeshStandardMaterial({
+      color: 0x161a22,
+      metalness: 0.9,
+      roughness: 0.2,
+    });
+    const audioEnclosure = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.75, 4.2), audioShieldMat);
+    audioEnclosure.position.set(-13.0, 0.8, 5.5);
+    audioEnclosure.castShadow = true;
+    scene.add(audioEnclosure);
+
+    // Gold Circuitry Accent Line on Audio Shield
+    const audioTrim = new THREE.Mesh(
+      new THREE.BoxGeometry(3.2, 0.08, 0.15),
+      new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.95, roughness: 0.1 })
+    );
+    audioTrim.position.set(-13.0, 1.18, 5.5);
+    scene.add(audioTrim);
+
+    // 4. Dedicated Memory VRM Power Subsystem (DIMM Phase Heatsink & Chokes)
+    const dimmVrmHeatsink = new THREE.Mesh(
+      new THREE.BoxGeometry(2.4, 0.9, 1.2),
+      new THREE.MeshStandardMaterial({ color: 0x242a35, metalness: 0.8, roughness: 0.3 })
+    );
+    dimmVrmHeatsink.position.set(6.5, 0.85, -9.2);
+    dimmVrmHeatsink.castShadow = true;
+    scene.add(dimmVrmHeatsink);
+
+    [-0.7, 0.7].forEach((dx) => {
+      const dChoke = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.6, 0.65), chokeMat);
+      dChoke.position.set(6.5 + dx, 0.7, -7.8);
+      scene.add(dChoke);
+
+      const dCap = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 0.65, 12), capBodyMat);
+      dCap.position.set(6.5 + dx, 0.72, -10.5);
+      scene.add(dCap);
+    });
+
+    // 5. Heavy Copper Heatpipe Connecting Southbridge (PCH) to Central Thermal Block
+    const pchHeatpipe = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.18, 0.18, 6.5, 16),
+      new THREE.MeshStandardMaterial({ color: 0xb87333, metalness: 0.95, roughness: 0.15 })
+    );
+    pchHeatpipe.rotation.z = Math.PI / 2.8;
+    pchHeatpipe.rotation.y = -Math.PI / 4.2;
+    pchHeatpipe.position.set(5.5, 1.35, 5.0);
+    scene.add(pchHeatpipe);
+
+    // 6. Large Auxiliary PCIe 6-Pin Power Header (PEG Aux Power on Bottom Edge)
+    const pegBlock = new THREE.Mesh(
+      new THREE.BoxGeometry(1.6, 1.1, 1.2),
+      new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.7 })
+    );
+    pegBlock.position.set(-8.5, 0.95, 11.2);
+    pegBlock.castShadow = true;
+    scene.add(pegBlock);
+
+    for (let px = -0.5; px <= 0.5; px += 0.5) {
+      [-0.25, 0.25].forEach((pz) => {
+        const pin = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.25, 0.1), pinMat);
+        pin.position.set(-8.5 + px, 1.52, 11.2 + pz);
+        scene.add(pin);
+      });
+    }
+
+    // 7. Diagnostic Status OLED Mini-Screen Module (Upper Right Panel)
+    const oledFrame = new THREE.Mesh(
+      new THREE.BoxGeometry(1.5, 0.35, 2.2),
+      new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4 })
+    );
+    oledFrame.position.set(13.2, 0.6, -4.0);
+    oledFrame.castShadow = true;
+    scene.add(oledFrame);
+
+    const oledGlass = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.2, 1.8),
+      new THREE.MeshBasicMaterial({ color: 0x00f0ff })
+    );
+    oledGlass.rotation.x = -Math.PI / 2;
+    oledGlass.position.set(13.2, 0.78, -4.0);
+    scene.add(oledGlass);
+
+    // 8. Dual U.2 / SlimSAS Enterprise NVMe High-Speed Storage Ports (Right Edge)
+    const u2Port = new THREE.Mesh(
+      new THREE.BoxGeometry(1.2, 0.95, 2.8),
+      new THREE.MeshStandardMaterial({ color: 0x8e99a8, metalness: 0.9, roughness: 0.25 })
+    );
+    u2Port.position.set(14.8, 0.9, -7.8);
+    u2Port.castShadow = true;
+    scene.add(u2Port);
+
+    // 9. Extended Lower M.2 Thermal Armor Bridge Plate (Spanning Lower Expansion Deck)
+    const lowerArmorMat = new THREE.MeshStandardMaterial({
+      color: 0x1a202c,
+      metalness: 0.88,
+      roughness: 0.2,
+    });
+    const lowerM2Plate = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.42, 3.4), lowerArmorMat);
+    lowerM2Plate.position.set(-1.8, 0.62, 8.5);
+    lowerM2Plate.castShadow = true;
+    scene.add(lowerM2Plate);
+
+    // Milled airflow grooves on Lower M.2 Plate
+    for (let mg = -1.2; mg <= 1.2; mg += 0.8) {
+      const groove = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.08, 0.18), grooveMat);
+      groove.position.set(-1.8, 0.84, 8.5 + mg);
+      scene.add(groove);
+    }
+
+    // 10. Gen5 Extreme Active Heatpipe Tower Cooler (Top-Right Zone)
+    const towerMat = new THREE.MeshStandardMaterial({
+      color: 0x334155,
+      metalness: 0.85,
+      roughness: 0.25,
+    });
+    const coolerTower = new THREE.Mesh(new THREE.BoxGeometry(2.6, 1.35, 2.4), towerMat);
+    coolerTower.position.set(11.2, 1.05, -9.6);
+    coolerTower.castShadow = true;
+    scene.add(coolerTower);
+
+    // Stacked cooling fins on the Gen5 tower
+    const towerFinMat = new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.9, roughness: 0.2 });
+    for (let f = 0.55; f <= 1.65; f += 0.2) {
+      const fin = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.04, 2.5), towerFinMat);
+      fin.position.set(11.2, f, -9.6);
+      scene.add(fin);
+    }
+    // Copper heatpipe loop crowning the tower
+    const towerPipe = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 2.2, 12), copperPipeMat);
+    towerPipe.rotation.x = Math.PI / 2;
+    towerPipe.position.set(11.2, 1.78, -9.6);
+    scene.add(towerPipe);
+
+    // 11. Onboard Enthusiast OC Diagnostic Control Island (Bottom Edge)
+    const ocIslandBase = new THREE.Mesh(
+      new THREE.BoxGeometry(5.2, 0.35, 1.8),
+      new THREE.MeshStandardMaterial({ color: 0x111827, metalness: 0.7, roughness: 0.3 })
+    );
+    ocIslandBase.position.set(2.0, 0.55, 11.0);
+    ocIslandBase.castShadow = true;
+    scene.add(ocIslandBase);
+
+    // Large Red Ignition Power Button
+    const pwrBezel = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.48, 0.2, 16), steelArmorMat);
+    pwrBezel.position.set(0.4, 0.75, 11.0);
+    scene.add(pwrBezel);
+
+    const pwrBtn = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.38, 0.38, 0.25, 16),
+      new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.3 })
+    );
+    pwrBtn.position.set(0.4, 0.82, 11.0);
+    scene.add(pwrBtn);
+
+    // Reset / FlexKey Button
+    const rstBtn = new THREE.Mesh(
+      new THREE.BoxGeometry(0.55, 0.25, 0.55),
+      new THREE.MeshStandardMaterial({ color: 0xd7ff38, roughness: 0.3 })
+    );
+    rstBtn.position.set(1.7, 0.8, 11.0);
+    scene.add(rstBtn);
+
+    // Dual 7-Segment POST Debug LED Display
+    const ocPostDisplay = new THREE.Mesh(
+      new THREE.BoxGeometry(1.4, 0.45, 0.9),
+      new THREE.MeshStandardMaterial({ color: 0x050811, roughness: 0.2 })
+    );
+    ocPostDisplay.position.set(3.4, 0.75, 11.0);
+    scene.add(ocPostDisplay);
+
+    const ocPostLed = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.1, 0.65),
+      new THREE.MeshBasicMaterial({ color: 0xd7ff38 })
+    );
+    ocPostLed.rotation.x = -Math.PI / 2;
+    ocPostLed.position.set(3.4, 0.99, 11.0);
+    scene.add(ocPostLed);
+
+    // 12. Dual Shielded Front-Panel USB 3.2 Gen 2x2 (20G) Steel Housing (Right Edge)
+    const usb3Block = new THREE.Mesh(
+      new THREE.BoxGeometry(1.4, 1.3, 2.4),
+      steelArmorMat
+    );
+    usb3Block.position.set(14.8, 1.05, -1.2);
+    usb3Block.castShadow = true;
+    scene.add(usb3Block);
+
+    [-0.55, 0.55].forEach((uz) => {
+      const usbSlot = new THREE.Mesh(
+        new THREE.BoxGeometry(0.35, 0.45, 0.7),
+        new THREE.MeshStandardMaterial({ color: 0x0284c7 })
+      );
+      usbSlot.position.set(15.4, 1.05, -1.2 + uz);
+      scene.add(usbSlot);
+    });
+
+    // 13. Rear I/O Wi-Fi 7 & Bluetooth 5.4 Dual RP-SMA Antenna Shroud (Top-Left Edge)
+    const wifiCanMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.95, roughness: 0.15 });
+    const wifiBlock = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.1, 2.2), wifiCanMat);
+    wifiBlock.position.set(-14.2, 0.95, -9.8);
+    wifiBlock.castShadow = true;
+    scene.add(wifiBlock);
+
+    [-0.55, 0.55].forEach((wz) => {
+      const antennaPost = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.18, 0.18, 0.6, 12),
+        new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.95, roughness: 0.1 })
+      );
+      antennaPost.rotation.x = Math.PI / 2;
+      antennaPost.position.set(-15.1, 0.95, -9.8 + wz);
+      scene.add(antennaPost);
+    });
+
+    // 14. Dual 8-Pin Pro EPS 12V Solid-Pin CPU Power Inlets (Top Edge)
+    const epsMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.6 });
+    [-9.2, -7.4].forEach((ex) => {
+      const epsSocket = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.1, 1.2), epsMat);
+      epsSocket.position.set(ex, 0.95, -11.0);
+      epsSocket.castShadow = true;
+      scene.add(epsSocket);
+
+      for (let px = -0.4; px <= 0.4; px += 0.8) {
+        [-0.3, 0.3].forEach((pz) => {
+          const pin = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.3, 0.1), pinMat);
+          pin.position.set(ex + px, 1.45, -11.0 + pz);
+          scene.add(pin);
+        });
+      }
+    });
+
     // 12. Dynamic Traveling Data Packets
     const packetGeo = new THREE.SphereGeometry(0.22, 12, 12);
     const dmaPacketMat = new THREE.MeshBasicMaterial({ color: 0xd7ff38 });
@@ -1708,29 +1981,29 @@ export const Motherboard3D: React.FC<Motherboard3DProps> = ({
       </div>
 
       {/* Selected Chip Architecture Telemetry Bar */}
-      <div className="p-3 bg-[#FFFFFF] border-t-2 border-[#171717] flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono">
+      <div className="p-3.5 bg-[#D7FF38] border-t-2 border-[#171717] flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono">
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-bold text-[#171717] text-xs sm:text-sm block">
+            <span className="font-extrabold text-[#171717] text-xs sm:text-sm block">
               {chipsInfo[activeChip].title}
             </span>
-            <span className="text-[10px] bg-[#EBEBE6] px-1.5 py-0.5 rounded text-[#525252] font-semibold">
+            <span className="text-[10px] bg-[#171717] text-[#D7FF38] px-2 py-0.5 rounded font-bold">
               {chipsInfo[activeChip].subtitle}
             </span>
           </div>
-          <p className="text-[#333333] text-xs mt-0.5 max-w-2xl leading-relaxed">
+          <p className="text-[#171717] text-xs mt-1 max-w-2xl leading-relaxed font-semibold">
             {chipsInfo[activeChip].role}
           </p>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <div className="bg-[#FFFFFF] border border-[#171717] px-2.5 py-1 rounded">
-            <span className="text-[9px] text-[#525252] font-bold block">STATUS</span>
-            <span className="font-bold text-xs text-[#171717]">{chipsInfo[activeChip].status}</span>
+          <div className="bg-[#FFFFFF] border-2 border-[#171717] px-3 py-1.5 rounded-lg shadow-[2px_2px_0_#171717]">
+            <span className="text-[9px] text-[#525252] font-extrabold block">STATUS</span>
+            <span className="font-extrabold text-xs text-[#171717]">{chipsInfo[activeChip].status}</span>
           </div>
-          <div className="bg-[#171717] text-[#D7FF38] px-2.5 py-1 rounded border border-[#171717]">
+          <div className="bg-[#171717] text-[#D7FF38] px-3 py-1.5 rounded-lg border-2 border-[#171717] shadow-[2px_2px_0_#171717]">
             <span className="text-[9px] text-[#8E99A8] font-bold block">SUBSYSTEM</span>
-            <span className="font-bold text-xs">{chipsInfo[activeChip].domain}</span>
+            <span className="font-extrabold text-xs text-[#D7FF38]">{chipsInfo[activeChip].domain}</span>
           </div>
         </div>
       </div>
