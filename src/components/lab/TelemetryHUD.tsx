@@ -1,6 +1,6 @@
 import React from "react";
 import { SimMetrics, SimConfig } from "../../engine/types";
-import { Zap, HardDrive, Radio, Activity, Film } from "lucide-react";
+import { HardDrive, Radio, Activity } from "lucide-react";
 
 interface TelemetryHUDProps {
   metrics: SimMetrics;
@@ -22,7 +22,7 @@ export const TelemetryHUD: React.FC<TelemetryHUDProps> = ({ metrics, config }) =
   const amatHealth = getAmatHealth();
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono">
       {/* 1. AMAT (Average Memory Access Time) */}
       <div className="bg-[#FFFFFF] border-2 border-[#171717] p-4 rounded-xl shadow-[4px_4px_0_#171717] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
         <div className="flex items-center justify-between mb-1.5">
@@ -93,49 +93,6 @@ export const TelemetryHUD: React.FC<TelemetryHUDProps> = ({ metrics, config }) =
         <div className="mt-2 pt-2 border-t border-[#171717]/10 flex items-center justify-between text-[10px] text-[#525252]">
           <span>{config.transferMode === "DMA" ? "Hardware Offload" : "Programmed I/O Loop"}</span>
           <span>CPI: {metrics.cpi}</span>
-        </div>
-      </div>
-
-      {/* 4. Stream Playback & Buffer Health */}
-      <div className={`border-2 border-[#171717] p-4 rounded-xl shadow-[4px_4px_0_#171717] hover:translate-x-0.5 hover:translate-y-0.5 transition-all ${
-        metrics.isBuffering ? "bg-[#FFF5F5]" : "bg-[#FFFFFF]"
-      }`}>
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[11px] font-bold text-[#525252] uppercase tracking-wider flex items-center gap-1.5">
-            <Film size={14} className={metrics.isBuffering ? "text-[#FF3B30]" : "text-[#171717]"} />
-            <span>Stream Health</span>
-          </span>
-          <span className={`text-[9px] font-extrabold px-2 py-0.5 rounded-full border border-[#171717] flex items-center gap-1 ${
-            metrics.isBuffering
-              ? "bg-[#FF3B30] text-white animate-pulse"
-              : "bg-[#D7FF38] text-[#171717]"
-          }`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${metrics.isBuffering ? "bg-white" : "bg-[#171717]"}`}></span>
-            {metrics.isBuffering ? "BUFFERING STALL" : "SMOOTH 60 FPS"}
-          </span>
-        </div>
-        <div className="flex items-baseline gap-1.5">
-          <span className={`font-display text-3xl sm:text-4xl font-black ${
-            metrics.isBuffering ? "text-[#FF3B30]" : "text-[#171717]"
-          }`}>
-            {metrics.bufferLevelPct}%
-          </span>
-          <span className="text-xs text-[#525252] font-bold">buffer ({metrics.fps} FPS)</span>
-        </div>
-        {/* Visual Mini Buffer Health Bar */}
-        <div className="mt-2 pt-2 border-t border-[#171717]/10">
-          <div className="w-full h-2 bg-[#EBEBE6] border border-[#171717] rounded-full overflow-hidden">
-            <div
-              className={`h-full transition-all duration-300 ${
-                metrics.bufferLevelPct > 50
-                  ? "bg-[#D7FF38]"
-                  : metrics.bufferLevelPct > 20
-                  ? "bg-[#2457FF]"
-                  : "bg-[#FF3B30]"
-              }`}
-              style={{ width: `${Math.min(100, Math.max(0, metrics.bufferLevelPct))}%` }}
-            ></div>
-          </div>
         </div>
       </div>
     </div>
