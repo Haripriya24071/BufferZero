@@ -10,18 +10,24 @@ import {
   AccessPattern,
 } from "../../engine/types";
 import { BITRATE_MBPS } from "../../engine/timing";
-import { Sliders, HelpCircle, HardDrive, Cpu, Radio, Film } from "lucide-react";
+import { Sliders, HelpCircle, HardDrive, Cpu, Radio, Film, Flame } from "lucide-react";
 
 interface ControlsProps {
   config: SimConfig;
   onChangeConfig: (partial: Partial<SimConfig>) => void;
   onResetDefaults: () => void;
+  onSeekStorm?: () => void;
+  onColdFlush?: () => void;
+  onNetworkBurst?: () => void;
 }
 
 export const Controls: React.FC<ControlsProps> = ({
   config,
   onChangeConfig,
   onResetDefaults,
+  onSeekStorm,
+  onColdFlush,
+  onNetworkBurst,
 }) => {
   const [showAdvanced, setShowAdvanced] = React.useState<boolean>(false);
 
@@ -160,6 +166,42 @@ export const Controls: React.FC<ControlsProps> = ({
           ))}
         </div>
       </div>
+
+      {/* 4. Hardware Stress Scenarios */}
+      {onSeekStorm && onColdFlush && onNetworkBurst && (
+        <div className="space-y-1.5 pt-2 border-t border-[#12151A]/10">
+          <div className="flex items-center justify-between">
+            <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#12151A] flex items-center gap-1.5">
+              <Flame size={13} className="text-[#FF3B30]" />
+              <span>Stress Triggers</span>
+            </label>
+            <span className="text-[9px] font-mono text-[#5A6372]">Edge Cases</span>
+          </div>
+          <div className="grid grid-cols-3 gap-1.5">
+            <button
+              onClick={onSeekStorm}
+              className="py-1.5 px-2 rounded font-mono text-xs font-bold border-2 border-[#12151A] bg-[#F5F2EB] hover:bg-[#EAE5DB] shadow-[2px_2px_0_#12151A] active:translate-y-0.5 text-center transition-all cursor-pointer"
+              title="Forces sudden video scrubbing. Tests spatial cache thrashing."
+            >
+              🌪️ Seek
+            </button>
+            <button
+              onClick={onColdFlush}
+              className="py-1.5 px-2 rounded font-mono text-xs font-bold border-2 border-[#12151A] bg-[#F5F2EB] hover:bg-[#EAE5DB] shadow-[2px_2px_0_#12151A] active:translate-y-0.5 text-center transition-all cursor-pointer"
+              title="Invalidates all cache lines. Tests compulsory miss latency."
+            >
+              ❄️ Flush
+            </button>
+            <button
+              onClick={onNetworkBurst}
+              className="py-1.5 px-2 rounded font-mono text-xs font-bold border-2 border-[#12151A] bg-[#CCFF00] hover:bg-[#BBEE00] text-[#12151A] shadow-[2px_2px_0_#12151A] active:translate-y-0.5 text-center transition-all cursor-pointer"
+              title="Spikes incoming packet bitrate. Tests DMA vs CPU saturation limit."
+            >
+              ⚡ Burst
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Collapsible Advanced Hardware Knobs */}
       <div className="pt-2 border-t border-[#12151A]/10">

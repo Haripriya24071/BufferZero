@@ -43,8 +43,8 @@ export const LabPage: React.FC = () => {
   // Active Bottom Tab
   const [bottomTab, setBottomTab] = useState<"charts" | "pipeline" | "debugger" | "handcheck">("charts");
 
-  // Active Center Stage View ("motherboard" | "cache" | "player")
-  const [centerStage, setCenterStage] = useState<"motherboard" | "cache" | "player">("motherboard");
+  // Active Center Stage View ("player" | "motherboard" | "cache")
+  const [centerStage, setCenterStage] = useState<"player" | "motherboard" | "cache">("player");
 
   // Simulation Ticker: Calmed down to a steady, explainable pace (1-2 accesses/sec on 1x)
   useEffect(() => {
@@ -168,17 +168,13 @@ export const LabPage: React.FC = () => {
         ) : (
           /* Standard 3-Column Lab View */
           <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              {/* Left Column: Hardware Controls + Break-It Deck (3 cols) */}
-              <div className="lg:col-span-3 space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+              {/* Left Column: Hardware Controls + Stress Triggers (3 cols) */}
+              <div className="lg:col-span-3 flex flex-col justify-between">
                 <Controls
                   config={config}
                   onChangeConfig={handleConfigChange}
                   onResetDefaults={() => handleConfigChange(DEFAULT_CONFIG)}
-                />
-
-                {/* Break-It Stress Test Deck sits flush under Controls */}
-                <BreakItDeck
                   onSeekStorm={() => simRef.current.triggerSeekStorm()}
                   onColdFlush={() => simRef.current.triggerColdFlush()}
                   onNetworkBurst={() => simRef.current.triggerNetworkBurst()}
@@ -186,13 +182,24 @@ export const LabPage: React.FC = () => {
               </div>
 
               {/* Center Column: Focused Simulation Stage (6 cols) */}
-              <div className="lg:col-span-6 space-y-4">
+              <div className="lg:col-span-6 flex flex-col justify-between space-y-3">
                 {/* Stage Selector Pills */}
                 <div className="flex items-center justify-between bg-[#FFFFFF] border-2 border-[#12151A] p-1.5 rounded-lg shadow-[3px_3px_0_#12151A]">
                   <div className="flex items-center gap-1 font-mono text-xs">
                     <button
+                      onClick={() => setCenterStage("player")}
+                      className={`px-3 py-1.5 rounded font-bold transition-all cursor-pointer ${
+                        centerStage === "player"
+                          ? "bg-[#12151A] text-[#CCFF00] shadow-[2px_2px_0_#12151A]"
+                          : "text-[#5A6372] hover:text-[#12151A]"
+                      }`}
+                    >
+                      📺 Video Monitor
+                    </button>
+
+                    <button
                       onClick={() => setCenterStage("motherboard")}
-                      className={`px-3 py-1.5 rounded font-bold transition-all ${
+                      className={`px-3 py-1.5 rounded font-bold transition-all cursor-pointer ${
                         centerStage === "motherboard"
                           ? "bg-[#12151A] text-[#CCFF00] shadow-[2px_2px_0_#12151A]"
                           : "text-[#5A6372] hover:text-[#12151A]"
@@ -203,24 +210,13 @@ export const LabPage: React.FC = () => {
 
                     <button
                       onClick={() => setCenterStage("cache")}
-                      className={`px-3 py-1.5 rounded font-bold transition-all ${
+                      className={`px-3 py-1.5 rounded font-bold transition-all cursor-pointer ${
                         centerStage === "cache"
                           ? "bg-[#12151A] text-[#CCFF00] shadow-[2px_2px_0_#12151A]"
                           : "text-[#5A6372] hover:text-[#12151A]"
                       }`}
                     >
                       🔬 Cache Bit Inspector
-                    </button>
-
-                    <button
-                      onClick={() => setCenterStage("player")}
-                      className={`px-3 py-1.5 rounded font-bold transition-all ${
-                        centerStage === "player"
-                          ? "bg-[#12151A] text-[#CCFF00] shadow-[2px_2px_0_#12151A]"
-                          : "text-[#5A6372] hover:text-[#12151A]"
-                      }`}
-                    >
-                      📺 Video Monitor
                     </button>
                   </div>
 
@@ -232,38 +228,57 @@ export const LabPage: React.FC = () => {
                 </div>
 
                 {/* Active Focused Visual Stage */}
-                {centerStage === "motherboard" && (
-                  <Motherboard3D
-                    transferMode={config.transferMode}
-                    isBuffering={metrics.isBuffering}
-                    cpuUtilizationFree={metrics.cpuUtilizationFree}
-                    hitRatio={metrics.hitRatio}
-                    currentAddressHex={lastStep?.hexAddress}
-                  />
-                )}
+                <div className="flex-1 flex flex-col">
+                  {centerStage === "player" && (
+                    <PlayerSim
+                      quality={config.quality}
+                      transferMode={config.transferMode}
+                      bufferLevelPct={metrics.bufferLevelPct}
+                      isBuffering={metrics.isBuffering}
+                      fps={metrics.fps}
+                      frameCounter={metrics.frameCounter}
+                    />
+                  )}
 
-                {centerStage === "cache" && (
-                  <CacheVisualizer
-                    cache={simRef.current.cache}
-                    lastStep={lastStep}
-                    recentSteps={recentSteps}
-                  />
-                )}
+                  {centerStage === "motherboard" && (
+                    <Motherboard3D
+                      transferMode={config.transferMode}
+                      isBuffering={metrics.isBuffering}
+                      cpuUtilizationFree={metrics.cpuUtilizationFree}
+                      hitRatio={metrics.hitRatio}
+                      currentAddressHex={lastStep?.hexAddress}
+                    />
+                  )}
 
-                {centerStage === "player" && (
-                  <PlayerSim
-                    quality={config.quality}
-                    transferMode={config.transferMode}
-                    bufferLevelPct={metrics.bufferLevelPct}
-                    isBuffering={metrics.isBuffering}
-                    fps={metrics.fps}
-                    frameCounter={metrics.frameCounter}
-                  />
-                )}
+                  {centerStage === "cache" && (
+                    <CacheVisualizer
+                      cache={simRef.current.cache}
+                      lastStep={lastStep}
+                      recentSteps={recentSteps}
+                    />
+                  )}
+                </div>
+
+                {/* Sub-Stage Quick Status Strip */}
+                <div className="flex items-center justify-between p-2 bg-[#FFFFFF] border-2 border-[#12151A] rounded-lg shadow-[2px_2px_0_#12151A] font-mono text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2.5 h-2.5 rounded-full ${metrics.isBuffering ? "bg-[#FF3B30] animate-ping" : "bg-[#CCFF00]"}`}></span>
+                    <span className="font-bold text-[#12151A]">
+                      {metrics.isBuffering ? "BUFFERING STALL" : "REAL-TIME STREAMING"}
+                    </span>
+                    <span className="text-[#5A6372]">|</span>
+                    <span className="text-[#5A6372] hidden sm:inline">
+                      {config.transferMode === "DMA" ? "DMA Hardware Active" : "CPU Busy Copying Words"}
+                    </span>
+                  </div>
+                  <div className="font-bold text-[#12151A]">
+                    {metrics.fps} FPS ({config.quality})
+                  </div>
+                </div>
               </div>
 
               {/* Right Column: Live Telemetry (3 cols) */}
-              <div className="lg:col-span-3">
+              <div className="lg:col-span-3 flex flex-col justify-between">
                 <MetricsPanel metrics={metrics} config={config} />
               </div>
             </div>
