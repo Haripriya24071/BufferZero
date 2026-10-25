@@ -63,25 +63,21 @@ export const Controls: React.FC<ControlsProps> = ({
     {
       id: "balanced",
       label: "Balanced (1080p)",
-      sub: "1080p • 16KB • DMA",
       tooltip: "Optimal sweet spot for everyday 1080p streaming with DMA hardware transfer",
     },
     {
       id: "phone",
       label: "Phone (480p)",
-      sub: "480p • 8KB • DMA",
       tooltip: "Low-power mobile tier with compact cache footprint",
     },
     {
       id: "weak_4k",
       label: "Weak Device (4K)",
-      sub: "4K • 4KB • CPU Copy",
       tooltip: "Stresses CPU-driven word copying under heavy 4K bitrates, exposing stall bottlenecks",
     },
     {
       id: "scrubbing",
       label: "Seek Scrubbing",
-      sub: "1080p • Seeking Storm",
       tooltip: "Forces non-sequential macroblock access, causing spatial cache thrashing",
     },
   ];
@@ -101,7 +97,7 @@ export const Controls: React.FC<ControlsProps> = ({
   const blockSizeBoxWidth = Math.max(16, (config.blockSizeB / 256) * 54);
 
   return (
-    <div className="card-tactile p-5 space-y-6">
+    <div className="card-tactile p-5 space-y-4 h-full flex flex-col justify-between">
       {/* Title Header with Reset Defaults */}
       <div className="flex items-center justify-between pb-3 border-b-2 border-[#171717]/10">
         <div className="flex items-center gap-2">
@@ -208,30 +204,24 @@ export const Controls: React.FC<ControlsProps> = ({
 
       {/* 2. WORKLOAD PRESETS */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
-            <Sliders size={13} className="text-[#2457FF]" />
-            <span>Workload Presets</span>
-          </label>
-          <span className="text-[10px] font-mono text-[#525252]">
-            Preconfigured Profiles
-          </span>
-        </div>
+        <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
+          <Sliders size={13} className="text-[#2457FF]" />
+          <span>Workload Presets</span>
+        </label>
 
-        <div className="grid grid-cols-2 gap-1.5">
+        <div className="grid grid-cols-2 gap-2">
           {presets.map((p) => (
             <button
               key={p.id}
               onClick={() => onSelectPreset?.(p.id)}
-              className={`p-2 rounded-lg text-left font-mono transition-all cursor-pointer flex flex-col gap-0.5 ${
+              className={`py-2 px-2.5 rounded-lg text-center font-mono text-xs font-bold transition-all cursor-pointer ${
                 activePreset === p.id
                   ? "bg-[#171717] text-[#D7FF38] border-2 border-[#171717] shadow-[2px_2px_0_#2457FF]"
-                  : "bg-[#F5F5F0] hover:bg-[#EBEBE6] text-[#171717] border border-[#171717]/20"
+                  : "bg-[#F5F5F0] hover:bg-[#EBEBE6] text-[#171717] border border-[#171717]/30"
               }`}
               title={p.tooltip}
             >
-              <span className="text-xs font-bold leading-tight">{p.label}</span>
-              <span className="text-[9px] opacity-80 leading-none">{p.sub}</span>
+              <span>{p.label}</span>
             </button>
           ))}
         </div>
@@ -239,44 +229,37 @@ export const Controls: React.FC<ControlsProps> = ({
 
       {/* 3. BIG TWO-STATE TRANSFER MODE SWITCH (CPU vs DMA) */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
-            <Radio size={13} className="text-[#2457FF]" />
-            <span>Data Transfer Architecture</span>
-          </label>
-          <span className="text-[10px] font-mono text-[#525252]">
-            {config.transferMode === "DMA" ? "Dedicated Hardware" : "Programmed I/O"}
-          </span>
-        </div>
+        <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
+          <Radio size={13} className="text-[#2457FF]" />
+          <span>Data Transfer Architecture</span>
+        </label>
 
         <div className="grid grid-cols-2 gap-2 p-1.5 bg-[#F5F5F0] border-2 border-[#171717] rounded-lg">
           <button
             onClick={() => onChangeConfig({ transferMode: "CPU" })}
-            className={`py-2 px-3 rounded font-mono text-xs font-bold transition-all flex flex-col items-center gap-0.5 cursor-pointer ${
+            className={`py-2.5 px-3 rounded font-mono text-xs font-extrabold tracking-wider transition-all cursor-pointer ${
               config.transferMode === "CPU"
                 ? "bg-[#FF3B30] text-white shadow-[2px_2px_0_#171717] border border-[#171717]"
                 : "text-[#171717] hover:bg-[#EBEBE6]"
             }`}
           >
-            <span>CPU-DRIVEN</span>
-            <span className="text-[9px] font-normal opacity-90">6 cycles/word copy</span>
+            CPU-DRIVEN
           </button>
 
           <button
             onClick={() => onChangeConfig({ transferMode: "DMA" })}
-            className={`py-2 px-3 rounded font-mono text-xs font-bold transition-all flex flex-col items-center gap-0.5 cursor-pointer ${
+            className={`py-2.5 px-3 rounded font-mono text-xs font-extrabold tracking-wider transition-all cursor-pointer ${
               config.transferMode === "DMA"
                 ? "bg-[#2457FF] text-white shadow-[2px_2px_0_#171717] border border-[#171717]"
                 : "text-[#171717] hover:bg-[#EBEBE6]"
             }`}
           >
-            <span>DMA CONTROLLER</span>
-            <span className="text-[9px] font-normal opacity-90">Hardware Offloaded</span>
+            DMA CONTROLLER
           </button>
         </div>
       </div>
 
-      {/* 4. BLOCK SIZE SLIDER WITH GROWTH VISUALIZER */}
+      {/* 4. BLOCK SIZE */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
@@ -285,7 +268,7 @@ export const Controls: React.FC<ControlsProps> = ({
           </label>
           <div className="flex items-center gap-2">
             <div
-              className="h-4 bg-[#D7FF38] border border-[#171717] rounded-xs transition-all duration-200"
+              className="h-3.5 bg-[#D7FF38] border border-[#171717] rounded-xs transition-all duration-200"
               style={{ width: `${blockSizeBoxWidth}px` }}
               title={`Block Size: ${config.blockSizeB} Bytes`}
             ></div>
@@ -295,14 +278,14 @@ export const Controls: React.FC<ControlsProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-5 gap-1">
+        <div className="grid grid-cols-5 gap-1.5">
           {blockSizes.map((size) => (
             <button
               key={size}
               onClick={() => onChangeConfig({ blockSizeB: size })}
-              className={`py-1.5 rounded font-mono text-xs transition-all cursor-pointer ${
+              className={`py-2 rounded font-mono text-xs font-bold transition-all cursor-pointer ${
                 config.blockSizeB === size
-                  ? "bg-[#171717] text-[#D7FF38] font-bold shadow-[2px_2px_0_#2457FF]"
+                  ? "bg-[#171717] text-[#D7FF38] shadow-[2px_2px_0_#2457FF]"
                   : "bg-[#F5F5F0] hover:bg-[#EBEBE6] text-[#171717] border border-[#171717]/20"
               }`}
             >
@@ -310,12 +293,9 @@ export const Controls: React.FC<ControlsProps> = ({
             </button>
           ))}
         </div>
-        <p className="text-[10px] font-mono text-[#525252]">
-          Small blocks cause misses; huge blocks balloon bus fill time.
-        </p>
       </div>
 
-      {/* 5. VIDEO STREAM QUALITY */}
+      {/* 5. VIDEO RESOLUTION */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label className="font-mono text-xs font-bold uppercase tracking-wider text-[#171717] flex items-center gap-1.5">
@@ -327,12 +307,12 @@ export const Controls: React.FC<ControlsProps> = ({
           </span>
         </div>
 
-        <div className="grid grid-cols-4 gap-1">
+        <div className="grid grid-cols-4 gap-1.5">
           {qualities.map((q) => (
             <button
               key={q}
               onClick={() => onChangeConfig({ quality: q })}
-              className={`py-1.5 rounded font-mono text-xs transition-all cursor-pointer ${
+              className={`py-2 rounded font-mono text-xs font-bold transition-all cursor-pointer ${
                 config.quality === q
                   ? "bg-[#D7FF38] text-[#171717] font-extrabold border border-[#171717] shadow-[2px_2px_0_#171717]"
                   : "bg-[#F5F5F0] hover:bg-[#EBEBE6] text-[#171717] border border-[#171717]/20"
