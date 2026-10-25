@@ -5,7 +5,6 @@ import { LabHeader } from "../components/lab/LabHeader";
 import { Controls } from "../components/lab/Controls";
 import { Motherboard3D } from "../components/lab/Motherboard3D";
 import { CacheVisualizer } from "../components/lab/CacheVisualizer";
-import { PlayerSim } from "../components/lab/PlayerSim";
 import { MetricsPanel } from "../components/lab/MetricsPanel";
 import { TelemetryHUD } from "../components/lab/TelemetryHUD";
 import { RaceMode } from "../components/lab/RaceMode";
@@ -38,8 +37,8 @@ export const LabPage: React.FC = () => {
   // Active Bottom Tab
   const [bottomTab, setBottomTab] = useState<"charts" | "pipeline" | "debugger" | "handcheck">("charts");
 
-  // Active Center Stage View ("player" | "motherboard" | "cache")
-  const [centerStage, setCenterStage] = useState<"player" | "motherboard" | "cache">("player");
+  // Active Center Stage View ("motherboard" | "cache")
+  const [centerStage, setCenterStage] = useState<"motherboard" | "cache">("motherboard");
 
   // Simulation Ticker: Calmed down to a steady, explainable pace (1-2 accesses/sec on 1x)
   useEffect(() => {
@@ -175,17 +174,6 @@ export const LabPage: React.FC = () => {
                 <div className="flex items-center justify-between bg-[#FFFFFF] border-2 border-[#171717] p-1.5 rounded-lg shadow-[3px_3px_0_#171717]">
                   <div className="flex items-center gap-1 font-mono text-xs">
                     <button
-                      onClick={() => setCenterStage("player")}
-                      className={`px-3 py-1.5 rounded font-bold transition-all cursor-pointer ${
-                        centerStage === "player"
-                          ? "bg-[#171717] text-[#D7FF38] shadow-[2px_2px_0_#2457FF]"
-                          : "text-[#525252] hover:text-[#171717]"
-                      }`}
-                    >
-                      📺 Video Monitor
-                    </button>
-
-                    <button
                       onClick={() => setCenterStage("motherboard")}
                       className={`px-3 py-1.5 rounded font-bold transition-all cursor-pointer ${
                         centerStage === "motherboard"
@@ -217,17 +205,6 @@ export const LabPage: React.FC = () => {
 
                 {/* Active Focused Visual Stage */}
                 <div className="flex flex-col">
-                  {centerStage === "player" && (
-                    <PlayerSim
-                      quality={config.quality}
-                      transferMode={config.transferMode}
-                      bufferLevelPct={metrics.bufferLevelPct}
-                      isBuffering={metrics.isBuffering}
-                      fps={metrics.fps}
-                      frameCounter={metrics.frameCounter}
-                    />
-                  )}
-
                   {centerStage === "motherboard" && (
                     <Motherboard3D
                       transferMode={config.transferMode}
