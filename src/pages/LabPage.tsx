@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Simulation, DEFAULT_CONFIG } from "../engine/simulation";
 import { SimConfig, SimMetrics, SimStep } from "../engine/types";
-import { LabHeader } from "../components/lab/LabHeader";
 import { Controls } from "../components/lab/Controls";
 import { Motherboard3D } from "../components/lab/Motherboard3D";
 import { RaceMode } from "../components/lab/RaceMode";
@@ -111,18 +110,6 @@ export const LabPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F5F5F0] flex flex-col">
-      {/* Top Controls Header: Transport on left, Race Mode on far right corner */}
-      <LabHeader
-        isRunning={isRunning}
-        onTogglePlay={() => setIsRunning(!isRunning)}
-        onStep={handleStep}
-        onReset={handleReset}
-        speed={speed}
-        onChangeSpeed={setSpeed}
-        isRaceMode={isRaceMode}
-        onToggleRaceMode={() => setIsRaceMode(!isRaceMode)}
-      />
-
       <div className="max-w-7xl mx-auto w-full px-4 md:px-8 py-6 space-y-6 flex-1">
         {isRaceMode ? (
           /* Race Mode View */
@@ -131,15 +118,18 @@ export const LabPage: React.FC = () => {
           /* Balanced 2-Column Lab Workspace (4 cols : 8 cols) */
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              {/* Left Column: Architecture Controls + Workload Presets + Stress Knobs (4 cols) */}
+              {/* Left Column: Architecture Controls + Primary Transport + Workload Presets (4 cols) */}
               <div className="lg:col-span-4 space-y-4">
                 <Controls
                   config={config}
                   onChangeConfig={handleConfigChange}
                   onResetDefaults={() => handleConfigChange(DEFAULT_CONFIG)}
-                  onSeekStorm={() => simRef.current.triggerSeekStorm()}
-                  onColdFlush={() => simRef.current.triggerColdFlush()}
-                  onNetworkBurst={() => simRef.current.triggerNetworkBurst()}
+                  isRunning={isRunning}
+                  onTogglePlay={() => setIsRunning(!isRunning)}
+                  onStep={handleStep}
+                  onReset={handleReset}
+                  speed={speed}
+                  onChangeSpeed={setSpeed}
                   activePreset={activePreset}
                   onSelectPreset={handleSelectPreset}
                   isRaceMode={isRaceMode}
