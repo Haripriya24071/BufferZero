@@ -7,7 +7,7 @@
 ██████╔╝╚██████╔╝██║     ██║     ███████╗██║  ██║███████╗██║  ██║╚██████╔╝
 ╚═════╝  ╚═════╝ ╚═╝     ╚═╝     ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝ 
 ```
-# BufferZero 
+
 ### Video Streaming Architecture Performance Analyzer
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-bufferzero.vercel.app-2457FF?style=for-the-badge&logo=vercel&logoColor=white)](https://bufferzero.vercel.app/)
