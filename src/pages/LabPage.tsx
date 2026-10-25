@@ -7,6 +7,7 @@ import { Motherboard3D } from "../components/lab/Motherboard3D";
 import { CacheVisualizer } from "../components/lab/CacheVisualizer";
 import { PlayerSim } from "../components/lab/PlayerSim";
 import { MetricsPanel } from "../components/lab/MetricsPanel";
+import { TelemetryHUD } from "../components/lab/TelemetryHUD";
 import { RaceMode } from "../components/lab/RaceMode";
 import { RewindDebugger } from "../components/lab/RewindDebugger";
 import { BreakItDeck } from "../components/lab/BreakItDeck";
@@ -162,15 +163,18 @@ export const LabPage: React.FC = () => {
       />
 
       <div className="max-w-7xl mx-auto w-full px-4 md:px-8 py-6 space-y-6 flex-1">
+        {/* Top Cockpit: Primary Live Telemetry HUD */}
+        <TelemetryHUD metrics={metrics} config={config} />
+
         {isRaceMode ? (
           /* Race Mode View */
           <RaceMode baseConfig={config} />
         ) : (
-          /* Standard 3-Column Lab View */
+          /* Balanced 2-Column Lab Workspace (5 cols : 7 cols) */
           <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-              {/* Left Column: Hardware Controls + Stress Triggers (3 cols) */}
-              <div className="lg:col-span-3 flex flex-col justify-between">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              {/* Left Column: Architecture Controls + Stress Knobs (5 cols) */}
+              <div className="lg:col-span-5 space-y-4">
                 <Controls
                   config={config}
                   onChangeConfig={handleConfigChange}
@@ -181,8 +185,8 @@ export const LabPage: React.FC = () => {
                 />
               </div>
 
-              {/* Center Column: Focused Simulation Stage (6 cols) */}
-              <div className="lg:col-span-6 flex flex-col justify-between space-y-3">
+              {/* Right Column: Visual Stage & Hardware Logic Explainer (7 cols) */}
+              <div className="lg:col-span-7 space-y-4">
                 {/* Stage Selector Pills */}
                 <div className="flex items-center justify-between bg-[#FFFFFF] border-2 border-[#171717] p-1.5 rounded-lg shadow-[3px_3px_0_#171717]">
                   <div className="flex items-center gap-1 font-mono text-xs">
@@ -228,7 +232,7 @@ export const LabPage: React.FC = () => {
                 </div>
 
                 {/* Active Focused Visual Stage */}
-                <div className="flex-1 flex flex-col">
+                <div className="flex flex-col">
                   {centerStage === "player" && (
                     <PlayerSim
                       quality={config.quality}
@@ -259,26 +263,7 @@ export const LabPage: React.FC = () => {
                   )}
                 </div>
 
-                {/* Sub-Stage Quick Status Strip */}
-                <div className="flex items-center justify-between p-2 bg-[#FFFFFF] border-2 border-[#171717] rounded-lg shadow-[2px_2px_0_#171717] font-mono text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className={`w-2.5 h-2.5 rounded-full ${metrics.isBuffering ? "bg-[#FF3B30] animate-ping" : "bg-[#2457FF]"}`}></span>
-                    <span className="font-bold text-[#171717]">
-                      {metrics.isBuffering ? "BUFFERING STALL" : "REAL-TIME STREAMING"}
-                    </span>
-                    <span className="text-[#525252]">|</span>
-                    <span className="text-[#525252] hidden sm:inline">
-                      {config.transferMode === "DMA" ? "DMA Hardware Engine Active" : "CPU Busy Copying Words"}
-                    </span>
-                  </div>
-                  <div className="font-bold text-[#171717]">
-                    {metrics.fps} FPS ({config.quality})
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: Live Telemetry (3 cols) */}
-              <div className="lg:col-span-3 flex flex-col justify-between">
+                {/* Hardware Logic Explainer & Secondary Telemetry */}
                 <MetricsPanel metrics={metrics} config={config} />
               </div>
             </div>

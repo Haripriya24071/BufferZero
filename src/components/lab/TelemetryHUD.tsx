@@ -1,0 +1,143 @@
+import React from "react";
+import { SimMetrics, SimConfig } from "../../engine/types";
+import { Zap, HardDrive, Radio, Activity, Film } from "lucide-react";
+
+interface TelemetryHUDProps {
+  metrics: SimMetrics;
+  config: SimConfig;
+}
+
+export const TelemetryHUD: React.FC<TelemetryHUDProps> = ({ metrics, config }) => {
+  // AMAT curve health assessment
+  const getAmatHealth = () => {
+    if (config.blockSizeB === 64 || config.blockSizeB === 128) {
+      return { text: "OPTIMAL U-CURVE", color: "bg-[#D7FF38] text-[#171717]" };
+    }
+    if (config.blockSizeB < 64) {
+      return { text: "HIGH MISS RATE", color: "bg-[#FFFFFF] text-[#FF3B30]" };
+    }
+    return { text: "HIGH BUS LATENCY", color: "bg-[#FFFFFF] text-[#FF3B30]" };
+  };
+
+  const amatHealth = getAmatHealth();
+
+  return (
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
+      {/* 1. AMAT (Average Memory Access Time) */}
+      <div className="bg-[#FFFFFF] border-2 border-[#171717] p-4 rounded-xl shadow-[4px_4px_0_#171717] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="text-[11px] font-bold text-[#525252] uppercase tracking-wider flex items-center gap-1.5">
+            <Activity size={14} className="text-[#2457FF]" />
+            <span>AMAT (CO5)</span>
+          </span>
+          <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-[#171717] ${amatHealth.color}`}>
+            {amatHealth.text}
+          </span>
+        </div>
+        <div className="flex items-baseline gap-1.5">
+          <span className="font-display text-3xl sm:text-4xl font-black text-[#171717]">
+            {metrics.amat}
+          </span>
+          <span className="text-xs text-[#525252] font-bold">cycles / access</span>
+        </div>
+        <div className="mt-2 pt-2 border-t border-[#171717]/10 flex items-center justify-between text-[10px] text-[#525252]">
+          <span>Hit: {config.hitTimeCycles}c</span>
+          <span>Penalty: {metrics.missPenalty}c</span>
+        </div>
+      </div>
+
+      {/* 2. Cache Hit Ratio */}
+      <div className="bg-[#FFFFFF] border-2 border-[#171717] p-4 rounded-xl shadow-[4px_4px_0_#2457FF] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="text-[11px] font-bold text-[#525252] uppercase tracking-wider flex items-center gap-1.5">
+            <HardDrive size={14} className="text-[#2457FF]" />
+            <span>Cache Hit Rate</span>
+          </span>
+          <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-[#171717] bg-[#F5F5F0] text-[#171717]">
+            {config.blockSizeB}B BLOCKS
+          </span>
+        </div>
+        <div className="flex items-baseline gap-1.5">
+          <span className="font-display text-3xl sm:text-4xl font-black text-[#2457FF]">
+            {metrics.hitRatio}%
+          </span>
+          <span className="text-xs text-[#525252] font-bold">hit ratio</span>
+        </div>
+        <div className="mt-2 pt-2 border-t border-[#171717]/10 flex items-center justify-between text-[10px] text-[#525252]">
+          <span>Miss: {metrics.missRatio}%</span>
+          <span>Associativity: {config.associativity}-Way</span>
+        </div>
+      </div>
+
+      {/* 3. CPU Headroom / DMA Offloading */}
+      <div className="bg-[#FFFFFF] border-2 border-[#171717] p-4 rounded-xl shadow-[4px_4px_0_#171717] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="text-[11px] font-bold text-[#525252] uppercase tracking-wider flex items-center gap-1.5">
+            <Radio size={14} className={config.transferMode === "DMA" ? "text-[#2457FF]" : "text-[#FF3B30]"} />
+            <span>CPU Headroom (CO4)</span>
+          </span>
+          <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-[#171717] ${
+            config.transferMode === "DMA" ? "bg-[#2457FF] text-white" : "bg-[#FF3B30] text-white"
+          }`}>
+            {config.transferMode === "DMA" ? "DMA ACTIVE" : "CPU BOUND"}
+          </span>
+        </div>
+        <div className="flex items-baseline gap-1.5">
+          <span className={`font-display text-3xl sm:text-4xl font-black ${
+            metrics.cpuUtilizationFree >= 50 ? "text-[#171717]" : "text-[#FF3B30]"
+          }`}>
+            {Math.round(metrics.cpuUtilizationFree)}%
+          </span>
+          <span className="text-xs text-[#525252] font-bold">free cycles</span>
+        </div>
+        <div className="mt-2 pt-2 border-t border-[#171717]/10 flex items-center justify-between text-[10px] text-[#525252]">
+          <span>{config.transferMode === "DMA" ? "Hardware Offload" : "Programmed I/O Loop"}</span>
+          <span>CPI: {metrics.cpi}</span>
+        </div>
+      </div>
+
+      {/* 4. Stream Playback & Buffer Health */}
+      <div className={`border-2 border-[#171717] p-4 rounded-xl shadow-[4px_4px_0_#171717] hover:translate-x-0.5 hover:translate-y-0.5 transition-all ${
+        metrics.isBuffering ? "bg-[#FFF5F5]" : "bg-[#FFFFFF]"
+      }`}>
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="text-[11px] font-bold text-[#525252] uppercase tracking-wider flex items-center gap-1.5">
+            <Film size={14} className={metrics.isBuffering ? "text-[#FF3B30]" : "text-[#171717]"} />
+            <span>Stream Health</span>
+          </span>
+          <span className={`text-[9px] font-extrabold px-2 py-0.5 rounded-full border border-[#171717] flex items-center gap-1 ${
+            metrics.isBuffering
+              ? "bg-[#FF3B30] text-white animate-pulse"
+              : "bg-[#D7FF38] text-[#171717]"
+          }`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${metrics.isBuffering ? "bg-white" : "bg-[#171717]"}`}></span>
+            {metrics.isBuffering ? "BUFFERING STALL" : "SMOOTH 60 FPS"}
+          </span>
+        </div>
+        <div className="flex items-baseline gap-1.5">
+          <span className={`font-display text-3xl sm:text-4xl font-black ${
+            metrics.isBuffering ? "text-[#FF3B30]" : "text-[#171717]"
+          }`}>
+            {metrics.bufferLevelPct}%
+          </span>
+          <span className="text-xs text-[#525252] font-bold">buffer ({metrics.fps} FPS)</span>
+        </div>
+        {/* Visual Mini Buffer Health Bar */}
+        <div className="mt-2 pt-2 border-t border-[#171717]/10">
+          <div className="w-full h-2 bg-[#EBEBE6] border border-[#171717] rounded-full overflow-hidden">
+            <div
+              className={`h-full transition-all duration-300 ${
+                metrics.bufferLevelPct > 50
+                  ? "bg-[#D7FF38]"
+                  : metrics.bufferLevelPct > 20
+                  ? "bg-[#2457FF]"
+                  : "bg-[#FF3B30]"
+              }`}
+              style={{ width: `${Math.min(100, Math.max(0, metrics.bufferLevelPct))}%` }}
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
